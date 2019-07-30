@@ -1,0 +1,198 @@
+# Define your background color Template
+<BackgroundColor@Widget>
+    background_color: 1, 1, 1, 1
+    canvas.before:
+        Color:
+            rgba: root.background_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+<NavButton@Button+BackgroundColor>
+    background_color: 0.4, 0.6, 0.8, 1
+    foreground_color: 0.3, 0.4, 0.5, 1
+    color: 1, 1, 1, 1
+
+<AnnotationSlider@SpanSlider+BackgroundColor>
+    pos_hint: {'center_x': .5, 'center_y': .5}
+    color:0.5,0.5,0.5,0.5
+    background_color: 0.4, 0.6, 0.8, 1
+    foreground_color: 0.3, 0.4, 0.5, 1
+    value_track_width: 1
+
+<AnnotationManipulationButton@Button+BackgroundColor>
+    background_color: 0.7, 0.6, 0.8, 1
+    foreground_color: 0.6, 0.4, 0.5, 1
+    color: 1, 1, 1, 1
+
+<AnnotationCheckBox@CheckBox+BackgroundColor>
+    foreground_color: 1, 1, 1, 1
+    color: 0.0, 0.1, 0.1, 1
+
+
+<InfoLabel@Label+BackgroundColor>
+    halign: "center"
+    color: 0.0, 0.1, 0.1, 1
+
+
+
+
+<RootWidget>:
+    id: Main
+    Sample_Screen:
+        id: sampl
+        name: "Sample_Screen"
+    Annotation_Screen:
+        id: annot
+        name: "Annotation_Screen"
+    Manipulation_Screen:
+        id: manip
+        name: "Manipulation_Screen"
+
+
+<Sample_Screen>:
+    GridLayout:
+        rows:5
+        cols:1
+        TextInput:
+            multiline: True
+            id: html_sample
+            size_hint_y: 9.5
+            text: "sample"
+            font_size: 40
+        NavButton:
+            text: "Next text"
+            font_size: 30
+            on_press: root.manager.next_page()
+
+        NavButton:
+            text: "Add selection to sample library"
+            font_size: 30
+            on_press: root.manager.sampler_add()
+        NavButton:
+            text: "Selection is too complicated, but somehow an explanation of a difference"
+            font_size: 30
+            on_press: root.manager.complicated_selection()
+        NavButton:
+            text: "Annotating"
+            font_size: 30
+            on_press: root.manager.shit()
+
+
+<Annotation_Screen>:
+    GridLayout:
+        rows:5
+        cols:1
+        InfoLabel:
+            halign: "center"
+            valign: "middle"
+            markup: True
+            size_hint_y: 9.5
+            text_size: self.size
+            multiline: True
+            id: sample
+            text: "sample"
+            font_size: 40
+        NavButton:
+            text: "Oll Korrect!"
+            font_size: 30
+            on_press: root.manager.ok()
+        NavButton:
+            text: "To hard for me. Put it in the one day maybe bin."
+            font_size: 30
+            on_press: root.manager.complicated_sample()
+        NavButton:
+            text: "Just no!"
+            font_size: 30
+            on_press: root.manager.shit()
+        NavButton:
+            text: "Manipulate"
+            font_size: 30
+            on_press: root.manager.manipulate()
+
+<RecycleViewRow>:
+    orientation: 'vertical'
+    size_hint_y: 2
+    InfoLabel:
+        text: root.kind
+        font_size: 30
+    AnnotationCheckBox:
+        id : active_or_not
+        active: root.able
+    AnnotationSlider:
+        id: start
+        min: 0
+        max: root.length
+        value: root.start
+        step: 1
+        orientation: 'horizontal'
+    AnnotationSlider:
+        id: end
+        min: 0
+        max: root.length
+        value: root.end
+        step: 1
+        orientation: 'horizontal'
+
+<AnnotationManipulationRow>:
+    orientation: 'horizontal'
+    InfoLabel:
+        text: root.kind
+        font_size: 30
+    AnnotationManipulationButton:
+        text: "+"
+        font_size: 30
+        on_press: root.more_annotation_of(root.kind)
+    AnnotationManipulationButton:
+        text: "-"
+        font_size: 30
+        on_press: root.less_annotation_of(root.kind)
+
+<SliderView>:
+    viewclass: 'RecycleViewRow'
+    RecycleBoxLayout:
+        default_size: dp(1656), dp(156)
+        height: self.minimum_height
+        orientation: 'vertical'
+
+<AnnotationManipulationView>:
+    viewclass: 'AnnotationManipulationRow'
+    RecycleGridLayout:
+        rows:2
+        cols:3
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'horizontal'
+
+<Manipulation_Screen>:
+    GridLayout:
+        rows:16
+        cols:1
+        InfoLabel:
+            halign: "center"
+            valign: "middle"
+            markup: True
+            size_hint_y: 5.5
+            text_size: self.size
+            multiline: True
+            id: sample
+            text: "sample"
+            font_size: 40
+        SliderView:
+            id: spansliderview
+            size_hint_y: 6.5
+            data: [{'text':'abracadabra', 'id':'0'}, {'text':'obrocodobro', 'id':'1'}]
+        AnnotationManipulationView:
+            data: [{'kind': 'CONTRAST'}, {'kind':'SUBJECT'},  {'kind':'ASPECT'},  {'kind':'CONTRAST_MARKER'},  {'kind':'SUBJECT_EXCEPT'}, {'kind':'COMPARISON_MARKER'}]
+            id: annotationmanipulationview
+            size_hint_y: 1
+        NavButton:
+            text: "Ok, fine!"
+            font_size: 30
+            on_press: root.manager.ok()
+        NavButton:
+            text: "Not even now"
+            font_size: 30
+            on_press: root.manager.shit()
