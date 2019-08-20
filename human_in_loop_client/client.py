@@ -5,16 +5,14 @@ import pprint
 
 
 from twisted.internet.protocol import ClientCreator
-from twisted.protocols import amp
 
 from kivy.support import install_twisted_reactor
 
 install_twisted_reactor()
-from twisted.internet import reactor, protocol
+from twisted.internet import reactor
 
 from human_in_loop_client.annotation_protocol import *
 
-import json
 
 
 def dummy_response(done=''):
@@ -82,7 +80,7 @@ class AnnotationClient:
             logging.error(str(reason))
             reactor.stop()
 
-        def seampless_apply(result):
+        def seamless_apply(result):
             if self.log_everything:
                 logging.warning(pprint.pformat(result))
             ProceedLocation(**result)
@@ -94,7 +92,7 @@ class AnnotationClient:
                 logging.warning(k)
                 logging.warning(warg)
 
-            result.callRemote(Command, **kwargs).addCallback(seampless_apply).addErrback(error)
+            result.callRemote(Command, **kwargs).addCallback(seamless_apply).addErrback(error)
             return result
 
         self.connection.addCallback(callback)

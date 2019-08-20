@@ -94,7 +94,7 @@ class RootWidget(ScreenManager):
     def next_page(self):
         self.me_as_client.commander(ProceedLocation=self.sampler_proceed, Command=DeliverPage)
 
-    def sampler_add(self):
+    def sampler_add_selection(self):
         text = self.ids.sampl.ids.html_sample.selection_text.replace('\n', ' ').replace('  ', ' ')
         if not text:
             logging.error('Text must be selected')
@@ -102,6 +102,14 @@ class RootWidget(ScreenManager):
         logging.info("Adding sample to library")
         self.me_as_client.commander(Command=SaveSample, text=text)
         self.current = "Sample_Screen"
+
+    def zero_annotation_selection(self):
+        text = self.ids.sampl.ids.html_sample.selection_text.replace('\n', ' ').replace('  ', ' ')
+        if not text:
+            logging.error('Text must be selected')
+            return None
+        logging.info("Adding zero sample to library")
+        self.me_as_client.commander(Command=ZeroAnnotation, text=text)
 
     def sampler_proceed(self, text=''):
         self.ids.sampl.ids.html_sample.text = text

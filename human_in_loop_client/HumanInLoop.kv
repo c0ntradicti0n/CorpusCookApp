@@ -52,31 +52,39 @@
 
 <Sample_Screen>:
     GridLayout:
-        rows:5
-        cols:1
+        rows: 2
+        cols: 1
         TextInput:
             multiline: True
             id: html_sample
             size_hint_y: 9.5
             text: "sample"
             font_size: 40
-        NavButton:
-            text: "Next text"
-            font_size: 30
-            on_press: root.manager.next_page()
+        GridLayout:
+            rows: 3
+            cols: 2
 
-        NavButton:
-            text: "Add selection to sample library"
-            font_size: 30
-            on_press: root.manager.sampler_add()
-        NavButton:
-            text: "Selection is too complicated, but somehow an explanation of a difference"
-            font_size: 30
-            on_press: root.manager.complicated_selection()
-        NavButton:
-            text: "Annotating"
-            font_size: 30
-            on_press: root.manager.shit()
+            NavButton:
+                text: "Next text"
+                font_size: 30
+                on_press: root.manager.next_page()
+
+            NavButton:
+                text: "Selection to sample library"
+                font_size: 30
+                on_press: root.manager.sampler_add_selection()
+            NavButton:
+                text: "Selection unfeasable to annotate, but difference utterance"
+                font_size: 30
+                on_press: root.manager.complicated_selection()
+            NavButton:
+                text: "Selection is non-difference utterance"
+                font_size: 30
+                on_press: root.manager.zero_annotation_selection()
+            NavButton:
+                text: "Let's go annotating"
+                font_size: 30
+                on_press: root.manager.shit()
 
 
 <Annotation_Screen>:
@@ -113,12 +121,15 @@
 <RecycleViewRow>:
     orientation: 'vertical'
     size_hint_y: 2
-    InfoLabel:
-        text: root.kind
-        font_size: 30
-    AnnotationCheckBox:
-        id : active_or_not
-        active: root.able
+    GridLayout:
+        rows: 1
+        cols: 2
+        InfoLabel:
+            font_size: 30
+            text: root.kind
+        AnnotationCheckBox:
+            id : active_or_not
+            active: root.able
     AnnotationSlider:
         id: start
         min: 0
@@ -149,9 +160,14 @@
         on_press: root.less_annotation_of(root.kind)
 
 <SliderView>:
+    scroll_type: ['bars', 'content']
+    bar_width: 25
     viewclass: 'RecycleViewRow'
     RecycleBoxLayout:
-        default_size: dp(1656), dp(156)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        default_size: dp(2656), dp(156)
         height: self.minimum_height
         orientation: 'vertical'
 
@@ -170,16 +186,18 @@
     GridLayout:
         rows:16
         cols:1
-        InfoLabel:
-            halign: "center"
-            valign: "middle"
-            markup: True
-            size_hint_y: 5.5
-            text_size: self.size
-            multiline: True
-            id: sample
-            text: "sample"
-            font_size: 40
+        ScrollView:
+            size_hint_y: 6
+            InfoLabel:
+                halign: "center"
+                valign: "middle"
+                markup: True
+                size_hint_y: 1
+                text_size: self.size
+                multiline: True
+                id: sample
+                text: "sample"
+                font_size: 40
         SliderView:
             id: spansliderview
             size_hint_y: 6.5
