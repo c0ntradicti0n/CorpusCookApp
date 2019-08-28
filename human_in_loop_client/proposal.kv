@@ -1,0 +1,44 @@
+<Proposal_Screen>:
+    ProposalView:
+        id: proposalview
+        data: [{'annotation':[1,2,34], 'text': 'abc', 'id':'2'}, {'annotation':[1,2,34,1], 'text': 'acbc', 'id':'1'},{'annotation':[1,2,4,34], 'text': 'dabc', 'id':'3'}]
+
+<ProposalView>:
+    scroll_type: ['bars', 'content']
+    bar_width: 25
+    viewclass: 'ProposalRecycleViewRow'
+    RecycleBoxLayout:
+        rows:20
+        cols:1
+        default_size: None, dp(560)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+
+<ProposalRecycleViewRow>:
+    orientation: 'vertical'
+    size_hint_y: 2
+    GridLayout:
+        rows:2
+        cols:1
+        TextInput:
+            font_size: 30
+            text: root.text
+            step: 1
+            orientation: 'horizontal'
+        BoxLayout:
+            NavButton:
+                on_press: self.main.ok(self)
+                background_normal: "./images/ok_cool.jpg"
+            NavButton:
+                on_press: self.main.zero()
+                background_normal: "./images/not_cool.jpg"
+            NavButton:
+                on_press: self.main.not_ok()
+                background_normal: "./images/trash.jpg"
+            NavButton:
+                on_press: self.main.manip()
+                background_normal: "./images/manip.png"
+
+

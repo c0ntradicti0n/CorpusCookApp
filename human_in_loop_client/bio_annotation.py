@@ -241,7 +241,6 @@ class BIO_Annotation:
     importance_list = ['SUBJECT','ASPECT','CONTRAST',
                             'SUBJECT_EXCEPT', 'CONTRAST_MARKER','COMPARISON_MARKER', '']
 
-
     def annotation_from_spans(tokens: List[str], paired_spans: List[List[Dict[str, Any]]]):
         sorted_paired_spans = sorted(paired_spans,
                                      key=lambda l:
@@ -261,7 +260,7 @@ class BIO_Annotation:
                         logging.error('Exceeding annotation length')
                         length = len(tokens)
                         logging.error('length %d' % length)
-                        logging.error(pprint.pformat(paired_spans))
+                        #logging.error(pprint.pformat(paired_spans))
                     for i in range(d['start'], d['end']):
                         these_tags[i] = "-".join(['B' if i == beginning else 'I', d['kind']])
                 all_tags = [x + [y] for x, y in zip(all_tags, these_tags)]

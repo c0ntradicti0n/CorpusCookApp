@@ -20,7 +20,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.slider import Slider
-from kivy.properties import StringProperty, NumericProperty, BooleanProperty
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ListProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview import RecycleView
 
@@ -35,11 +35,28 @@ class Annotation_Screen(Screen):
 class Manipulation_Screen(Screen):
     pass
 
-class Sample_Screen(Screen):
+
+class Proposal_Screen(Screen):
     pass
 
 
-class RecycleViewRow(BoxLayout):
+class Sample_Screen(Screen):
+    pass
+
+class ProposalRecycleViewRow(BoxLayout):
+    id = StringProperty()
+    annotation = ListProperty()
+    text = StringProperty()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.main = self.get_root()
+
+    def get_root(self):
+        return self.get_root_window().children[0]
+
+
+class ManipulationRecycleViewRow(BoxLayout):
     id = StringProperty()
     kind = StringProperty()
     start = NumericProperty()
@@ -57,10 +74,16 @@ class AnnotationManipulationRow(BoxLayout):
         self.get_root_window().children[0].less_annotation_of(kind)
 
 
+
+
+
 class SliderView(RecycleView):
     pass
 
 class AnnotationManipulationView(RecycleView):
+    pass
+
+class ProposalView(RecycleView):
     pass
 
 
@@ -84,12 +107,14 @@ class SpanSlider(Slider):
 class RootWidget(ScreenManager):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.me_as_client = AnnotationClient()
 
+        self.me_as_client = AnnotationClient()
         self.upmarker = UpMarker()
         self.textstore = None
 
-        self.next_page()
+        self.current = "Proposal_Screen"
+
+        #self.next_page()
 
     def next_page(self):
         self.me_as_client.commander(ProceedLocation=self.sampler_proceed, Command=DeliverPage)
@@ -113,7 +138,13 @@ class RootWidget(ScreenManager):
 
     def sampler_proceed(self, text=''):
         self.ids.sampl.ids.html_sample.text = text
+        self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
         self.current = "Sample_Screen"
+
+    def proposaler_proceed(self, proposals=''):
+        print (proposals)
+        self.ids.proposals.ids.proposalview.data = \
+            [OD(p) for p in proposals if all(k in ['annotation', 'text'] for k in p.keys())]
 
     def go_annotating(self):
         self.take_next()

@@ -19,7 +19,7 @@ def dummy_response(done=''):
     pass
 
 class AnnotationClient:
-    def __init__(self, log_everything=True):
+    def __init__(self, log_everything=False):
         """ Client for not spreading client-server-commands throughout your App.
 
         Call in your `app`, where the twisted reactor is installed inside kivy with
