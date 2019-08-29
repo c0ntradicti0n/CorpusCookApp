@@ -35,7 +35,6 @@ class Annotation_Screen(Screen):
 class Manipulation_Screen(Screen):
     pass
 
-
 class Proposal_Screen(Screen):
     pass
 
@@ -44,16 +43,12 @@ class Sample_Screen(Screen):
     pass
 
 class ProposalRecycleViewRow(BoxLayout):
-    id = StringProperty()
+    tokens = ListProperty()
     annotation = ListProperty()
     text = StringProperty()
+    id = NumericProperty()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.main = self.get_root()
-
-    def get_root(self):
-        return self.get_root_window().children[0]
+    app = App.get_running_app()
 
 
 class ManipulationRecycleViewRow(BoxLayout):
@@ -112,9 +107,13 @@ class RootWidget(ScreenManager):
         self.upmarker = UpMarker()
         self.textstore = None
 
-        self.current = "Proposal_Screen"
+        self.landing_screen = "Proposal_Screen"
+        self.landing()
 
-        #self.next_page()
+        self.next_page()
+
+    def landing(self):
+        self.current = self.landing_screen
 
     def next_page(self):
         self.me_as_client.commander(ProceedLocation=self.sampler_proceed, Command=DeliverPage)
@@ -128,43 +127,76 @@ class RootWidget(ScreenManager):
         self.me_as_client.commander(Command=SaveSample, text=text)
         self.current = "Sample_Screen"
 
-    def zero_annotation_selection(self):
-        text = self.ids.sampl.ids.html_sample.selection_text.replace('\n', ' ').replace('  ', ' ')
+    def zero_annotation_selection(self, proposal=None):
+        if proposal:
+            text=proposal.text
+            self.update_from_proposal(proposal)
+        else:
+            text = self.ids.sampl.ids.html_sample.selection_text.replace('\n', ' ').replace('  ', ' ')
+
         if not text:
             logging.error('Text must be selected')
             return None
+
         logging.info("Adding zero sample to library")
         self.me_as_client.commander(Command=ZeroAnnotation, text=text)
 
     def sampler_proceed(self, text=''):
-        self.ids.sampl.ids.html_sample.text = text
+        self.ids.sample.ids.html_sample.text = text
         self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
-        self.current = "Sample_Screen"
+        self.landing()
 
     def proposaler_proceed(self, proposals=''):
         print (proposals)
         self.ids.proposals.ids.proposalview.data = \
-            [OD(p) for p in proposals if all(k in ['annotation', 'text'] for k in p.keys())]
+            [OD(p) for p in proposals if all(k in ['annotation', 'tokens', 'text', 'id'] for k in p.keys())]
+        self.current = "Proposal_Screen"
 
     def go_annotating(self):
         self.take_next()
         sleep(0.2)
         self.current = "Annotation_Screen"
 
-    def ok(self):
+    def go_manipulating(self, proposal = None):
+        if proposal:
+            self.update_from_proposal(proposal)
+        else:
+            logging.error("there must be given a proposal!")
+        self.current = "Manipulation_Screen"
+
+
+    def update_from_proposal(self, proposal):
+        proposal.done = True
+        self.final_version = proposal.annotation
+        self.annotated_sample = self.final_version
+        self.display_sample()
+        self.update_sliders_from_spans()
+        self.delete(proposal)
+        if not self.ids.proposals.ids.proposalview.data:
+            current = 'Sample_Screen'
+
+    def delete(self, proposal):
+        self.ids.proposals.ids.proposalview.data = [d for d in self.ids.proposals.ids.proposalview.data if d['id'] != proposal.id]
+
+    def ok(self, proposal=None):
+        if proposal:
+            self.update_from_proposal(proposal)
         self.me_as_client.commander(Command=SaveAnnotation, annotation=self.final_version)
         logging.info("Added to corpus")
-        self.take_next()
-        self.current = "Annotation_Screen"
+        if not proposal:
+            self.take_next()
+        self.landing()
 
-    def complicated_sample(self):
+    def complicated_sample(self, proposal=None):
+        if proposal:
+            self.update_from_proposal(proposal)
         self.complicated(" ".join([word for word, _ in self.final_version]))
         self.take_next()
-        self.current = "Annotation_Screen"
+        self.landing()
 
     def complicated_selection(self):
         self.complicated(self.ids.sampl.ids.html_sample.selection_text)
-        self.current = "Sample_Screen"
+        self.landing()
 
     def complicated(self, text):
         self.me_as_client.commander(Command=SaveComplicated, text=text)
@@ -173,7 +205,7 @@ class RootWidget(ScreenManager):
 
     def shit(self):
         self.take_next()
-        self.current = "Annotation_Screen"
+        self.landing()
 
     def manipulate(self):
         self.update_sliders()

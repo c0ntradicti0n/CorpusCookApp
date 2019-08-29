@@ -242,9 +242,12 @@ class BIO_Annotation:
                             'SUBJECT_EXCEPT', 'CONTRAST_MARKER','COMPARISON_MARKER', '']
 
     def annotation_from_spans(tokens: List[str], paired_spans: List[List[Dict[str, Any]]]):
-        sorted_paired_spans = sorted(paired_spans,
-                                     key=lambda l:
-                                     min(l, key=lambda x: x['start'])['start'])
+        try:
+            sorted_paired_spans = sorted(paired_spans,
+                                         key=lambda l:
+                                         min(l, key=lambda x: x['start'])['start'])
+        except TypeError:
+            raise
 
         all_tags = [[]] * len(tokens)
         # read list of spans backwards to overwrie the contrast with the subject tags
