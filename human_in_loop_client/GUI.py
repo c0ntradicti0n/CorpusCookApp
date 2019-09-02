@@ -20,7 +20,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.slider import Slider
-from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ListProperty
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ListProperty, ObservableList
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview import RecycleView
 
@@ -172,11 +172,11 @@ class RootWidget(ScreenManager):
         self.display_sample()
         self.update_sliders_from_spans()
         self.delete(proposal)
-        if not self.ids.proposals.ids.proposalview.data:
-            current = 'Sample_Screen'
 
     def delete(self, proposal):
         self.ids.proposals.ids.proposalview.data = [d for d in self.ids.proposals.ids.proposalview.data if d['id'] != proposal.id]
+        if not self.ids.proposals.ids.proposalview.data:
+            self.sampler_proceed()
 
     def ok(self, proposal=None):
         if proposal:
