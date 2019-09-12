@@ -12,6 +12,7 @@ kivy.require('1.9.0')
 from kivy.config import Config
 Config.set('graphics', 'width', '2000')
 Config.set('graphics', 'height', '1500')
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 Config.write()
 from kivy.core.window import Window
 Window.clearcolor = (1, 1, 1, 1)
@@ -20,6 +21,9 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.slider import Slider
+from human_in_loop_client.multislider import SliderX
+#from human_in_loop_client.multislider import MultiSlider
+
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ListProperty, ObservableList
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview import RecycleView
@@ -48,7 +52,14 @@ class ProposalRecycleViewRow(BoxLayout):
     text = StringProperty()
     id = NumericProperty()
 
+
+
     app = App.get_running_app()
+
+
+class ProposalSliderX(SliderX):
+    def on_change(self, index, delete_add=None):
+        self.get_root_window().children[0].change_proposal_neighbors(self.mirror_index(index), self.mirror_values, delete_add=delete_add)
 
 
 class ManipulationRecycleViewRow(BoxLayout):
@@ -59,6 +70,7 @@ class ManipulationRecycleViewRow(BoxLayout):
     length = NumericProperty()
     able = BooleanProperty()
 
+
 class AnnotationManipulationRow(BoxLayout):
     kind = StringProperty()
 
@@ -67,9 +79,6 @@ class AnnotationManipulationRow(BoxLayout):
 
     def less_annotation_of(self, kind):
         self.get_root_window().children[0].less_annotation_of(kind)
-
-
-
 
 
 class SliderView(RecycleView):
@@ -147,10 +156,48 @@ class RootWidget(ScreenManager):
         self.landing()
 
     def proposaler_proceed(self, proposals=''):
-        print (proposals)
-        self.ids.proposals.ids.proposalview.data = \
-            [OD(p) for p in proposals if all(k in ['annotation', 'tokens', 'text', 'id'] for k in p.keys())]
+        proposal_cuts = [d['cut'] for d in proposals]
+        self.ids.proposals.ids.splitter.max = max(proposal_cuts)
+        self.ids.proposals.ids.splitter.mirror_values = proposal_cuts
+
+        proposal_data = [OD(p) for p in proposals]
+        self.ids.proposals.ids.proposalview.data = sorted(proposal_data, key=lambda p:p['cut'])
         self.current = "Proposal_Screen"
+
+    change_values_before = []
+    def change_proposal_neighbors(self, index, values, delete_add=None):
+        if index<=0:
+            index = 1
+
+        indices = [index-1, index, index+1]
+        if index >= len(values)-1:
+            return
+
+        cuts = (values[index-1], values[index], values[index+1])
+
+        #if self.change_values_before == cuts:
+        #    return
+
+        self.change_values_before = cuts
+
+        self.me_as_client.commander(Command=ChangeProposals, ProceedLocation=self.proceed_change_proposals, cuts=cuts, indices=indices, delete_add=delete_add)
+
+    def proceed_change_proposals(self, proposals, indices, delete_add=None):
+        all_proposals = sorted(self.ids.proposals.ids.proposalview.data, key=lambda p:p['cut'])
+        if delete_add==1:
+            all_proposals.insert(min(indices), None)
+        all_proposals[min(indices):max(indices)] = proposals
+        cuts = [p['cut'] for p in all_proposals]
+        if delete_add == -1:
+            zero__proposal_indices = [idx for idx, item in enumerate(cuts) if item in cuts[:idx]]
+            for z in zero__proposal_indices:
+                # When inserting don't delete!
+                all_proposals.pop(z-1)
+                cuts.pop(z-1)
+        self.ids.proposals.ids.splitter.mirror_values = cuts
+        self.ids.proposals.ids.proposalview.data = all_proposals
+        if not (len(all_proposals)==len(cuts)):
+            logging.error("number of spans does not fit to number of cuts")
 
     def go_annotating(self):
         self.take_next()
@@ -174,7 +221,14 @@ class RootWidget(ScreenManager):
         self.delete(proposal)
 
     def delete(self, proposal):
-        self.ids.proposals.ids.proposalview.data = [d for d in self.ids.proposals.ids.proposalview.data if d['id'] != proposal.id]
+        to_del = [d for d in self.ids.proposals.ids.proposalview.data if d['id'] == proposal.id][0]
+
+        self.ids.proposals.ids.proposalview.data.remove(to_del) #= [d for d in self.ids.proposals.ids.proposalview.data if d['id'] != proposal.id]
+        cuts = self.ids.proposals.ids.splitter.mirror_values
+
+        cuts.remove(to_del['cut'])
+
+        self.ids.proposals.ids.splitter.mirror_values = cuts #[v for v in  self.ids.proposals.ids.splitter.mirror_values if v != to_del['cut']]
         if not self.ids.proposals.ids.proposalview.data:
             self.sampler_proceed()
 
@@ -317,7 +371,6 @@ class RootWidget(ScreenManager):
         self.me_as_client.commander(ProceedLocation=self.take_next_rest, Command=MakePrediction, text=text)
 
     def take_next_rest(self, annotation=''):
-        print (annotation)
         self.annotated_sample = annotation
         self.final_version = self.annotated_sample
         self.update_sliders_from_spans()

@@ -24,21 +24,23 @@ class JSONB64COMPRESS(Argument):
         )
         l_before = len(json.dumps(inObject).encode('ascii'))
         l_after = len(base64.b64encode(zlib.compress(json.dumps(inObject).encode('ascii'))).decode('utf-8'))
-        logging.info('compression: %dkB to %dkB, means to %2.1f%% of the original' % (l_before/1000, l_after/1000, 100/(l_before/l_after)))
+        #logging.info('compression: %dkB to %dkB, means to %2.1f%% of the original' % (l_before/1000, l_after/1000, 100/(l_before/l_after)))
         return encoded
 
     def fromString(self, inString):
         decoded = json.loads(zlib.decompress(base64.b64decode(inString)))
         l_before = len(inString)
         l_after = len(str(decoded))
-        logging.info('compression: %dkB to %dkB, means to %2.1f%% of the original' % (l_before/1000, l_after/1000, 100/(l_before/l_after)))
-
+        #logging.info('compression: %dkB to %dkB, means to %2.1f%% of the original' % (l_before/1000, l_after/1000, 100/(l_before/l_after)))
         return decoded
 
 class DeliverPage(amp.Command):
     arguments = []
     response = [(b'text', amp.Unicode())]
 
+class ChangeProposals(amp.Command):
+    arguments = [(b'cuts', JSONB64COMPRESS()), (b'indices', JSONB64COMPRESS()), (b'delete_add', JSONB64COMPRESS())]
+    response = [(b'proposals', JSONB64COMPRESS()), (b'indices', JSONB64COMPRESS()),  (b'delete_add', JSONB64COMPRESS())]
 
 class MakePrediction(amp.Command):
     arguments = [(b'text', amp.Unicode())]
