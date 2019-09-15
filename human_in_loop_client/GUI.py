@@ -22,7 +22,6 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.slider import Slider
 from human_in_loop_client.multislider import SliderX
-#from human_in_loop_client.multislider import MultiSlider
 
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ListProperty, ObservableList
 from kivy.uix.boxlayout import BoxLayout
@@ -31,82 +30,10 @@ from kivy.uix.recycleview import RecycleView
 from human_in_loop_client.upmarker import UpMarker
 from human_in_loop_client.client import AnnotationClient
 from human_in_loop_client.annotation_protocol import *
+from human_in_loop_client.screens_kivy import *
+from human_in_loop_client.manipulation_kivy import *
+from human_in_loop_client.proposal_kivy import *
 
-
-class Annotation_Screen(Screen):
-    pass
-
-class Manipulation_Screen(Screen):
-    pass
-
-class Proposal_Screen(Screen):
-    pass
-
-
-class Sample_Screen(Screen):
-    pass
-
-class ProposalRecycleViewRow(BoxLayout):
-    tokens = ListProperty()
-    annotation = ListProperty()
-    text = StringProperty()
-    id = NumericProperty()
-
-
-
-    app = App.get_running_app()
-
-
-class ProposalSliderX(SliderX):
-    def on_change(self, index, delete_add=None):
-        self.get_root_window().children[0].change_proposal_neighbors(self.mirror_index(index), self.mirror_values, delete_add=delete_add)
-
-
-class ManipulationRecycleViewRow(BoxLayout):
-    id = StringProperty()
-    kind = StringProperty()
-    start = NumericProperty()
-    end = NumericProperty()
-    length = NumericProperty()
-    able = BooleanProperty()
-
-
-class AnnotationManipulationRow(BoxLayout):
-    kind = StringProperty()
-
-    def more_annotation_of(self, kind):
-        self.get_root_window().children[0].more_annotation_of(kind)
-
-    def less_annotation_of(self, kind):
-        self.get_root_window().children[0].less_annotation_of(kind)
-
-
-class SliderView(RecycleView):
-    pass
-
-class AnnotationManipulationView(RecycleView):
-    pass
-
-class ProposalView(RecycleView):
-    pass
-
-
-class SpanSlider(Slider):
-    def on_touch_up(self, touch):
-        root = self.get_root_window().children[0]
-        boxes = list(self.parent.parent.children)
-        new_data = [SpanSlider.collect_data_from_box(b) for b in boxes]
-        root.update_from_data(new_data)
-
-    def collect_data_from_box(b):
-        return OD({
-            'able': b.ids.active_or_not.active,
-            'kind': b.kind,
-            'start': int(b.ids.start.value),
-            'end': int(b.ids.end.value),
-            'length': int(b.ids.end.max),
-            'id': 'hach'
-        })
 
 class RootWidget(ScreenManager):
     def __init__(self, *args, **kwargs):
@@ -120,6 +47,7 @@ class RootWidget(ScreenManager):
         self.landing()
 
         self.next_page()
+
 
     def landing(self):
         self.current = self.landing_screen
@@ -152,7 +80,6 @@ class RootWidget(ScreenManager):
 
     def sampler_proceed(self, text=''):
         self.ids.sample.ids.html_sample.text = text
-        self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
         self.landing()
 
     def proposaler_proceed(self, proposals=''):
@@ -161,8 +88,15 @@ class RootWidget(ScreenManager):
         self.ids.proposals.ids.splitter.mirror_values = proposal_cuts
 
         proposal_data = [OD(p) for p in proposals]
-        self.ids.proposals.ids.proposalview.data = sorted(proposal_data, key=lambda p:p['cut'])
+        self.ids.proposals.ids.proposalview.data = self.sort_proposals(proposal_data)
         self.current = "Proposal_Screen"
+        self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
+
+    def sort_proposals(self, proposal_data):
+        for i, p in enumerate(proposal_data):
+            p['no'] = i
+
+        return sorted(proposal_data, key=lambda p: p['cut'])
 
     change_values_before = []
     def change_proposal_neighbors(self, index, values, delete_add=None):
@@ -195,7 +129,7 @@ class RootWidget(ScreenManager):
                 all_proposals.pop(z-1)
                 cuts.pop(z-1)
         self.ids.proposals.ids.splitter.mirror_values = cuts
-        self.ids.proposals.ids.proposalview.data = all_proposals
+        self.ids.proposals.ids.proposalview.data = self.sort_proposals(all_proposals)
         if not (len(all_proposals)==len(cuts)):
             logging.error("number of spans does not fit to number of cuts")
 
@@ -223,12 +157,15 @@ class RootWidget(ScreenManager):
     def delete(self, proposal):
         to_del = [d for d in self.ids.proposals.ids.proposalview.data if d['id'] == proposal.id][0]
 
-        self.ids.proposals.ids.proposalview.data.remove(to_del) #= [d for d in self.ids.proposals.ids.proposalview.data if d['id'] != proposal.id]
+        self.ids.proposals.ids.proposalview.data.remove(to_del)
         cuts = self.ids.proposals.ids.splitter.mirror_values
 
-        cuts.remove(to_del['cut'])
+        try:
+            cuts.remove(to_del['cut'])
+        except ValueError:
+            logging.error('cut not in cuts list, can\'t delete')
 
-        self.ids.proposals.ids.splitter.mirror_values = cuts #[v for v in  self.ids.proposals.ids.splitter.mirror_values if v != to_del['cut']]
+        self.ids.proposals.ids.splitter.mirror_values = cuts
         if not self.ids.proposals.ids.proposalview.data:
             self.sampler_proceed()
 
@@ -358,7 +295,8 @@ class RootWidget(ScreenManager):
             logging.error('Annotation contains not at least the minimum number of annotations!!! %s' % str(count))
 
     def take_next(self):
-        self.me_as_client.commander(ProceedLocation=self.got_sample, Command=DeliverSample)
+        pass
+        #self.me_as_client.commander(ProceedLocation=self.got_sample, Command=DeliverSample)
 
     def got_sample(self, text=''):
         self.sentence = text

@@ -7,7 +7,7 @@
         cols: 2
         InfoLabel:
             font_size: 30
-            text: root.kind
+            text: root.kind #+ str(self.parent.parent.ids.startend.values_pos)  + str(self.parent.parent.ids.startend.last_click)
         AnnotationCheckBox:
             id : active_or_not
             active: root.able
@@ -25,12 +25,22 @@
         value: root.end
         step: 1
         orientation: 'horizontal'
+#    SpanSlider:
+#        orientation: 'horizontal'
+#        id: startend
+#        values: [root.start, root.end]
+#        max: root.length
+#        min: 0
+#       heigth: root.height
+#        width: root.width
+#        step: 1
+
 
 <AnnotationManipulationRow>:
     orientation: 'horizontal'
     InfoLabel:
         text: root.kind
-        font_size: 30
+        font_size: 25
     AnnotationManipulationButton:
         text: "+"
         font_size: 30
@@ -87,11 +97,12 @@
             id: annotationmanipulationview
             size_hint_y: 1
             data: [{'kind': 'CONTRAST'}, {'kind':'SUBJECT'},  {'kind':'ASPECT'},  {'kind':'CONTRAST_MARKER'},  {'kind':'SUBJECT_EXCEPT'}, {'kind':'COMPARISON_MARKER'}]
+
         NavButton:
-            text: "Ok, fine!"
-            font_size: 30
+            text: "ok"
             on_press: root.manager.ok()
+            background_normal: "./images/annotate_icon.png"
         NavButton:
-            text: "Not even now"
-            font_size: 30
+            text: "trash"
+            background_normal: "./images/ignore.jpg"
             on_press: root.manager.shit()

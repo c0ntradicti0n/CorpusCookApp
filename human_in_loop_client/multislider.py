@@ -16,35 +16,28 @@ from kivy.properties import AliasProperty, ListProperty
 from kivy.lang import Builder
 
 Builder.load_string('''
-<-Sliderx>:    
-    canvas:
-        Color:
-            rgb: 1, 1, 1
-        BorderImage:
-            border: self.border_horizontal if self.orientation == 'horizontal' else self.border_vertical
-            pos: (self.x + self.padding, self.center_y - self.background_width / 2) if self.orientation == 'horizontal' else (self.center_x - self.background_width / 2, self.y + self.padding)
-            size: (self.width - self.padding * 2, self.background_width) if self.orientation == 'horizontal' else (self.background_width, self.height - self.padding * 2)
-            source: (self.background_disabled_horizontal if self.orientation == 'horizontal' else self.background_disabled_vertical) if self.disabled else (self.background_horizontal if self.orientation == 'horizontal' else self.background_vertical)
-        Color:
-            rgba: root.value_track_color if self.value_track and self.orientation == 'horizontal' else [1, 1, 1, 0]
-        Color:
-            rgba: root.value_track_color if self.value_track and self.orientation == 'vertical' else [1, 1, 1, 0]
-        Color:
-            rgb: 1, 1, 1
-            
 <CursorLabel>:
     text: ""
-    pos: root.pos if not print (root.children) else 1
     color: 0.9294117647058824, 0.7176470588235294, 0.2901960784313726, 1
     font_size: dp(40)
+    
+<CursorImage>
+    Label:
+        id: anzeige
+        color: 0.9294117647058824, 0.7176470588235294, 0.2901960784313726, 1
+        font_size: dp(40)
+        text: str(self.pos)
 ''')
 
 class CursorImage(Image):
-    def __init__(self, *args, **kwargs):
-        Image.__init__(self, *args, **kwargs)
+
+    def __init__(self, **kwargs):
+        super(CursorImage, self).__init__(**kwargs)
 
 class CursorLabel(Label):
-    pass
+
+    def __init__(self, **kwargs):
+        super(CursorLabel, self).__init__(**kwargs)
 
 
 class SliderX(Slider):
@@ -52,6 +45,9 @@ class SliderX(Slider):
 
     Check module documentation for more details.
     """
+
+    def __init__(self, **kwargs):
+        super(Slider, self).__init__(**kwargs)
 
     crtl = False
 
@@ -85,15 +81,18 @@ class SliderX(Slider):
 
         for index, v in enumerate(self.values):
             img = CursorImage()
-
-            img.pos = self.update_pos(index)
+            img.pos = self.get_single_pos(index)
             img.source=self.cursor_image
+            img.ids.anzeige.text = str(img.pos)
+            print ("image positions", img.pos)
             self.add_widget(img)
 
         for index, (first, second) in enumerate(pairwise(self.values)):
             label = CursorLabel()
-            label.pos = [sum(p)/2 for p in  zip(self.update_pos(index), self.update_pos(index+1))]
-            label.text = str(index) if not self.mirror else str (self.mirror_index(index))
+            pos1 = self.get_single_pos(index)
+            pos2 = self.get_single_pos(index+1)
+            label.pos = [sum(p)/2 for p in  zip(pos1, pos2)]
+            label.text = str((pos1, pos2)) + str(index) if not self.mirror else str (self.mirror_index(index))
             self.add_widget(label)
 
     images = AliasProperty(make_cursors, return_cursors,
@@ -116,14 +115,28 @@ class SliderX(Slider):
         self.assert_standard_len()
         return len(self.values) -1 - mi
 
-    def update_pos(self, index):
-        norm_values = self.get_norm_values()
+    def calc_pos (self, normal_value):
+        print ('xy', self.x, self.y)
+        print ('cxy', self.center_x, self.center_y)
+        print ('wh', self.width, self.height)
+
         if self.orientation == 'horizontal':
-            return (norm_values[index] * self.width*0.95 - self.cursor_width/2,
-                   self.center_y - self.y - 1.5 * self.cursor_width)
+            pos = (self.x + (normal_value) * self.width*0.95 - self.cursor_width/2,
+                    self.center_y - 1.5 * self.cursor_height)
         else:
-            return (self.center_x - self.x - 1.5 * self.cursor_height,
-                    norm_values[index] * self.height*0.95 - self.cursor_height/2)
+            pos = (self.center_x - 1.5 * self.cursor_width,
+                    self.y  + (normal_value) * self.height*0.95 - self.cursor_height/2)
+        print (pos)
+        return pos
+
+
+    def update_pos(self):
+        norm_values = self.get_norm_values()
+        return [self.calc_pos(nv) for nv in norm_values]
+
+    def get_single_pos(self, index):
+        norm_values = self.get_norm_values()
+        return self.calc_pos(norm_values[index])
 
     def on_min(self, *largs):
         self.assert_standard_len()
@@ -137,8 +150,8 @@ class SliderX(Slider):
         self.assert_standard_len()
         vmin = self.min
         d = self.max - vmin
-        if d == 0:
-            return 0
+        if 0==d:
+            d = 1
         return [(v - vmin) / float(d) for v in self.values]
 
     def get_nearest_index_val(self, values,  v, left_only=False):
@@ -181,9 +194,9 @@ class SliderX(Slider):
         x = self.x - self.cursor_width
         y = self.y - self.cursor_height
         nval = self.values_normalized
+        if isinstance(nval, int):
+            raise ValueError("MultiSlider has to have list values")
         if self.orientation == 'horizontal':
-            if isinstance(nval, int):
-                raise ValueError ("MultiSlider has to have list values")
             return [(x + padding + nv * (self.width - padding), y) for nv in nval]
         else:
             return [(x, y + padding + nv * (self.height - padding)) for nv in nval]
@@ -195,26 +208,16 @@ class SliderX(Slider):
             x = min(self.right - padding, max(pos[0], self.x + padding))
             y = min(self.top - padding, max(pos[1], self.y + padding))
             if self.orientation == 'horizontal':
-                if self.width == 0:
-                    self.values_normalized
-                    print ("zero width, doing nothing")
-                else:
-                    self.values_normalized = (x - self.x - padding
-                                             ) / float(self.width - padding)
+                self.values_normalized = (x - self.x - padding) / float(self.width - padding)
             else:
-                if self.height == 0:
-                    self.values_normalized
-                    print ("zero height, doing nothing")
-
-                else:
-                    self.values_normalized = (y - self.y - padding
-                                             ) / float(self.height - padding)
+                self.values_normalized = (y - self.y - padding) / float(self.height - padding)
 
     values_pos = AliasProperty(get_values_pos, set_values_pos,
                               bind=('pos', 'size', 'min', 'max', 'padding',
                                     'values_normalized', 'orientation'),
                               cache=True)
 
+    last_click = None
     def _on_keyboard_down(instance, keyboard, keycode, text, modifiers):
         if len(modifiers) > 0 and modifiers[0] == 'ctrl' :
             SliderX.crtl = True
@@ -240,12 +243,15 @@ class SliderX(Slider):
         if 'left' in touch.button:
             # values_pos setter acts 'polmorphically'. so if this list is set to a single value, it looks for the nearest one
             if not SliderX.crtl:
+                print ("pos click", touch.pos)
+
                 self.values_pos = touch.pos
             else:
                 print ("INSERTING!!!")
                 val = self.values[index]-1 if not self.mirror_values else self.values[index]+1
                 self.values.insert(index, val)
                 self.on_change(index, delete_add=1)
+        self.last_click = touch.pos
         return True
 
     def on_touch_move(self, touch):

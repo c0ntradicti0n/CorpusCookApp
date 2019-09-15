@@ -45,19 +45,20 @@
             text: app.root.upmarker.markup(root.annotation)
         BoxLayout:
             InfoLabel:
-                text: str(root.children.index(self)) if self in root.children else "not in list"
+                font_size: 40
+                text: str(root.no) #''#str(root.children.index(self)) if self in root.children else "not in list"
             NavButton:
                 on_press:     app.root.ok(proposal=root)
-                background_normal: "./images/ok_cool.jpg"
+                background_normal: "./images/annotate_icon.png"
             NavButton:
                 on_press: app.root.zero_annotation_selection(proposal=root)
-                background_normal: "./images/not_cool.jpg"
+                background_normal: "./images/zero_annotation.jpg"
             NavButton:
                 on_press: app.root.delete(proposal=root)
-                background_normal: "./images/trash.jpg"
+                background_normal: "./images/ignore.jpg"
             NavButton:
                 on_press: app.root.go_manipulating(proposal=root)
-                background_normal: "./images/manip.png"
+                background_normal: "./images/manipulate.jpg"
             InfoLabel:
                 text: ""
 

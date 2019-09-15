@@ -270,7 +270,7 @@ class BIO_Annotation:
 
         print ('ALL TAGS', all_tags)
         tags = [max(row_tags, key=lambda x: - BIO_Annotation.importance_list.index(x[2:]))
-                for row_tags in all_tags]
+                for row_tags in all_tags if row_tags]
 
         annotation = list(zip(tokens, tags))
         return annotation
