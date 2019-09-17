@@ -1,5 +1,6 @@
 from kivy.clock import Clock
 from kivy.core.window import Window
+from kivy.input.providers.mtdev import MTDMotionEvent
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.slider import Slider
@@ -83,7 +84,7 @@ class SliderX(Slider):
             img = CursorImage()
             img.pos = self.get_single_pos(index)
             img.source=self.cursor_image
-            img.ids.anzeige.text = str(img.pos)
+            #img.ids.anzeige.text = str(img.pos)
             print ("image positions", img.pos)
             self.add_widget(img)
 
@@ -126,7 +127,7 @@ class SliderX(Slider):
         else:
             pos = (self.center_x - 1.5 * self.cursor_width,
                     self.y  + (normal_value) * self.height*0.95 - self.cursor_height/2)
-        print (pos)
+        #print (pos)
         return pos
 
 
@@ -225,6 +226,9 @@ class SliderX(Slider):
         SliderX.crtl = False
 
     def on_touch_down(self, touch):
+        if isinstance(touch, MTDMotionEvent):
+            pass
+
         self.assert_standard_len()
         if self.disabled or not self.collide_point(*touch.pos):
             return

@@ -80,6 +80,9 @@ class RootWidget(ScreenManager):
 
     def sampler_proceed(self, text=''):
         self.ids.sample.ids.html_sample.text = text
+        self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
+
+        self.landing()
         self.landing()
 
     def proposaler_proceed(self, proposals=''):
@@ -90,7 +93,7 @@ class RootWidget(ScreenManager):
         proposal_data = [OD(p) for p in proposals]
         self.ids.proposals.ids.proposalview.data = self.sort_proposals(proposal_data)
         self.current = "Proposal_Screen"
-        self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
+        #self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
 
     def sort_proposals(self, proposal_data):
         for i, p in enumerate(proposal_data):
@@ -318,6 +321,7 @@ Builder.load_file("./human_in_loop_client/HumanInLoop.kv")
 
 class MainApp(App):
     def build(self):
+        self.title = "Corpus Cook Application"
         return RootWidget()
 
     def __init__(self, *args, **kwargs):
