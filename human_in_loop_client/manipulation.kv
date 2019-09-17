@@ -6,7 +6,7 @@
         rows: 1
         cols: 2
         InfoLabel:
-            font_size: 30
+            font_size: (25 if root.length < 150 and not print ('kackkcackcka', root.length) else  (150/root.length)**0.5 * 30)
             text: root.kind #+ str(self.parent.parent.ids.startend.values_pos)  + str(self.parent.parent.ids.startend.last_click)
         AnnotationCheckBox:
             id : active_or_not

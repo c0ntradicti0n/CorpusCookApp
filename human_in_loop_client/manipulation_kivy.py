@@ -11,7 +11,7 @@ class ManipulationRecycleViewRow(BoxLayout):
     kind = StringProperty()
     start = NumericProperty()
     end = NumericProperty()
-    length = NumericProperty()
+    length = NumericProperty(30)
     able = BooleanProperty()
 
 
@@ -39,12 +39,14 @@ class SpanSlider(Slider):
         super(Slider, self).__init__(**kwargs)
 
     def on_change(self, index):
-        pass
+        return True
+
     def on_touch_up(self, touch):
         root = self.get_root_window().children[0]
         boxes = list(self.parent.parent.children)
         new_data = [SpanSlider.collect_data_from_box(b) for b in boxes]
         root.update_from_data(new_data)
+        return True
 
     def collect_data_from_box(b):
         return OD({

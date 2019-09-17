@@ -18,7 +18,7 @@
                 background_normal: "./images/next.png"
                 on_press: app.root.next_page()
                 text: "next"
-                size = (self.parent.x, self.parent.x)
+                size: (self.parent.width, self.parent.width)
 
 
 
@@ -50,7 +50,7 @@
             multiline: True
             id: sample
             text: "sample"
-            font_size: 50 if not print ("text_len", len(root.annotation)) and len(root.annotation) < 150 else  (150/len(root.annotation))**0.5 * 40
+            font_size: 50 if len(root.annotation) < 150 else  (150/len(root.annotation))**0.5 * 40
             text: app.root.upmarker.markup(root.annotation)
         BoxLayout:
             InfoLabel:

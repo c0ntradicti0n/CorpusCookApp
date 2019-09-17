@@ -27,7 +27,6 @@ Builder.load_string('''
         id: anzeige
         color: 0.9294117647058824, 0.7176470588235294, 0.2901960784313726, 1
         font_size: dp(40)
-        text: str(self.pos)
 ''')
 
 class CursorImage(Image):
@@ -85,7 +84,7 @@ class SliderX(Slider):
             img.pos = self.get_single_pos(index)
             img.source=self.cursor_image
             #img.ids.anzeige.text = str(img.pos)
-            print ("image positions", img.pos)
+            #print ("image positions", img.pos)
             self.add_widget(img)
 
         for index, (first, second) in enumerate(pairwise(self.values)):
@@ -93,7 +92,7 @@ class SliderX(Slider):
             pos1 = self.get_single_pos(index)
             pos2 = self.get_single_pos(index+1)
             label.pos = [sum(p)/2 for p in  zip(pos1, pos2)]
-            label.text = str((pos1, pos2)) + str(index) if not self.mirror else str (self.mirror_index(index))
+            label.text = str(index) if not self.mirror else str (self.mirror_index(index))
             self.add_widget(label)
 
     images = AliasProperty(make_cursors, return_cursors,
@@ -155,7 +154,7 @@ class SliderX(Slider):
             d = 1
         return [(v - vmin) / float(d) for v in self.values]
 
-    def get_nearest_index_val(self, values,  v, left_only=False):
+    def get_nearest_index_val(self, values,  v, left_only=False, variance=1):
         self.assert_standard_len()
 
         if left_only:
@@ -166,7 +165,7 @@ class SliderX(Slider):
             else:
                 return i
 
-        return min(enumerate(abs(val-v) for val in values), key=lambda t: t[1])[0]
+        return min(enumerate(abs(val-v) for val in values  ), key=lambda t: t[1])[0]
 
     def set_norm_values(self, raw_value_s):
         self.assert_standard_len()
@@ -227,18 +226,20 @@ class SliderX(Slider):
 
     def on_touch_down(self, touch):
         if isinstance(touch, MTDMotionEvent):
-            pass
+            return True
 
         self.assert_standard_len()
         if self.disabled or not self.collide_point(*touch.pos):
-            return
+            return True
         self.touched_down = touch.pos
         self.values = [min(self.max, v) for v in self.values]
         positions = [v[0] for v in self.values_pos] if self.orientation == 'horizontal' else [v[1] for v in
                                                                                               self.values_pos]
         index = self.get_nearest_index_val(positions,
                                            touch.pos[0] if self.orientation == 'horizontal' else touch.pos[1],
-                                           left_only=True)
+                                           left_only=True, variance = 0.05)
+        if index == None:
+            return True
 
         if 'right' in touch.button:
             self.standard_len -= 1
@@ -247,8 +248,6 @@ class SliderX(Slider):
         if 'left' in touch.button:
             # values_pos setter acts 'polmorphically'. so if this list is set to a single value, it looks for the nearest one
             if not SliderX.crtl:
-                print ("pos click", touch.pos)
-
                 self.values_pos = touch.pos
             else:
                 print ("INSERTING!!!")
@@ -257,23 +256,6 @@ class SliderX(Slider):
                 self.on_change(index, delete_add=1)
         self.last_click = touch.pos
         return True
-
-    def on_touch_move(self, touch):
-        self.assert_standard_len()
-        if touch.grab_current == self:
-            self.values_pos = touch.pos
-            return True
-
-    def on_touch_up(self, touch):
-        self.assert_standard_len()
-        if self.touched_down == touch.pos:
-            self.touched_down = -1
-            return True
-
-        if touch.grab_current == self:
-            self.values_pos = touch.pos
-            return True
-
 
 Window.bind(on_key_down=SliderX._on_keyboard_down)
 Window.bind(on_key_up=SliderX._on_keyboard_up)

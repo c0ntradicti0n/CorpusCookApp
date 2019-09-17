@@ -12,7 +12,7 @@ kivy.require('1.9.0')
 from kivy.config import Config
 Config.set('graphics', 'width', '2000')
 Config.set('graphics', 'height', '1500')
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+#Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 Config.write()
 from kivy.core.window import Window
 Window.clearcolor = (1, 1, 1, 1)
@@ -36,6 +36,7 @@ from human_in_loop_client.proposal_kivy import *
 
 
 class RootWidget(ScreenManager):
+    final_version = []
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -97,7 +98,7 @@ class RootWidget(ScreenManager):
 
     def sort_proposals(self, proposal_data):
         for i, p in enumerate(proposal_data):
-            p['no'] = i
+            p['no'] = i + 1
 
         return sorted(proposal_data, key=lambda p: p['cut'])
 
