@@ -1,0 +1,18 @@
+<MultiMedia_Screen>:
+    BoxLayout:
+        orientation:'vertical'
+        TextInput:
+            id: address
+            text: "http://isiarticles.com/bundles/Article/pre/pdf/4129.pdf"
+            multiline: False
+            on_text_validate: root.manager.load_something()
+        TextInput:
+            id: editor
+        Button:
+            text: "ok"
+            on_press: root.manager.load_something()
+
+
+
+
+

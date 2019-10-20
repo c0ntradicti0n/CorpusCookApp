@@ -15,3 +15,7 @@ class Proposal_Screen(Screen):
 
 class Sample_Screen(Screen):
     pass
+
+
+class MultiMedia_Screen(Screen):
+    pass

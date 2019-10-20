@@ -3,3 +3,5 @@ numpy
 more_itertools
 regex
 twisted
+scipy
+tika

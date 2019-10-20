@@ -34,8 +34,11 @@ class AnnotationManipulationView(RecycleView):
 
 
 class SpanSlider(Slider):
-    def __init__(self, **kwargs):
-        super(Slider, self).__init__(**kwargs)
+    def on_touch_up(self, touch):
+        root = self.get_root_window().children[0]
+        boxes = list(self.parent.parent.children)
+        new_data = [SpanSlider.collect_data_from_box(b) for b in boxes]
+        root.update_from_data(new_data)
 
     def collect_data_from_box(b):
         return OD({
@@ -43,6 +46,6 @@ class SpanSlider(Slider):
             'kind': b.kind,
             'start': int(b.ids.start.value),
             'end': int(b.ids.end.value),
-            'length': int(b.ids.start.max),
+            'length': int(b.ids.end.max),
             'id': 'hach'
         })

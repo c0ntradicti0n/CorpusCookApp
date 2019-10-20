@@ -7,6 +7,7 @@ import kivy
 
 from helpers.nested_dict_tools import flatten
 from human_in_loop_client.bio_annotation import BIO_Annotation
+from human_in_loop_client.paper_reader import paper_reader
 
 kivy.require('1.9.0')
 from kivy.config import Config
@@ -42,6 +43,7 @@ class RootWidget(ScreenManager):
 
         self.me_as_client = AnnotationClient()
         self.upmarker = UpMarker()
+        self.pr = paper_reader()
         self.textstore = None
 
         self.landing_screen = "Proposal_Screen"
@@ -55,6 +57,18 @@ class RootWidget(ScreenManager):
 
     def next_page(self):
         self.me_as_client.commander(ProceedLocation=self.sampler_proceed, Command=DeliverPage)
+
+    def load_mm(self):
+        self.current = "MultiMedia_Screen"
+
+
+    def load_something(self):
+
+        adress = self.ids.multim.ids.address.text
+
+        self.pr.load_text(adress)
+        return self.pr.analyse()
+
 
     def sampler_add_selection(self):
         text = self.ids.sampl.ids.html_sample.selection_text.replace('\n', ' ').replace('  ', ' ')
@@ -87,7 +101,7 @@ class RootWidget(ScreenManager):
         self.landing()
 
     def proposaler_proceed(self, proposals=''):
-        proposal_cuts = [d['cut'] for d in proposals]
+        proposal_cuts = [d['start'] for d in proposals]
         self.ids.proposals.ids.splitter.max = max(proposal_cuts)
         self.ids.proposals.ids.splitter.mirror_values = proposal_cuts
 
@@ -99,8 +113,7 @@ class RootWidget(ScreenManager):
     def sort_proposals(self, proposal_data):
         for i, p in enumerate(proposal_data):
             p['no'] = i + 1
-
-        return sorted(proposal_data, key=lambda p: p['cut'])
+        return sorted(proposal_data, key=lambda p: p['start'])
 
     change_values_before = []
     def change_proposal_neighbors(self, index, values, delete_add=None):
@@ -164,8 +177,9 @@ class RootWidget(ScreenManager):
         self.ids.proposals.ids.proposalview.data.remove(to_del)
         cuts = self.ids.proposals.ids.splitter.mirror_values
 
+        print (list(to_del.keys()))
         try:
-            cuts.remove(to_del['cut'])
+            cuts.remove(to_del['start'])
         except ValueError:
             logging.error('cut not in cuts list, can\'t delete')
 
