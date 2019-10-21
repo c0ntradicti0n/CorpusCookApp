@@ -21,6 +21,11 @@ class UpMarker:
         else:
            return word
 
-    def markup(self, annotation):
+    def markup_string(self, annotation):
         return " ".join([self.markup_word(*anno) for anno in annotation])
+
+    def markup_list(self, annotation):
+        return [self.markup_word(*anno) for anno in annotation]
+
+
 

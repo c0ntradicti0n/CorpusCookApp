@@ -1,5 +1,5 @@
 from helpers.color_logger import *
-from collections import Counter
+from collections import Counter, OrderedDict
 from time import sleep
 from collections import OrderedDict as OD
 
@@ -61,14 +61,26 @@ class RootWidget(ScreenManager):
     def load_mm(self):
         self.current = "MultiMedia_Screen"
 
-
     def load_something(self):
-
         adress = self.ids.multim.ids.address.text
-
         self.pr.load_text(adress)
-        return self.pr.analyse()
+        text = self.pr.analyse()
+        self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.get_analysed, text=text)
 
+    def get_analysed(self, proposals=''):
+        proposals = sorted(proposals, key=lambda d: d['indices'][0])
+        length = max(max(d['indices']) for d in proposals)
+        print (proposals)
+        highlighted = OrderedDict({i:' \n ' for i in range(length)})
+        for annotation in proposals:
+            highlighting = self.upmarker.markup_list(annotation['annotation'])
+            highlighted.update({i: mw for i, mw in zip(annotation['indices'], highlighting)
+            })
+        self.ids.multim.ids.editor.text = " ".join([mw for i, mw in highlighted.items()])
+
+    def analyse_paper(self):
+        text = self.ids.multim.ids.editor.text
+        self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
 
     def sampler_add_selection(self):
         text = self.ids.sampl.ids.html_sample.selection_text.replace('\n', ' ').replace('  ', ' ')
@@ -98,7 +110,6 @@ class RootWidget(ScreenManager):
         self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
 
         self.landing()
-        self.landing()
 
     def proposaler_proceed(self, proposals=''):
         proposal_cuts = [d['start'] for d in proposals]
@@ -108,7 +119,6 @@ class RootWidget(ScreenManager):
         proposal_data = [OD(p) for p in proposals]
         self.ids.proposals.ids.proposalview.data = self.sort_proposals(proposal_data)
         self.current = "Proposal_Screen"
-        #self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
 
     def sort_proposals(self, proposal_data):
         for i, p in enumerate(proposal_data):
@@ -125,12 +135,7 @@ class RootWidget(ScreenManager):
             return
 
         cuts = (values[index-1], values[index], values[index+1])
-
-        #if self.change_values_before == cuts:
-        #    return
-
         self.change_values_before = cuts
-
         self.me_as_client.commander(Command=ChangeProposals, ProceedLocation=self.proceed_change_proposals, cuts=cuts, indices=indices, delete_add=delete_add)
 
     def proceed_change_proposals(self, proposals, indices, delete_add=None):
@@ -162,7 +167,6 @@ class RootWidget(ScreenManager):
             logging.error("there must be given a proposal!")
         self.current = "Manipulation_Screen"
 
-
     def update_from_proposal(self, proposal):
         proposal.done = True
         self.final_version = proposal.annotation
@@ -176,11 +180,11 @@ class RootWidget(ScreenManager):
 
         self.ids.proposals.ids.proposalview.data.remove(to_del)
         cuts = self.ids.proposals.ids.splitter.mirror_values
-
-        print (list(to_del.keys()))
         try:
             cuts.remove(to_del['start'])
         except ValueError:
+            logging.error('...')
+        except KeyError:
             logging.error('cut not in cuts list, can\'t delete')
 
         self.ids.proposals.ids.splitter.mirror_values = cuts
@@ -230,7 +234,7 @@ class RootWidget(ScreenManager):
             sl.range = (0, l)
 
     def display_sample(self):
-        markedup_sentence = self.upmarker.markup(self.annotated_sample)
+        markedup_sentence = self.upmarker.markup_string(self.annotated_sample)
         self.ids.annot.ids.sample.text = markedup_sentence
         self.ids.manip.ids.sample.text = markedup_sentence
         self.ids.manip.ids.annotationmanipulationview.refresh_from_data()
@@ -314,7 +318,6 @@ class RootWidget(ScreenManager):
 
     def take_next(self):
         pass
-        #self.me_as_client.commander(ProceedLocation=self.got_sample, Command=DeliverSample)
 
     def got_sample(self, text=''):
         self.sentence = text

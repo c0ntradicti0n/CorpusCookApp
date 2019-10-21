@@ -59,7 +59,7 @@
             id: sample
             text: "sample"
             font_size: 40 if len(root.annotation) < 130 else  (130/len(root.annotation))**0.5 * 40
-            text: app.root.upmarker.markup(root.annotation)
+            text: app.root.upmarker.markup_string(root.annotation)
         GridLayout:
             size_hint_y: 1
 
