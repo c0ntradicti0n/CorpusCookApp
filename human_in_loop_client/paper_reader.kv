@@ -8,27 +8,29 @@
             cols: 1
             TextInput:
                 id: address
-                text: "http://isiarticles.com/bundles/Article/pre/pdf/4129.pdf"
+                text: "pdfs/sample.pdf"  #"http://isiarticles.com/bundles/Article/pre/pdf/4129.pdf"
                 multiline: False
-                size_hint_y: 0.1
+                size_hint_y: 0.03
             Button:
                 text: "read"
                 on_press: root.manager.load_something()
-                size_hint_y: 0.1
-            InfoLabel:
-                halign: "justify"
-                valign: "middle"
-                markup: True
-                text_size: self.size
-                multiline: True
-                id: editor
-                text: "sample"
-                font_size: 18
-                size_hint_y: 0.7
+                size_hint_y: 0.03
+            ScrollView:
+                InfoLabel:
+                    halign: "justify"
+                    valign: "middle"
+                    markup: True
+                    multiline: True
+                    id: editor
+                    text: "sample"
+                    font_size: 18
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: self.texture_size[1]
             Button:
                 text: "ok"
                 on_press: root.manager.analyse_paper()
-                size_hint_y: 0.1
+                size_hint_y: 0.04
         BoxLayout:
             size_hint_x:.04
             orientation:'vertical'

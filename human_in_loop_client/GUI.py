@@ -1,3 +1,6 @@
+from pprint import pprint
+from typing import List
+
 from helpers.color_logger import *
 from collections import Counter, OrderedDict
 from time import sleep
@@ -46,10 +49,15 @@ class RootWidget(ScreenManager):
         self.pr = paper_reader()
         self.textstore = None
 
-        self.landing_screen = "Proposal_Screen"
-        self.landing()
+        self.current = "MultiMedia_Screen"
 
-        self.next_page()
+        self.load_something()
+
+
+        #self.landing_screen = "Proposal_Screen"
+        #self.landing()
+
+        #self.next_page()
 
 
     def landing(self):
@@ -67,16 +75,11 @@ class RootWidget(ScreenManager):
         text = self.pr.analyse()
         self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.get_analysed, text=text)
 
-    def get_analysed(self, proposals=''):
-        proposals = sorted(proposals, key=lambda d: d['indices'][0])
-        length = max(max(d['indices']) for d in proposals)
-        print (proposals)
-        highlighted = OrderedDict({i:' \n ' for i in range(length)})
-        for annotation in proposals:
-            highlighting = self.upmarker.markup_list(annotation['annotation'])
-            highlighted.update({i: mw for i, mw in zip(annotation['indices'], highlighting)
-            })
-        self.ids.multim.ids.editor.text = " ".join([mw for i, mw in highlighted.items()])
+    def get_analysed(self, proposals:List=[]):
+        self.current = "MultiMedia_Screen"
+
+        self.ids.multim.ids.editor.text = \
+            self.upmarker.markup_proposal_list(proposals)
 
     def analyse_paper(self):
         text = self.ids.multim.ids.editor.text

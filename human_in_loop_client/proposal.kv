@@ -58,8 +58,7 @@
             multiline: True
             id: sample
             text: "sample"
-            font_size: 40 if len(root.annotation) < 130 else  (130/len(root.annotation))**0.5 * 40
-            text: app.root.upmarker.markup_string(root.annotation)
+            font_size: 40 if len(root.annotation) < 130 else  (130/len(root.annotation))**0.5 * 40 #            text: app.root.upmarker.join_markup(app.root.upmarker.markup_annotation(word_tag_list=root.annotation))
         GridLayout:
             size_hint_y: 1
 
@@ -67,7 +66,7 @@
             cols:6
             InfoLabel:
                 font_size: 40
-                text: str(root.no) #''#str(root.children.index(self)) if self in root.children else "not in list"
+                text: str(root.no)
             NavButton:
                 on_press:     app.root.ok(proposal=root)
                 background_normal: "./images/annotate_icon.png"

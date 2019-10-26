@@ -1,10 +1,17 @@
+import os
 import urllib
 from pprint import pprint
 from statistics import mean
+from time import sleep
 
 from scipy.stats import ks_2samp
+
+os.popen('java -jar human_in_loop_client/tika-server-1.22.jar')
+sleep(1)
 from tika import parser
 import regex as re
+
+from human_in_loop_client.annotation_protocol import MakeProposals
 
 
 class paper_reader:
@@ -41,7 +48,7 @@ class paper_reader:
         self.threshold = threshold
 
     def load_text(self, adress):
-        if re.match(r"""((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*""",
+        if not re.match(r"""((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*""",
             adress        ):
             self.rawText = parser.from_file(adress)
         else:
@@ -71,3 +78,78 @@ class paper_reader:
                                         p and ks_2samp(self.normal_data, list(p)).pvalue > self.threshold])
         return processed_text
 
+text_no = 0
+
+def main():
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser(description='Analyse txt, pdf etc. text files for utterances of differences.')
+    parser.add_argument('file', type=str, help='file or directory to process')
+    parser.add_argument("-r", "--recursive", help="iterate recursively through directory",
+                        action="store_true")
+    parser.add_argument("-e", "--extensions", metavar='E', type=str, nargs='+',
+                        help="file extensions, parses pdf, txt on default. What's possible depends on apache TIKA",
+                        default=['pdf'])
+
+    args = parser.parse_args()
+
+    import os
+
+
+    print ("tika runs or was already running (if you see \"address already in use\")")
+    from human_in_loop_client.client import AnnotationClient
+    from human_in_loop_client.upmarker import UpMarker
+
+    from twisted.internet import reactor
+
+    def process_single_file(paths):
+        if isinstance(paths, str):
+            paths = [paths]
+        client = AnnotationClient()
+        upmarker = UpMarker(_generator='html')
+        pr = paper_reader()
+
+        sleep(1)
+
+        pr.load_text(paths[text_no])
+        text = pr.analyse()
+        print(text[:100])
+
+        def proceed(proposals=""):
+            global text_no
+            with open(paths[text_no] + '.html', "w", encoding="utf-8") as f:
+                try:
+                    f.write(upmarker.markup_proposal_list(proposals))
+                except ValueError:
+                    f.write (str(ValueError))
+            if text_no == len(paths)-1:
+                reactor.stop()
+            else:
+                text_no += 1
+                pr.load_text(paths[text_no])
+                text = pr.analyse()
+                print(text[:100])
+                text = text [:20000]
+
+                client.commander(Command=MakeProposals, ProceedLocation=proceed, text=text)
+
+        client.commander(Command=MakeProposals, ProceedLocation=proceed, text=text)
+
+
+    if os.path.isfile(args.file):
+        process_single_file(paths=args.file)
+    elif os.path.isdir(args.file):
+        import glob
+
+        for file_extension in args.extensions:
+            relevant_files = list(glob.iglob(args.file + '/*.' +  file_extension, recursive=args.recursive))
+
+            process_single_file(paths=relevant_files)
+    else:
+        print ("Given path '%s' is neither file nor directory" % args.file)
+
+    reactor.run()
+
+
+if __name__== "__main__":
+    main()

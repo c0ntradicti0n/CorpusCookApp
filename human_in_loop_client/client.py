@@ -6,9 +6,11 @@ import pprint
 
 from twisted.internet.protocol import ClientCreator
 
-from kivy.support import install_twisted_reactor
+# kivy has its own event loop, so the client is appending callbacks there
+if 'kivy' in sys.modules:
+    from kivy.support import install_twisted_reactor
+    install_twisted_reactor()
 
-install_twisted_reactor()
 from twisted.internet import reactor
 
 from human_in_loop_client.annotation_protocol import *
