@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<style>
+
+span.subject1     {color: red;}
+span.contrast1     {color: blue;}
+
+span.subject2      {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.55em;
+    border:2px solid
+}
+span.contrast2     {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.025em;
+    border:2px solid
+}
+
+
+.indentation     {display:inline-block; 
+                  width: 50px;
+}
+</style>
+</head>
+<body>
+ 0   About   this   document   This   document   is   a   translation   of   a   large   part   of   Godel   ’s   proof   .   The   translation   happens   on   three   levels   :   from   German   to   English   Kurt   <br> </br>
+   Godel   1   Introduction   [   174   ]   but   it   is   true   for   a   very   wide   class   of   formal   systems   ,   which   in   particular   includes   all   those   that   you   get   by   adding   a   finite   <br> </br>
+   number   of   axioms   to   the   above   mentioned   systems   ,   provided   the   additional   axioms   do   n’t   make   false   theorems   provable   .   come   up   with   a   formula   F   (   v   )   of   PM   that   <br> </br>
+   has   one   free   variable   v   (   whose   type   is   sequence   of   numbers   )   such   that   the   semantic   interpretation   of   F   (   v   )   is   :   v   is   a   provable   formula   .   <br> </br>
+   <br> </br>
+   We   will   now   construct   an   undecidable   theorem   of   the   system   PM   ,   i.e.   a   theorem   A   for   which   neither   A   nor   A   is   provable   ,   as   follows   :   class-sign   .   We   will   assume   <br> </br>
+   the   class-signs   are   somehow   numbered   ,   call   the   nth   one   Rn   ,   and   note   that   both   the   concept   “   class-sign   ”   and   the   ordering   relation   R   are   definable   within   the   <br> </br>
+   system   PM   .   Let   be   an   arbitrary   class-sign   ;   with   (   n   )   we   denote   the   formula   that   you   get   when   you   substitute   n   for   the   free   variable   of   .   Also   ,   the   ternary   <br> </br>
+   relation   x   y(z   )   is   definable   within   PM   .   <br> </br>
+   <br> </br>
+   Now   we   will   define   a   class   K   of   natural   numbers   as   follows   :   numbers   n   where   the   formula   Rn(n   )   that   you   get   when   you   insert   n   into   its   own   formula   Rn   is   <br> </br>
+   improvable   .   Since   all   the   concepts   used   for   this   definition   are   themselves   definable   in   PM   ,   so   is   the   compound   concept   K   ,   i.e.   there   is   a   class-sign   S   such   <br> </br>
+   that   the   formula   S(n   )   states   that   n   K.   As   a   class-sign   ,   S   is   identical   with   a   specific   Rq   ,   i.e.   we   have   [   176   ]   enough   to   allow   the   definition   of   the   concepts   <br> </br>
+   used   above   (   in   particular   the   concept   “   provable   formula   ”   )   ,   and   in   which   on   the   other   hand   all   provable   formulae   are   also   true   .   <br> </br>
+   <br> </br>
+   The   following   exact   implementation   of   the   proof   will   among   other   things   have   the   goal   to   replace   the   second   prerequisite   by   a   purely   formal   and   much   weaker   <br> </br>
+   one   .   From   the   remark   that   Rq(q   )   states   its   own   improvability   it   immediately   follows   that   Rq(q   )   is   correct   ,   since   Rq(q   )   is   in   fact   unprovable   (   because   it   is   <br> </br>
+   undecidable   )   .   The   theorem   which   is   undecidable   within   the   system   PM   has   hence   been   decided   by   metamathematical   considerations   .   The   exact   analysis   of   <br> </br>
+   this   strange   fact   leads   to   surprising   results   about   consistency   proofs   for   formal   systems   ,   which   will   be   discussed   in   section   4   (   theorem   XI   )   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> 2 </span> <span class="subject level1 subject1"> Main   Result </span> <span class="contrast level1 contrast1"> We   will   now   exactly   implement   the   proof   sketched   above   ,   and   will   first   give   an   exact   description   of   the   formal   system </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="subject level2 subject2"> P </span> <span class="contrast level2 contrast2"> ,   for   which   we   want   to   show   the   existence   of   undecidable   theorems </span></span>  <br> </br>
+   .   By   and   large   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> P </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   the   system   that   you   get   by   building   the   logic   of   PM   on   top   the   Peano   axioms   (   numbers   as   individuals   ,   successor-relation   as   undefined   basic   concept   ) </span></span>  <br> </br>
+   .   2.1   Definitions   The   basic   signs   of   system   P   are   the   following   :   <br> </br>
+   <br> </br>
+   Remark   :   Variables   for   binary   or   n-ary   functions   (   relations   )   are   superfluous   as   basic   signs   ,   because   one   can   define   relations   as   classes   of   ordered   pairs   <br> </br>
+   and   ordered   pairs   as   classes   of   classes   ,   e.g.   the   ordered   pair   (   a   ,   b   )   by   a   ,   a   ,   b   ,   where   x   ,   y   and   x   stand   for   the   classes   whose   only   elements   are   x   ,   y   and   x   ,   <br> </br>
+   respectively   .   [   177   ]   By   a   sign   of   type   one   we   understand   a   combination   of   signs   of   the   form   The   following   formulae   (   I   through   V   )   are   called   axioms   (   they   are   <br> </br>
+   written   with   the   help   of   the   abbreviations   (   defined   in   the   usual   manner   )   ,   ,   ,   x   ,   ,   and   using   the   customary   conventions   for   leaving   out   parentheses   )   :   <br> </br>
+   <br> </br>
+   I.   The   Peano   axioms   ,   which   give   fundamental   properties   for   natural   numbers   .   successor   ,   they   are   equal   .   II   .   Every   formula   obtained   by   inserting   <br> </br>
+   arbitrary   formulae   for   p   ,   q   ,   r   in   the   following   schemata   .   We   call   these   proposition   axioms   .   III   .   Every   formula   obtained   from   the   two   schemata   by   inserting   <br> </br>
+   the   following   things   for   a   ,   v   ,   b   ,   c   (   and   executing   the   operation   denoted   by   subst   in   1   .   )   :   Insert   an   arbitrary   formula   for   a   ,   an   arbitrary   variable   for   v   ,   any   <br> </br>
+   formula   where   v   does   not   occur   free   for   b   ,   and   for   c   a   sign   of   the   same   type   as   v   with   the   additional   requirement   that   c   does   not   contain   a   free   variable   that   <br> </br>
+   would   be   bound   in   a   position   in   a   where   v   is   free   .   <br> </br>
+   <br> </br>
+   For   lack   of   a   better   name   ,   we   will   call   these   quantor   axioms   .   IV   .   Every   formula   obtained   from   the   schema   by   inserting   for   v   and   u   any   variables   of   type   n   and   n   +   1   <br> </br>
+   respectively   and   for   a   a   formula   that   has   no   free   occurrence   of   u.   This   axiom   takes   the   place   of   the   reducibility   axiom   (   the   comprehension   axiom   of   set   <br> </br>
+   theory   )   .   V.   Any   formula   obtained   from   the   following   by   type-lift   (   and   the   formula   itself   )   :   This   axiom   states   that   a   class   is   completely   determined   by   its   <br> </br>
+   elements   .   Let   us   call   it   the   set   axiom   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="subject level2 subject2"> 2.2 </span> <span class="subject level1 subject1"> Godel-numbers </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Furthermore   we   will   uniquely   associate   each   variable   of   type   n   with   a   number   of   the   form   pn </span></span>  <br> </br>
+   (   where   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> p </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   a   prime   13   ) </span></span>  <br> </br>
+   .   Thus   there   is   a   one-to-one-correspondence   between   every   finite   string   of   basic   signs   and   a   sequence   of   natural   numbers   .   We   now   map   the   sequences   of   <br> </br>
+   natural   numbers   (   again   in   one-to-one   correspondence   )   to   natural   numbers   by   having   the   sequence   n1   ,   n2   ,   .   .   .   ,   nk   correspond   to   the   number   2   2.3   Primitive   <br> </br>
+   recursion   We   call   a   number-theoretical   formula   primitive   recursive   if   there   is   a   finite   sequence   of   number-theoretical   formulae   1   ,   2   ,   .   .   .   ,   n   ending   in   <br> </br>
+   such   that   every   function   k   of   the   sequence   is   either   defined   from   two   of   the   preceding   formulae   by   primitive   recursion   or   results   by   inserting   into   any   of   <br> </br>
+   the   preceding   ones   or   ,   and   this   is   the   base   The   following   theorems   hold   :   )   as   well   as   the   function   Theorem   I   follows   immediately   from   the   definition   of   “   <br> </br>
+   primitive   recursive   ”   .   <br> </br>
+   <br> </br>
+   Theorems   II   and   III   are   based   upon   the   fact   that   the   number-theoretical   functions   [   181   ]   are   primitive   recursive   ,   as   one   can   easily   convince   oneself   .  <span class="contrast level1 contrast1"> The </span>  <br> </br>
+  <span class="contrast level1 contrast1"> proof   for   theorem   Using   the   recursion-schema   (   2   )   we   now   define   a   function   (   y   ,   z   )   as   follows   :   then   0   else   1   It   is   easy   to   reduce   the   relation   T   to   a   case </span>  <br> </br>
+  <span class="contrast level1 contrast1"> analogous   to   that   of   S   by   negation   .   This   concludes   the   proof   of   theorem   IV </span>  .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> 2.4 </span> <span class="contrast level1 contrast1"> Expressing   metamathematical   concepts   )   x   is   a   prime   number </span>  .   )   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> prFactor(n </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> ,   x   )   is   the   nth   (   by   size   ) </span></span> <span class="subject level2 subject2"> prime   number </span> <span class="contrast level2 contrast2"> contained   in   x.   ) </span> <span class="subject level2 subject2"> nthPrime(n </span> <span class="contrast level2 contrast2"> )   is   the   nth   (   by   size   )   prime   number </span>  <br> </br>
+   .   )   item(n   ,   x   )   is   the   nth   item   of   the   sequence   of   numbers   associated   with   x   (   for   n   0   and   n   not   larger   than   the   length   of   this   sequence   )   .   )   length(x   )   is   the   length   <br> </br>
+   of   the   sequence   of   numbers   associated   with   x.   with   the   primitive   signs   “   (   ”   and   “   )   ”   )   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> x </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   a   variable   of   type   n.   variable   ) </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> x </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   a   sign   of   type   one </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level2 subject2"> x </span> <span class="contrast level2 contrast2"> is   a   sign   of   type   n.   x   is   an   elementary   formula </span>  <br> </br>
+   .   length(x   )   0   x   is   a   sequence   of   formulae   ,   each   of   which   is   either   an   elementary   formula   or   is   obtained   from   the   preceding   ones   by   the   operations   of   negation   ,   <br> </br>
+   disjunction   ,   or   generalization   .   z   does   not   contain   a   variable   that   is   bound   anywhere   in   y   where   v   is   free   .   This   condition   for   the   applicability   of   axiom   III   <br> </br>
+   ,   1   ,   ensured   that   a   substitution   of   z   for   the   free   occurrences   of   v   in   y   does   not   accidentally   bind   some   of   z   ’s   variables   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> x </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   a   formula   obtained   by   substitution   from   the   axiom   schema   III   ,   1   ,   i.e.   one   of   the   quantor   axioms </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> x </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   a   formula   obtained   by   substitution   from   the   axiom   schema   IV   ,   1   ,   i.e.   from   the   reducibility   axiom   .   There   is   a   specific   number   corresponding   to   axiom   V   , </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> 1   ,   (   the   set   axiom   )   ,   which   we   will   denote   by   sa   ,   and   we   define   :   x   is   an   axiom </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> length(x </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> ) </span> <span class="subject level1 subject1"> 0   x </span> <span class="contrast level1 contrast1"> is   a   proof   figure   (   a   finite   sequence   of   formulae   ,   each   of   which   is   either   an   axiom   or   the   immediate   consequence   of   two   of   the   preceding   ones   ) </span></span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+   2.5   Denotability   and   provability   2.6   Undecidability   theorem   We   now   come   to   the   goal   of   our   elaborations   .   Let   be   any   class   of   formulae   .   We   denote   with   <br> </br>
+   Conseq   (   )   the   smallest   set   of   formulae   that   contains   all   formulae   of   and   all   axioms   and   is   closed   under   the   relation   “   immediate   consequence   ”   .   is   called   <br> </br>
+   -consistent   if   there   is   no   class-sign   a   such   that   (   The   general   result   about   the   existence   of   undecidable   propositions   goes   as   follows   :   Theorem   VI   :   For   <br> </br>
+   every   -consistent   primitive   recursive   class   of   formulae   there   is   a   primitive   recursive   class-sign   r   such   that   neither   forall(v   ,   r   )   nor   not(forall(v   ,   r   )   <br> </br>
+   )   belongs   to   Conseq   (   )   (   where   v   is   the   free   variable   of   r   )   .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> Proof </span> <span class="contrast level1 contrast1"> :   Let   be   any   -consistent   primitive   recursive   class   of   formulae   .   We   define   :   (   compare   to   the   analogous   concept   44   )   (   compare   to   the   analogous   concepts </span>  <br> </br>
+  <span class="contrast level1 contrast1"> 45   ,   46   )   . </span>  <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> The   following   obviously   holds   :   [188]Now   we   define   the   relation </span>  :   We   set   :   Then   the   following   holds   :   while   on   the   other   hand  <span class="contrast level1 contrast1"> the   -provability   of </span> <span class="subject level1 subject1"> forall(17 </span> <span class="contrast level1 contrast1"> ,   r </span>  <br> </br>
+  <span class="contrast level1 contrast1"> )   also   implies   that   of   subst(r   ,   17   ,   number(n   )   ) </span>  .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> Therefore </span> <span class="contrast level1 contrast1"> would   be   inconsistent   (   and   in   particular   inconsistent   )   .   This   implies   by   (   15   )   contradict   the   -consistency   of </span>  .  <span class="contrast level1 contrast1"> Therefore </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> forall(17 </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> ,   r   )   is   not   decidable   from   ,   whereby   theorem   VI   is   proved </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level2 subject2"> 2.7 </span> <span class="contrast level2 contrast2"> Discussion   Let   us   call   a   relation   (   class   )   between   natural   numbers   R(x1   ,   .   .   .   ,   xn   )   decision-definite   if   there   is   an   n-ary   relation   sign   r   such   that   (   3   ) </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> and   (   4   )   (   c.f   .   theorem   V   )   hold   .   In   particular   therefore   every   primitive   recursive   relation   is   by   Theorem   V   decision-definite </span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> Analogously </span> <span class="contrast level1 contrast1"> ,   a   relation   sign   shall   be   called   decision-definite   if   it   corresponds   to   a   decision-definite   relation   in   this   manner </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> For   the   existence   of </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> propositions </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> undecidable   from   it   is   now   sufficient   to   require   of   a   class   that   it   is   -consistent   and   decisiondefinite </span></span>  <br> </br>
+   .   With   other   words   ,   it   is   not   even   important   how   the   class   of   added   axioms   is   defined   ,   we   just   have   to   be   able   to   decide   with   the   means   of   the   system   whether   <br> </br>
+   something   is   an   axiom   or   not   .   This   is   because   the   decision-definiteness   carries   over   from   to   poofFor(x   ,   y   )   (   compare   to   (   5   )   ,   (   6   )   )   and   to   Q(x   ,   y   )   (   compare   to   (   <br> </br>
+   9   )   )   ,   and   only   that   [   190   ]   was   used   for   the   above   proof   .   <br> </br>
+   <br> </br>
+   In   this   case   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> the </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> undecidable </span> <span class="contrast level1 contrast1"> theorem </span> <span class="contrast level2 contrast2"> takes   on   the   form   forall(v   ,   r   ) </span></span>  <br> </br>
+   ,   where   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> r </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   a   decision-definite   class-sign   (   by   the   way   ,   it   is   even   sufficient   that   is   decision-definite   in   the   system   augmented   by   ) </span>  .   and   hence   in   particular   and </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> on   the   other   hand   of   course   But   that   means   that   forall(17   ,   r   )   precisely   fits   the   definition   of   a   witness   against   consistency </span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> A   special   case   of </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> theorem   VI </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   the   theorem   where   the   class   consists   of   a   finite   number   of   formulae   (   and   perhaps   the   ones   derived   from   these   by   type-lift   ) </span></span>  <br> </br>
+   .  <span class="contrast level1 contrast1"> Every </span> <span class="subject level1 subject1"> finite </span> <span class="contrast level1 contrast1"> class   is   of   course   primitive   recursive   .   Let   a   be   the   largest   contained   number </span>  .   Then   we   have   for   in   this   case   During   the   proof   of   theorem   VI   we   <br> </br>
+   did   not   use   any   other   properties   of   the   system   P   than   the   following   :   1   .   <br> </br>
+   <br> </br>
+   The   class   of   axioms   and   deduction   rules   (   i.e.   the   relation   “   immediate   consequence   ”   )   are   primitive   recursively   definable   (   as   soon   as   you   replace   the   <br> </br>
+   basic   signs   by   numbers   in   some   way   )   .   2   .   Every   primitive   recursive   relation   is   definable   within   the   system   P   (   in   the   sense   of   theorem   V   )   .   3   Generalizations   <br> </br>
+   omitted   [   196   ]   4   Implications   for   the   nature   of   consistency   A   Experiences   A.1   Have   I   learned   or   gained   something   ?   Second   ,   how   useful   was   the   translation   <br> </br>
+   itself   ?   Well   ,   it   was   useful   to   try   out   some   ideas   I   had   about   how   translating   a   technical   paper   between   languages   might   work   .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> My   recipe </span> <span class="contrast level1 contrast1"> was   to   first   read   and   understand   the   whole   paper   ,   then   translate   it   one   sentence   at   a   time   (   avoid   to   start   translating   a   sentence   before   having   a </span>  <br> </br>
+  <span class="contrast level1 contrast1"> plan   for   all   of   it   !   )   ,   and   finally   to   read   it   fast   to   check   the   flow   and   logic   .   This   might   or   might   not   be   the   best   way   ,   but   it   worked   well   enough   for   me </span>  .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> For   understanding   the   paper   itself   ,   the   translation   between   languages   or   the   use   of </span> <span class="subject level1 subject1"> hyper-text </span> <span class="contrast level1 contrast1"> as   a   medium   did   not   help   me   much   as   I   was   doing   it </span>  .   <br> </br>
+   <br> </br>
+   More   important   was   the   translation   of   notation   to   one   I   am   more   used   to   ,   and   the   occasional   comment   to   express   my   view   of   a   tricky   detail   .   Last   but   not   least   ,   <br> </br>
+   it   seems   hardly   necessary   to   admit   my   strong   affection   for   type-setting   ,   and   there   is   a   certain   pleasure   in   looking   over   and   polishing   something   you   <br> </br>
+   crafted   that   I   believe   I   share   with   many   people   .   A.2   Has   the   paper   improved   ?   The   original   paper   is   brilliant   ,   well-written   ,   rich   of   content   ,   relevant   .   Yet   <br> </br>
+   I   went   ahead   and   tinkered   around   ,   changing   a   little   thing   here   and   there   ,   taking   much   more   freedom   than   the   translators   for   [   2   ,   1   ]   .   <br> </br>
+   <br> </br>
+   Yes   ,   the   paper   did   improve   !   It   is   closer   to   my   very   personal   ideas   of   what   it   should   ideally   look   like   .   To   me   who   did   the   changes   just   a   few   days   ago   the   modified   <br> </br>
+   paper   looks   better   than   the   original   .   In   section   0   ,   I   announced   a   translation   along   three   dimensions   ,   namely   language   (   from   German   to   English   )   ,   notation   <br> </br>
+   (   using   symbols   I   am   more   used   to   )   and   medium   (   exploiting   hyper-text   )   .   Let   us   review   each   one   in   turn   and   criticize   the   changes   .   Language   .   After   finishing   <br> </br>
+   the   translation   ,   I   compared   it   with   the   ones   in   [   2   ,   1   ]   ,   and   found   that   although   they   are   different   ,   the   wording   probably   does   not   matter   all   that   much   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> To   give   an   example   where   it   did   seem   to   play   a </span></span> <span class="subject level2 subject2"> role </span>  <br> </br>
+   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> here   are   three   wordings   for   besteht   eine   nahe </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Verwandtschaft </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> :   (   i   )   is   closely   related   ,   (   ii   )   is   also   a   close   relationship   ,   (   iii   )   is   also   a   close   kinship </span></span>  <br> </br>
+   .   The   third   one   is   mine   ,   and   my   motivation   for   it   is   that   it   is   the   most   punchy   one   ,   for   what   it   ’s   worth   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> The   stumbling   blocks   in   this   kind   of </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> translation </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> ,   as   I   see   it   ,   are   rather   the   technical   terms   that   may   be   in </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> no </span> <span class="subject level1 subject1"> dictionary </span>  .   For   example   ,   I   could   well   imagine   that   my   translation   decision-definite   seems   unnatural   to   someone   studying   logic   who   might   be   used   to   <br> </br>
+   another   term   .   Notation   .   This   is   the   part   of   the   translation   that   I   believe   helps   the   most   in   making   the   paper   more   accessible   for   readers   with   a   similar   <br> </br>
+   educational   background   as   mine   .   <br> </br>
+   <br> </br>
+   For   example   ,   I   have   never   seen   “   ”   used   for   “   ”   ,   and   inside   an   English   text   I   find   “   bound(v   ,   n   ,   x   )   ”   easier   to   parse   than   “   vGebn   ,   x   ”   .   A.3   Opinions   This   discussion   <br> </br>
+   is   a   trade-off   between   being   careful   and   thoughtful   on   the   one   hand   ,   and   being   forthcoming   and   fruitful   on   the   other   .   As   it   leans   more   to   the   second   half   of   <br> </br>
+   the   spectrum   ,   I   might   as   well   go   ahead   and   state   some   opinions   the   project   and   the   reflections   upon   it   have   inspired   in   me   .   A   well-written   technical   paper   <br> </br>
+   already   has   the   positive   features   of   hyper-text   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> This </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> may   not   seem   so   at   first   glance   ,   but   compare   it   to   the   typical   web-page   and   then   ask   yourself   which   has   more   coherence </span></span>  <br> </br>
+   .   To   me   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> coherence </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   part   of   the   essence   and   beauty   of </span> <span class="subject level2 subject2"> cross-referencing </span></span>  <br> </br>
+   .   Reading   and   understanding   Godel   ’s   proof   yields   many   benefits   .   There   are   pearls   to   be   found   in   its   contents   ,   and   skills   to   be   practiced   that   go   beyond   what   <br> </br>
+   one   might   think   at   first   glance   .   <br> </br>
+   <br> </br>
+   I   am   well   aware   that   I   did   not   give   many   arguments   to   support   these   opinions   .   That   would   be   the   stuff   for   a   paper   by   itself   ,   and   the   reader   is   encouraged   to   <br> </br>
+   think   about   them   .   But   above   all   ,   enjoy   the   paper   “   On   formally   undecidable   propositions   of   Principia   Mathematica   and   related   systems   I   ”   itself   ,   which   <br> </br>
+   after   all   makes   up   the   main   part   of   this   document   !   B   Index   axiom   ,   5   class-sign   ,   3   comprehension   axiom   ,   5   consistent   ,   14   elementary   formula   ,   4   formula   ,   4   <br> </br>
+   generalization   ,   4   immediate   consequence   ,   6   negation   ,   4   number-sign   ,   4   reducibility   axiom   ,   5   type-lift   ,   5   Generalizations   Implications   for   the   nature   <br> </br>
+   of   consistency   Experiences   Have   I   learned   or   gained   something   ?   <br> </br>
+   <br> </br>
+   Has   the   paper   improved   ? 
+</body>
+</html>

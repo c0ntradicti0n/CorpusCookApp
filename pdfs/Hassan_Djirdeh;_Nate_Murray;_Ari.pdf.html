@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<style>
+
+span.subject1     {color: red;}
+span.contrast1     {color: blue;}
+
+span.subject2      {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.55em;
+    border:2px solid
+}
+span.contrast2     {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.025em;
+    border:2px solid
+}
+
+
+.indentation     {display:inline-block; 
+                  width: 50px;
+}
+</style>
+</head>
+<body>
+ Fullstack   Vue.js   All   rights   reserved   .   No   portion   of   the   book   manuscript   may   be   reproduced   ,   stored   in   a   retrieval   system   ,   or   transmitted   in   any   form   or   by   <br> </br>
+   any   means   beyond   the   number   of   purchased   copies   ,   except   for   a   single   backup   or   archival   copy   .   The   code   may   be   used   freely   in   your   projects   ,   commercial   or   <br> </br>
+   otherwise   .   For   further   help   dealing   with   issues   ,   refer   to   “   How   to   Get   the   Most   Out   of   This   Book   ”   .   Be   notified   of   updates   via   Twitter   If   you   ’d   like   to   be   <br> </br>
+   notified   of   updates   to   the   book   on   Twitter   ,   follow   us   at   fullstackio1   .   <br> </br>
+   <br> </br>
+   We   ’d   love   to   hear   from   you   !   Did   you   like   the   book   ?   Did   you   find   it   helpful   ?   We   ’d   love   to   add   your   face   to   our   list   of   testimonials   on   the   website   !   Email   us   at   :   <br> </br>
+   vuefullstack.io   .   Foreword   Front-end   web   development   has   become   astoundingly   complex   .   If   you   ’ve   never   used   a   modern   JavaScript   framework   ,   building   <br> </br>
+   your   first   app   that   just   displays   “   Hello   ”   can   take   a   whole   week   !   That   might   sound   ridiculous   ,   but   most   frameworks   assume   knowledge   of   the   terminal   ,   <br> </br>
+   advanced   JavaScript   ,   and   tools   such   as   the   Node   Package   Manager   (   NPM   )   ,   Babel   ,   Webpack   ,   and   sometimes   more   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> Welcome   to   the   community   ,   have   fun   ,   and   enjoy   the </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> Vue </span></span>  <br> </br>
+   !   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> This </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> book   aims   to   be   the   single   most   useful   resource   on   learning   Vue.js   .   By   the   time   you   ’re   done   reading   this   book   ,   you   (   and   your   team   )   will   have   everything </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> you   need   to   build   reliable   ,   powerful   Vue   applications </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level2 subject2"> Vue </span> <span class="contrast level2 contrast2"> is   built   on   the   premise   of   simplicity   by   being   designed   from   the   ground   up   to   be   incrementally   adoptable </span>  <br> </br>
+   .   After   the   first   few   chapters   ,   you   ’ll   have   a   solid   understanding   of   Vue   ’s   fundamentals   and   will   be   able   to   build   a   wide   array   of   rich   ,   interactive   web   apps   <br> </br>
+   with   the   framework   .   <br> </br>
+   <br> </br>
+   But   beyond   Vue   ’s   core   ,   there   are   tools   and   libraries   that   exist   in   the   Vue   ecosystem   that   ’s   often   needed   to   build   real-world   production   scale   <br> </br>
+   applications   .   Things   like   client-side   routing   between   pages   ,   managing   complex   state   ,   and   heavy   API   interaction   at   scale   .  <span class="subject level1 subject1"> This </span> <span class="contrast level1 contrast1"> book   can   be   broken   down </span>  <br> </br>
+  <span class="contrast level1 contrast1"> into   two   parts </span>  .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> We   bookend   the   first   part   by   introducing </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> Vuex </span></span>  <br> </br>
+   and  <span class="contrast level1 contrast1"> how </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> Vuex </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   integrated   to   manage   overall   application   data   architecture </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> First </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> ,   know   that   you   do   not   need   to   read   this   book   linearly   from   cover-to-cover </span></span>  <br> </br>
+   .   However   ,   we   ’ve   ordered   the   contents   of   the   book   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> in   a   way   we   feel   fits   the   order   you   should   learn   the   concepts </span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Some   sections   in </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Part   II </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> assume   you   ’ve   acquired   certain   fundamental   concepts   from   Part </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> I.   As   a   result   ,   we   encourage   you   to   learn   all   the   concepts   in   Part   I   of   the   book   first   before   diving   into   concepts   in   Part   II </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"><span class="subject level1 subject1"> Second </span> <span class="contrast level1 contrast1"> ,   keep   in   mind   this   package   is   more   than   just   a </span> <span class="subject level2 subject2"> book </span> <span class="contrast level2 contrast2"> -   it   ’s   a   course   complete   with   example   code   for   every   chapter </span></span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+   Below   ,   we   ’ll   tell   you   :   how   to   approach   the   code   examples   and   how   to   get   help   if   something   goes   wrong   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> In </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Sept.   20163 </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> ,   the   Vue   framework   was   rewritten   and   released   as   version </span> <span class="subject level2 subject2"> 2.0 </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> Vue   2.0 </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> introduced   new   concepts   such   as   the   Virual   DOM   ,   render   functions   ,   and   server-side   rendering   capabilities </span></span>  <br> </br>
+   .   In   addition   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level2 subject2"> version   2.0 </span> <span class="contrast level2 contrast2"> was   rewritten   to   provide   significant   performance   improvements   over   v1   . </span>  <br> </br>
+   <span class='indentation'>  </span>   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> This   book   covers   ,   and   will   always   cover   ,   the   latest   release   of </span> <span class="subject level1 subject1"> Vue </span> <span class="contrast level1 contrast1"> -   which   is   currently   labelled   as   version   2.x </span></span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+   Running   Code   Examples   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> This </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> book   comes   with   a   library   of   runnable   code   examples   .   The   code   is   available   to   download   from   the   same   place   where   you   purchased   this   book   .   If   you   have </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> any   trouble   finding   or   downloading   the   code   examples   ,   email   us   at </span> <span class="subject level2 subject2"> vuefullstack.io </span></span>  <br> </br>
+   .  <span class="subject level1 subject1"> Webpack </span> <span class="contrast level1 contrast1"> projects   For   Webpack-bundled   projects   ,   we   use   the   program   npm4   to   run   examples   .   You   can   install   the   application   dependencies   with   :   And   boot </span>  <br> </br>
+  <span class="contrast level1 contrast1"> apps   with   one   of   the   following   commands   :   With   every   chapter   ,   we   ’ll   reiterate   the   commands   necessary   to   install   application   dependancies   and   boot </span>  <br> </br>
+  <span class="contrast level1 contrast1"> example   code   .   If   you   ’re   unfamiliar   with   npm   ,   we   cover   how   to   get   it   installed   in   the   “   Setting   Up   ”   section   in   the   second   chapter </span>  .   <br> </br>
+   <br> </br>
+   If   you   ’re   ever   unclear   on   how   to   run   a   particular   sample   app   ,   checkout   the   README.md   in   that   project   ’s   directory   .   EveryWebpack   bundled   sample   project   <br> </br>
+   contains   a   README.md   that   will   give   you   the   instructions   you   need   to   run   each   app   .   Direct   script   Include   For   simpler   examples   ,   we   ’ve   resorted   to   directly   <br> </br>
+   including   the   Vue   library   from   a   Content   Delivery   Network   (   CDN   )   to   get   the   app   up   and   running   as   fast   as   possible   .   Code   Blocks   and   Context   ,   computed   :   ,   <br> </br>
+   Notice   that   the   header   of   this   code   block   states   the   path   to   the   file   which   contains   this   code   :   upvoteapp_5main.js   .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> Certain   code   examples </span> <span class="contrast level1 contrast1"> will   resemble   building   blocks   to   get   to   a   certain   point   and   thus   may   not   reflect   a   code   block   directly   from   the   sample   code   .   If   you   ever </span>  <br> </br>
+  <span class="contrast level1 contrast1"> feel   like   you   ’re   missing   the   context   for   a   code   example   ,   open   up   the   full   code   file   using   your   favorite   text   editor </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> This </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> book   is   written   with   the   expectation   that   you   ’ll   also   be   looking   at   the   example   code   alongside   the   manuscript   .   For   example   ,   we   often   need   to   import </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> libraries   to   get   our   code   to   run </span></span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+   In   the   early   chapters   of   the   book   we   show   these   import   statements   ,   because   it   ’s   not   clear   where   the   libraries   are   coming   from   otherwise   .   However   ,   the   later   <br> </br>
+   chapters   of   the   book   aremore   advanced   and   they   focus   on   key   concepts   instead   of   repeating   boilerplate   code   that   was   covered   earlier   in   the   book   .   If   at   any   <br> </br>
+   point   you   ’re   not   clear   on   the   context   ,   open   up   the   code   example   on   disk   .   Code   Block   Numbering   In   this   book   ,   we   mostly   build   larger   examples   in   steps   .   If   you   <br> </br>
+   see   a   file   being   loaded   that   has   a   numeric   suffix   ,   that   generally   means   we   ’re   building   up   to   something   bigger   .   <br> </br>
+   <br> </br>
+   For   instance   ,   the   code   block   above   has   the   file   path   :  <span class="subject level1 subject1"> upvoteapp_5main.js </span>  .   <br> </br>
+   <br> </br>
+   When   you   see   the   -N.js   syntax   ,   that   means   we   ’re   building   up   to   a   final   version   of   the   file   .   You   can   jump   into   that   file   and   see   the   state   of   all   the   code   at   that   <br> </br>
+   particular   stage   .   All   the   code   in   this   book   has   been   tested   on   a   Windows   machine   .   If   you   have   any   issues   running   the   code   on   Windows   ,   send   us   an   email5   and   we   <br> </br>
+   ’ll   try   to   help   you   get   it   resolved   .   Ensure   Node.js   and   npm   are   installed   If   you   ’re   on   a   Windows   machine   and   have   yet   to   do   any   web   development   on   it   ,   you   can   <br> </br>
+   install   the   Node.js   Windows   Installer   from   the   Node.js6   website   .   <br> </br>
+   <br> </br>
+   With   Node.js   (   and   npm   )   appropriately   installed   ,   you   should   be   able   to   start   the   Webpack-bundled   Node.js   projects   in   the   book   as   expected   .   See   this   <br> </br>
+   tutorial7   for   installing   Node.js   and   npm   on   Windows   .   Getting   Help   Generally   ,   there   are   three   types   of   problems   :   A   “   bug   ”   in   the   book   (   e.g.   how   we   describe   <br> </br>
+   something   is   wrong   )   A   “   bug   ”   in   our   code   A   “   bug   ”   in   your   code   5vuefullstack.io   6http   :   nodejs.org   7http   :   <br> </br>
+   blog.teamtreehouse.cominstall-node-js-npm-windows   Similarly   ,   if   you   ’ve   found   a   bug   in   our   code   we   definitely   want   to   hear   about   it   .   <br> </br>
+   <br> </br>
+   Emailing   Us   If   you   ’re   emailing   us   asking   for   technical   help   ,   here   ’s   what   we   ’d   like   to   know   :   The   absolute   best   way   to   get   technical   support   is   to   send   us   a   <br> </br>
+   short   ,   self-contained   example   of   the   problem   .   Our   preferred   way   to   receive   this   would   be   for   you   to   send   us   a   Plunkr   link   by   using   this   URL8   as   a   template   .   <br> </br>
+   When   you   ’ve   written   down   these   things   ,   email   us   at   vuefullstack.io   .   We   look   forward   to   hearing   from   you   .   Get   excited   !   Writing   web   apps   with   Vue   is   fun   .   And   <br> </br>
+   by   using   this   book   ,   you   ’re   going   to   learn   how   to   build   real   Vue   apps   fast   .   <br> </br>
+   <br> </br>
+   (   Much   faster   than   spending   hours   parsing   out-dated   blog   posts   .   )   So   hold   on   tight   -   you   ’re   about   to   become   really   proficient   with   Vue   ,   and   have   a   lot   of   fun   <br> </br>
+   along   the   way   .  <span class="contrast level1 contrast1"> Let   ’s   dig   in   !   On   our   first   step   to   learning   Vue   , </span> <span class="subject level1 subject1"> we   ’re   going </span> <span class="contrast level1 contrast1"> to   build   a   simple   voting   application   (   named   UpVote   !   )   that   takes   inspiration   from </span>  <br> </br>
+  <span class="contrast level1 contrast1"> popular   social   feed   websites   like   Reddit10   and   Hacker   News11 </span>  .   <br> </br>
+   <br> </br>
+   Completed   version   of   the   app   With   UpVote   !   ,   we   ’ll   become   familiar   with   how  <span class="subject level1 subject1"> Vue </span> <span class="contrast level1 contrast1"> approaches   front-end   development   by   under-   standing   the   basic </span>  <br> </br>
+  <span class="contrast level1 contrast1"> fundamentals   associated   with   the   library </span>  .   <br> </br>
+   <br> </br>
+   By   the   end   of   the   chapter   we   ’ll   be   well   on   our   way   to   building   dynamic   front-end   interfaces   thanks   to   Vue   ’s   simplicity   !   Code   editor   Regardless   of   <br> </br>
+   experience   ,   whenever   developing   for   the   web   ,   we   ’ll   need   a   code   editor   to   write   our   application   (   this   is   true   for   all   code   in   this   book   )   .   It   ’s   most   important   <br> </br>
+   to   be   comfortable   with   your   code   editor   ,   so   if   you   have   one   you   like   ,   stick   with   it   .   If   not   ,   we   recommend   Atom12   ,   Sublime   Text   313   ,   or   Visual   Studio   Code14   .   <br> </br>
+   Note   :   With   certain   chapters   in   this   book   (   like   this   chapter   for   example   )   ,   we   ’ll   be   working   with   applications   opened   via   file   :   protocol   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> To   make   the   Vue   devtools   work   for   these   pages   ,   you   ’ll   need   to   check   “   Allow   access   to   file   URLs   ”   for   the   extension   in </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Chrome </span> <span class="contrast level1 contrast1"> ’s </span> <span class="contrast level2 contrast2"> extension   manager   :   Allow </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> access   to   file   URLs   Its   widespread   adoption   as   the   Internet   ’s   client-side   scripting   language   led   to   the   formation   of   a   standards   body   which   manages   its </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> specification </span></span>  <br> </br>
+   .   The   specification   is   called   ECMAScript   or   ES   .   This   book   is   written   using   the   JavaScript   ES7   version   .  <span class="contrast level1 contrast1"> As </span> <span class="subject level1 subject1"> ES6 </span> <span class="contrast level1 contrast1"> ratified   a   majority   of   these   new   features   ,   we </span>  <br> </br>
+  <span class="contrast level1 contrast1"> ’ll   commonly   refer   to   these   new   features   as   ES6   features </span>  .   <br> </br>
+   <br> </br>
+   Getting   started   Sample   Code   All   the   code   examplessnippets   contained   in   this   chapter   (   and   all   the   other   chapters   )   are   available   in   the   code   package   that   <br> </br>
+   came   with   the   book   .   In   the   code   package   we   ’ll   see   completed   versions   of   the   apps   as   well   as  <span class="subject level1 subject1"> boilerplates </span> <span class="contrast level1 contrast1"> to   help   us   get   started </span>  .   <br> </br>
+   <br> </br>
+   Each   chapter   provides   detailed   instruction   on   how   to   follow   along   on   our   own   .   Previewing   the   application   We   ’ll   begin   this   chapter   by   taking   a   look   at   a   <br> </br>
+   working   implementation   of   the   UpVote   !   app   .   Let   ’s   open   up   the   sample   code   that   came   with   the   book   and   locate   the   upvote   folder   with   our   machines   file   <br> </br>
+   navigator   (   Finder   for   OS   X   or   Windows   Explorer   on   Windows   )   or   through   our   code   editor   (   e.g.   Sublime   )   .   By   opening   the   upvote   folder   ,   we   ’ll   see   all   the   <br> </br>
+   sub-directories   containedwithin   the   sample   app   :   app   app_complete   public   We   ’ve   included   each   version   of   the   app   as   we   build   it   up   throughout   this   chapter   <br> </br>
+   (   app_1   ,   app_2   ,   etc   )   .   <br> </br>
+   <br> </br>
+   Each   code   block   in   this   chapter   references   which   app   version   it   is   contained   within   .   We   can   copy   and   paste   longer   code   insertions   from   these   app   versions   <br> </br>
+   into   our   local   app   folder   ,   the   starting   point   of   our   application   .  <span class="subject level1 subject1"> app_complete </span> <span class="contrast level1 contrast1"> represents   the   completed   state   of   our   application </span>  .   <br> </br>
+   <br> </br>
+   Opening   the   app_complete   folder   ,   we   ’ll   see   there   are   just   three   files   located   inside   :   app_complete   index.html   main.js   seed.js   Completed   version   of   the   <br> </br>
+   app   Prepare   the   app   Let   ’s   begin   building   the   application   .  <span class="contrast level1 contrast1"> We </span> <span class="subject level1 subject1"> ’re </span> <span class="contrast level1 contrast1"> going   to   be   working   entirely   from   the   app   directory   .   By   opening   the   files   within   app   in   a </span>  <br> </br>
+  <span class="contrast level1 contrast1"> text   editor   ,   we   ’ll   see   some   boilerplate   code   contained   in   the   index.html   and   seed.js   files </span>  ,   while   main.js   is   left   blank   .   <br> </br>
+   <br> </br>
+   Let   ’s   begin   by   looking   inside   the   index.html   file   :   html   link   relstylesheet   link   relstylesheet   link   relstylesheet   html   In   our   head   tag   ,   there   are   three   <br> </br>
+   stylesheet   dependancies   we   ’ve   included   in   our   application   :   link   relstylesheet   link   relstylesheet   link   relstylesheet   We   ’ve   introduced   Bulma18   as   our   <br> </br>
+   applications   CSS   framework   ,   Font   Awesome19   for   icons   ,   and   our   own   styles.css   file   that   lives   in   our   public   folder   .   For   this   project   ,   we   ’re   using   Bulma20   <br> </br>
+   for   styling   .   We   ’ll   always   provide   all   the   styling   code   that   is   needed   .   At   some   point   ,   it   ’s   a   good   idea   to   check   out   the   Bulma   docs22   to   get   familiar   with   the   <br> </br>
+   framework   and   explore   how   to   use   it   in   other   projects   we   ’ll   build   in   the   future   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> The </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> class   attributes </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> refer   to   CSS   styles   and   are   safe   to   ignore   in   the   context   of   our   application   .   Not   paying   attention   to   those   ,   we   can   see   we   have   a   title </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> for   the   page   (   h2   )   and   a   div   element   with   an   i   d   of   app   .   The   div   element   with   the   i   d   of   app   is   where   our </span> <span class="subject level2 subject2"> Vue </span> <span class="contrast level2 contrast2"> application   will   be   loaded   and   attached   onto   the </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> template </span></span>  <br> </br>
+   .   In   other   words   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> our </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Vue </span> <span class="contrast level2 contrast2"> application </span> <span class="contrast level1 contrast1"> will   bemounted   on   to   this   particular   element </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> . </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> The </span> <span class="subject level2 subject2"> next   few   lines </span> <span class="contrast level2 contrast2"> tells   the   browser   which   JavaScript   files   to   load   :   The   first   script   tag   loads   the   latest   version   of   Vue   from   a   Content   Delivery   Network   ( </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> CDN   )   at   unpkg23 </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Using   the   CDN   to   load   the </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Vue   dependency </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   the   simplest   and   quickest   way   to   introduce   Vue   to   an   application </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> A </span> <span class="subject level1 subject1"> Content   Delivery   Network </span> <span class="contrast level1 contrast1"> (   CDN   )   is   a   system   of   services   that   deliver   content   to   users   based   on   their   geographical   location   and   the   content   delivery </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> server </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Using </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> CDN </span> <span class="contrast level1 contrast1"> ’s </span> <span class="contrast level2 contrast2"> have   the   benefit   of   decreasing   server   load   and   providing   faster   loading   times   to   users   who   ’ve   already   downloaded   the   content </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Most </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> CDNs </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> are   used   to   deliver   static   content   like   common   JavaScript   libraries   ,   fonts   ,   CSS   files   ,   etc </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> .   We   ’ve   also   introduced   Bulma   and   Font   Awesome   through   CDNs   in   our   head   tag </span>  .   <br> </br>
+   <br> </br>
+   The   other   two   script   tags   reference   the   internal   JavaScript   files   we   ’ll   write   in   the   .seed.js   and   .main.js   files   .  <span class="contrast level1 contrast1"> Now   that   we   have   a   good   understanding   of </span>  <br> </br>
+  <span class="contrast level1 contrast1"> our </span> <span class="subject level1 subject1"> boilerplate   code </span> <span class="contrast level1 contrast1"> ,   we   can   start   diving   in   and   writing   some   code   .   Let   ’s   first   set   up   a   template   for   how   a   single   submission   would   look   like </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> We   ’ll   adapt </span> <span class="subject level2 subject2"> Bulma </span> <span class="contrast level2 contrast2"> ’s   media </span> <span class="subject level2 subject2"> object24 </span> <span class="contrast level2 contrast2"> as   it   represents   a   good   starting   point </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> div   classsection   figure </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> div   classcontent   strong   strong   On-demand   sand   castle   construction   expertise </span></span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+   Submitted   by   :   small   span   classicon   is-small   article   This   template   is   a   slight   modification   of   Bulma   ’s   media   object25   .   figure   with   media-left   class   <br> </br>
+   which   will   display   the   main   image   of   the   submission   and   is   positioned   to   the   left   .   div   with   media-content   class   which   displays   the   additional   details   of   <br> </br>
+   the   submission   such   as   the   title   ,   i   d   ,   description   ,   and   avatar   of   the   submitted   user   .   If   we   open   our   appindex.html   in   our   Chrome   Browser   (   right   click   and   <br> </br>
+   select   Open   With   Google   Chrome   )   ,   we   will   see   our   newly   built   submission   .   Awesome   .   We   wo   n’t   write   much   more   HTML   markup   than   what   we   ’ve   just   added   .   <br> </br>
+   <br> </br>
+   While   neat   ,   at   the   moment   our   view   is   static   .   We   ’ve   simply   hard-coded   the   title   ,   description   and   other   details   .   To   use   this   template   in   a   meanigful   way   ,   we   <br> </br>
+   ’ll   want   to   change   it   to   be   reactive   (   i.e.   dynamically   data-driven   )   .   Making   the   view   data-driven   Driving   the   template   with   data   will   allow   us   to   <br> </br>
+   dynamically   render   the   view   based   upon   the   data   that   we   give   it   .   Let   ’s   familiarize   ourselves   with   the   applications   data   model   .   Within   our   app   directory   ,   <br> </br>
+   we   ’ve   included   a   file   called   seed.js   .   seed.js   contains   sample   data   for   a   list   of   submissions   (   it   seeds   our   application   with   data   )   .   <br> </br>
+   <br> </br>
+   The   seed.js   file   contains   a   JavaScript   object   called   Seed.submissions   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> Seed.submissions </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   an   array   of   JavaScript   objects   where   each   represents   a   sample   submission   object   :   ,   Each   submission   has   a   unique   i   d   and   a   series   of </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> properties   including   title   ,   description   ,   votes   ,   etc </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> The </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Vue </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Instance   The </span></span> <span class="subject level2 subject2"> Vue   instance </span> <span class="contrast level2 contrast2"> is   the   starting   point   of   all   Vue   applications </span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"><span class="contrast level2 contrast2"> A </span></span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"><span class="subject level2 subject2"> Vue </span>  instance </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> accepts   an   options   object   which   can   contain   details   of   the   instance   such   as   its   template   ,   data   ,   methods   ,   etc </span></span>  <br> </br>
+   .  <span class="subject level1 subject1"> Root   level   Vue </span> <span class="contrast level1 contrast1"> instances   allow   us   to   reference   the   DOM   with   which   the   instance   is   to   be   mountedattached   to   .   Let   ’s   see   an   example   of   this   by   setting   up   the   Vue </span>  <br> </br>
+  <span class="contrast level1 contrast1"> instance   for   our   application   .   We   ’ll   write   all   our   Vue   code   for   the   rest   of   this   chapter   inside   the   main.js   file   .   Let   ’s   open   main.js   and   create   the   Vue </span>  <br> </br>
+  <span class="contrast level1 contrast1"> instance   using   the   Vue   function   :   We   ’ve   just   specified   the   HTML   element   with   the   i   d   of   app   to   be   the   mounting   point   of   our   Vue   application   ,   by   using   the   el </span>  <br> </br>
+  <span class="contrast level1 contrast1"> option   and   providing   it   a   string   value   of   app </span>  .   <br> </br>
+   <br> </br>
+   Anywhere   within   this   element   can   Vue   JavaScript   code   now   be   used   .  <span class="contrast level1 contrast1"> The </span> <span class="subject level1 subject1"> Vue </span> <span class="contrast level1 contrast1"> instance   can   also   return   data   that   needs   to   be   handled   within   the   view   .   This   data </span>  <br> </br>
+  <span class="contrast level1 contrast1"> must   be   specified   within   a   data   object   in   the   instance   .   This   is   how   we   ’ll   arrange   the   connection   between   the   data   in   our   seed.js   file   and   the   template   view   . </span>  <br> </br>
+  <span class="contrast level1 contrast1"> Let   ’s   update   the   instance   by   specifying   a   new   data   object </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> In   the </span> <span class="subject level1 subject1"> object </span> <span class="contrast level1 contrast1"> ,   we   ’ll   include   a   submissions   key   that   will   have   the   same   value   as   the </span> <span class="subject level2 subject2"> Seed.submissions   array </span></span>  <br> </br>
+   :   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> In   the </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> HTML </span> <span class="contrast level2 contrast2"> template </span> <span class="contrast level1 contrast1"> ,   we   can   now   reference   all   submission   data   by   accessing   submissions </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> The </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Vue   object   constructor </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   available   on   the   global   scope   since   we   ’ve   included   the   script   tag   ,   that   loads   Vue   ,   in   our </span> <span class="subject level2 subject2"> index.html   file </span>  . </span> <span class="contrast level2 contrast2"> Without </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> including   this   tag   ,   the   Vue   function   wo   n’t   be   available   and   we   ’ll   be   presented   with   a   console   error   stating   Uncaught   ReferenceError   : </span> <span class="subject level2 subject2"> Vue </span> <span class="contrast level2 contrast2"> is   not   defined   . </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"><span class="contrast level2 contrast2"> With </span> <span class="contrast level2 contrast2"> our </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Vue </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> instance </span> <span class="contrast level2 contrast2"> created </span> <span class="contrast level2 contrast2"> and </span> <span class="contrast level2 contrast2"> containing </span> <span class="contrast level2 contrast2"> submission </span> <span class="contrast level2 contrast2"> data </span> <span class="contrast level2 contrast2"> , </span> <span class="contrast level2 contrast2"> we </span> <span class="contrast level2 contrast2"> can </span> <span class="contrast level2 contrast2"> now </span> <span class="contrast level2 contrast2"> work </span> <span class="contrast level2 contrast2"> towards </span> <span class="contrast level2 contrast2"> synchronizing </span> <span class="contrast level2 contrast2"> data </span> <span class="contrast level2 contrast2"> in </span> <span class="contrast level2 contrast2"> the </span> <span class="contrast level2 contrast2"> model </span> <span class="contrast level2 contrast2"> to </span> <span class="contrast level2 contrast2"> the </span> <span class="contrast level2 contrast2"> view </span></span></span>  <br> </br>
+   .   In   other   words   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> we   can   now   data   bind   the   instance   ’s   data   to   the </span> <span class="subject level2 subject2"> DOM </span></span>  <br> </br>
+   .   Data   binding   The   simplest   form   of   data   binding   in   Vue   is   using   the   ‘   Mustache   ’   syntax   which   is   denoted   by   double   curly   braces   .   We   ’ll   apply   this   syntax   to   <br> </br>
+   bind   all   the   text   within   our   HTML   (   e.g.   title   ,   description   ,   etc   .   )   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> The </span> <span class="subject level1 subject1"> Vue   syntax </span> <span class="contrast level1 contrast1"> may   take   some   brief   time   to   get   used   to   ,   both   within   template   manipulation   as   well   as   on   the   JavaScript   side   .   Let   ’s   swap   the   hard-coded   data   in </span>  <br> </br>
+  <span class="contrast level1 contrast1"> the   template   to   now   reference   the   content   in   the   first   object   in   the   submissions   array   ,   submissions[0   ]   .   This   will   make   the   newly   added   template   block   now </span>  <br> </br>
+  <span class="contrast level1 contrast1"> look   like   this   :   figure   div   classcontent   strong   strong   Submitted   by   :   small   span   classicon   is-small   article   If   we   ’ve   bound   everything   appropriately   ,   we </span>  <br> </br>
+  <span class="contrast level1 contrast1"> should   see   no   change   in   our   view   (   since   the   hard-coded   information   was   the   same   content   in   our   submissions[0   ]   object   ) </span>  .   <br> </br>
+   <br> </br>
+   Let   ’s   refresh   our   browser   and   see   our   template   be   rendered   again   .   Submission   with   bound   data   List   rendering   Since   we   ’re   going   to   be   rendering   a   list   of   <br> </br>
+   submission   objects   ,   we   ’re   going   to   use   Vue   ’s   native   v-for   directive   .   v-for   directive   The   v-for   directive   is   used   to   render   a   list   of   items   based   on   a   data   <br> </br>
+   source   .   In   our   case   ,   we   would   like   to   render   a   submission   post   for   each   of   the   submission   objects   in   our   Seeds.submission   array   .   The   article   element   in   the   <br> </br>
+   index.html   file   ,   which   is   a   standard   HTML   element   ,   currently   displays   a   single   submission   post   :   article   The   v-for   directive   requires   a   specific   syntax   <br> </br>
+   along   the   lines   of   item   in   items   ,   where   items   is   a   data   collection   and   item   is   an   alias   for   every   element   that   is   being   iterated   upon   :   article   key   article   If   <br> </br>
+   there   were   any   dynamic   changes   made   to   a   v-for   list   without   the   key   attribute   ,   Vue   will   opt   towards   changing   data   within   each   element   instead   of   moving   the   <br> </br>
+   DOM   elements   accordingly   .   <br> </br>
+   <br> </br>
+   By   specifying   a   unique   key   attribute   to   each   iterated   item   ,   we   ’re   now   telling   Vue   to   reorder   elements   if   needed   .  <span class="contrast level1 contrast1"> The </span> <span class="subject level1 subject1"> Vue   docs26 </span> <span class="contrast level1 contrast1"> explains   the   importance   of </span>  <br> </br>
+  <span class="contrast level1 contrast1"> the   key   attribute   in   more   detail   .   In   our   template   ,   let   ’s   now   change   the   submissions[0   ]   references   and   update   it   to   use   the   iterated   array   instance </span>  <br> </br>
+  <span class="contrast level1 contrast1"> variable   submission   :   div   classsection   figure   div   classcontent   strong   strong   Submitted   by   :   small   span   classicon   is-small   article   Refreshing   our </span>  <br> </br>
+  <span class="contrast level1 contrast1"> browser   ,   we   should   now   expect   to   see   a   list   of   submissions   . </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="subject level1 subject1"><span class="subject level2 subject2"> This </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is </span> <span class="contrast level1 contrast1"> due </span> <span class="contrast level1 contrast1"> to </span> <span class="contrast level1 contrast1"> the </span> <span class="contrast level1 contrast1"> v-for </span> <span class="contrast level1 contrast1"> directive </span> <span class="contrast level1 contrast1"> now </span> <span class="contrast level1 contrast1"> dynamically </span> <span class="contrast level1 contrast1"> creating </span> <span class="contrast level1 contrast1"> a </span> <span class="contrast level1 contrast1"> submission </span> <span class="contrast level1 contrast1"> article </span> <span class="contrast level1 contrast1"> element </span> <span class="contrast level1 contrast1"> for </span> <span class="contrast level1 contrast1"> each </span> <span class="contrast level1 contrast1"> submission </span> <span class="contrast level1 contrast1"> in </span> <span class="contrast level1 contrast1"> the </span> <span class="contrast level1 contrast1"> seed </span> <span class="contrast level1 contrast1"> file </span></span></span>  <br> </br>
+   .   ,  <span class="subject level1 subject1"> computed </span> <span class="contrast level1 contrast1"> :   article   When   the   up-vote   icon   on   each   one   of   the   submissions   is   clicked   ,   we   expect   it   to   increase   the   votes   attribute   for   that   submission   by   one </span>  <br> </br>
+   .   To   handle   this   interaction   ,   we   ’ll   be   using   Vue   ’s   native   v-on   directive   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> The   v-on   directive   The   v-on   directive   is   used   to   create   event   listeners   within   the   DOM </span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+   As   all   web   browsers   are   event   driven   ,   we   ’ll   use   these   events   to   trigger   interaction   in   our   Vue   application   .   For   instance   ,   in   native   JavaScript   (   i.e.   <br> </br>
+   without   Vue   )   ,   we   can   attach   an   event   listener   to   a   DOM   object   using   the   addEventListener   (   )   method   .   const   ele   document.getElementById(app   )   ;   In   Vue   ,   we   <br> </br>
+   can   use   the   v-on   :   click   directive   to   implement   a   click   handler   .   We   can   specify   this   click   handler   on   an   up-vote   icon   of   a   submission   .   We   ’ll   set   this   click   <br> </br>
+   event   handler   to   call   an   upvote(submission.id   )   method   whenever   the   up-vote   icon   is   clicked   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> We   ’ll   pass   in   the </span> <span class="subject level1 subject1"> submission.id </span> <span class="contrast level1 contrast1"> as   an   argument   to   be   used   within   the   method   .   This   updates   the   div   element   that   encompasses   the   up-vote   icon   to   this   :   Since   we </span>  <br> </br>
+  <span class="contrast level1 contrast1"> ’ve   specifed   the   click   event   ,   we   now   need   to   define   the   upvote(submissionId   )   method   in   our   Vue   instance   .   ,   computed   :   ,   methods   :   Reactive   state   We   need   to </span>  <br> </br>
+  <span class="contrast level1 contrast1"> note   an   important   aspect   of   Vue   here   .   With   a   library   like   React   ,   the   above   method   implementation   is   problematic   since   state   is   often   treated   as   immutable </span>  .   <br> </br>
+  <span class="subject level1 subject1"> State   within   Vue </span> <span class="contrast level1 contrast1"> ,   on   the   other   hand   ,   is   reactive </span>  . 
+</body>
+</html>
