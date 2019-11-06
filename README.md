@@ -1,4 +1,4 @@
-# App and scripts for using the Corpuscook-server
+# App and scripts for using the CorpusCook-server
 
 ## App
 To run the app call 
