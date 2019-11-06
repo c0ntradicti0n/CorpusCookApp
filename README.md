@@ -25,6 +25,8 @@ Run
 python human_in_loop_client/paper_reader.py your.pdf
 ```
 
-Output formatted HTML, that marks the annotations. See e.g. [Annotated Adolph-Gruenbaum-paper](https://raw.githubusercontent.com/c0ntradicti0n/CorpusCookApp/master/pdfs/Adolph%20Gruenbaum%20-%20Physics%2C%20Philosophy%20and%20Psychoanalysis.pdf.html)
+Output formatted HTML, that marks the annotations. See e.g. [Annotated Adolph-Gruenbaum-paper](https://raw.githubusercontent.com/c0ntradicti0n/CorpusCookApp/master/pdfs/Adolph%20Gruenbaum%20-%20Physics%2C%20Philosophy%20and%20Psychoanalysis.pdf.html) like this:
+
+![Marked html](https://raw.githubusercontent.com/c0ntradiction/CorpusCookApp/master/sample_pdf2html.png)
 
 

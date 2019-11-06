@@ -8,8 +8,6 @@ tests
 venv
 *.pyc
 *.pyx
-*.png
-*.jpg
 .buildozer
 image_tests
 *.apk
