@@ -76,7 +76,7 @@ class paper_reader:
             processed_text = " ".join([p
                                         for p in paragraphs if
                                         p and ks_2samp(self.normal_data, list(p)).pvalue > self.threshold])
-        return processed_text
+        return processed_text.strip() [:20000]
 
 text_no = 0
 

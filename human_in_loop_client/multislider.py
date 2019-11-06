@@ -223,14 +223,16 @@ class SliderX(Slider):
             SliderX.crtl = True
     def _on_keyboard_up( keycode, text, modifiers):
         SliderX.crtl = False
+        SliderX.crtl = True
 
     def on_touch_down(self, touch):
+        if self.disabled or not self.collide_point(*touch.pos):
+            return True
         if isinstance(touch, MTDMotionEvent):
             return True
 
         self.assert_standard_len()
-        if self.disabled or not self.collide_point(*touch.pos):
-            return True
+
         self.touched_down = touch.pos
         self.values = [min(self.max, v) for v in self.values]
         positions = [v[0] for v in self.values_pos] if self.orientation == 'horizontal' else [v[1] for v in
@@ -256,6 +258,7 @@ class SliderX(Slider):
                 self.on_change(index, delete_add=1)
         self.last_click = touch.pos
         return True
+
 
 Window.bind(on_key_down=SliderX._on_keyboard_down)
 Window.bind(on_key_up=SliderX._on_keyboard_up)

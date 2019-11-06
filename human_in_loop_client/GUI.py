@@ -37,7 +37,7 @@ from human_in_loop_client.annotation_protocol import *
 from human_in_loop_client.screens_kivy import *
 from human_in_loop_client.manipulation_kivy import *
 from human_in_loop_client.proposal_kivy import *
-
+from human_in_loop_client.editable_label import  EditableLabel
 
 class RootWidget(ScreenManager):
     final_version = []
@@ -53,8 +53,10 @@ class RootWidget(ScreenManager):
 
         self.load_something()
 
+        # extra-text window width of annotations to be made
+        self.l = 200
 
-        #self.landing_screen = "Proposal_Screen"
+        self.landing_screen = "MultiMedia_Screen"
         #self.landing()
 
         #self.next_page()
@@ -85,14 +87,47 @@ class RootWidget(ScreenManager):
         text = self.ids.multim.ids.editor.text
         self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
 
-    def sampler_add_selection(self):
-        text = self.ids.sampl.ids.html_sample.selection_text.replace('\n', ' ').replace('  ', ' ')
-        if not text:
+
+    def sampler_add_selection(self, input_field):
+        # extract selected text and selection information
+        full_text = input_field.text
+        selected_text =  input_field.selection_text
+        selected_text = selected_text.replace('\n', ' ').replace('  ', ' ')
+        sel_start = min(input_field.selection_from, input_field.selection_to)
+        sel_to = max(input_field.selection_from, input_field.selection_to)
+
+        if not selected_text:
             logging.error('Text must be selected')
             return None
-        logging.info("Adding sample to library")
-        self.me_as_client.commander(Command=SaveSample, text=text)
-        self.current = "Sample_Screen"
+
+        # get some text to both sides and transform to zero annotations
+        self.text_before = full_text[:sel_start].split()[-self.l:]
+        self.text_after = full_text[sel_to:].split()[:self.l]
+        self.zero_before = [(word, 'O') for word in self.text_before]
+        self.zero_after = [(word, 'O') for word in self.text_after]
+
+        # get prediction and let the human annotate it
+        self.me_as_client.commander(Command=MakePrediction, ProceedLocation=self.window_sample_proceed, text=selected_text)
+        self.user_action = 'rolling'
+        self.current = "Manipulation_Screen"
+
+    def window_sample_proceed(self, annotation =[]):
+        # update the manipulation screen after making a prediction
+        self.annotated_sample = annotation
+        self.final_version = self.annotated_sample
+        self.update_sliders_from_spans()
+        self.display_sample()
+
+    def roll_windows(self):
+        # roll in windows over annotation and save them all as samples
+        whole_annotation = self.zero_before+self.final_version+self.zero_after
+        for start in range(
+                max(0,len(self.zero_before)+len(self.final_version)-self.l),
+                len(self.zero_before)):
+            new_annotation = whole_annotation[start:start + self.l]
+            logging.info ("creating annotation window from %d to %d with text %s" % (start, start + self.l, new_annotation))
+            self.me_as_client.commander(Command=SaveAnnotation, annotation=new_annotation)
+            sleep(0.5)
 
     def zero_annotation_selection(self, proposal=None):
         if proposal:
@@ -195,6 +230,9 @@ class RootWidget(ScreenManager):
             self.sampler_proceed()
 
     def ok(self, proposal=None):
+        if self.user_action == 'rolling':
+            self.roll_windows()
+            return
         if proposal:
             self.update_from_proposal(proposal)
         self.me_as_client.commander(Command=SaveAnnotation, annotation=self.final_version)
@@ -237,7 +275,7 @@ class RootWidget(ScreenManager):
             sl.range = (0, l)
 
     def display_sample(self):
-        markedup_sentence = self.upmarker.markup_string(self.annotated_sample)
+        markedup_sentence = self.upmarker.markup_annotation(self.annotated_sample)
         self.ids.annot.ids.sample.text = markedup_sentence
         self.ids.manip.ids.sample.text = markedup_sentence
         self.ids.manip.ids.annotationmanipulationview.refresh_from_data()

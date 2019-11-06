@@ -47,5 +47,5 @@ class SpanSlider(Slider):
             'start': int(b.ids.start.value),
             'end': int(b.ids.end.value),
             'length': int(b.ids.end.max),
-            'id': 'hach'
+            'id': 'default'
         })

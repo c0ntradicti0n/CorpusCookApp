@@ -249,7 +249,7 @@ class BIO_Annotation:
         except TypeError:
             raise
 
-        all_tags = [[]] * len(tokens)
+        all_tags = [['O']] * len(tokens)
         # read list of spans backwards to overwrie the contrast with the subject tags
         for spans in sorted_paired_spans:
 

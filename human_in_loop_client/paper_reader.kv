@@ -4,19 +4,25 @@
         cols: 2
         GridLayout:
             size_hint_x:0.96
-            rows: 4
+            rows: 3
             cols: 1
-            TextInput:
-                id: address
-                text: "pdfs/sample.pdf"  #"http://isiarticles.com/bundles/Article/pre/pdf/4129.pdf"
-                multiline: False
-                size_hint_y: 0.03
-            Button:
-                text: "read"
-                on_press: root.manager.load_something()
-                size_hint_y: 0.03
+            BoxLayout:
+                size_hint_y: 0.06
+                orientation:'horizontal'
+                TextInput:
+                    id: address
+                    text: "/home/stefan/PycharmProjects/CorpusCookApp/pdfs/David Chalmers - Two Dimensional Semantics.pdf"
+                    multiline: False
+                    size_hint_x: 0.9
+                Button:
+                    background_normal: "./images/read.png"
+                    size_hint : 1,1
+                    on_press: root.manager.load_something()
+                    size_hint_x: 0.1
             ScrollView:
-                InfoLabel:
+                scroll_type: ['bars']
+                size_hint_y: 0.87
+                Textlooker:
                     halign: "justify"
                     valign: "middle"
                     markup: True
@@ -27,10 +33,7 @@
                     text_size: self.width, None
                     size_hint_y: None
                     height: self.texture_size[1]
-            Button:
-                text: "ok"
-                on_press: root.manager.analyse_paper()
-                size_hint_y: 0.04
+                    selection_made:  root.manager.sampler_add_selection
         BoxLayout:
             size_hint_x:.04
             orientation:'vertical'
