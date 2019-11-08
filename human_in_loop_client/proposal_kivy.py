@@ -3,7 +3,7 @@ from kivy.properties import ListProperty, StringProperty, NumericProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.recycleview import RecycleView
 
-from human_in_loop_client.multislider import SliderX
+#from human_in_loop_client.multislider import SliderX
 
 
 class ProposalRecycleViewRow(BoxLayout):

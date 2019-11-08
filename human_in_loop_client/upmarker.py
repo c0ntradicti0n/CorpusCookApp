@@ -79,7 +79,6 @@ class Bwalp:
     def delete_beginning(self, tag):
         self.before.remove(tag)
 
-
     def delete_everything(self, tag):
         self.delete_beginning(tag)
         self.delete_ending(tag)

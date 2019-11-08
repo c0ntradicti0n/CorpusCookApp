@@ -5,3 +5,4 @@ regex
 twisted
 scipy
 tika
+kivy-deps.sdl2

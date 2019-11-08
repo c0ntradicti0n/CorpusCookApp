@@ -23,9 +23,12 @@ class paper_reader:
 
         detecting text by comparing to the letter distribution of normal prose to parts of the text extracted.
     """
-    def __init__(self, threshold = 0.5):
+    def __init__(self, _threshold = 0.001, _length_limit = 20000):
         #with open('hamlet.txt', 'r+') as f:
         #    self.normal_data = list(f.read())
+
+        self.length_limit = _length_limit
+        self.threshold = _threshold
 
         self.normal_data = list(
                                     'used are variants of the predicate calculus. He  even says, “Lately '
@@ -43,9 +46,8 @@ class paper_reader:
                                     'are entailed by a set of beliefs.  They wander from this idea in a '
                                     'few  places but not for long. It is not hard  to see why: Deduction '
                                     'is one of the  fews kinds of inference for which we  have an '
-                                    'interesting general theory. '
+                                    'interesting general theory. '.lower()
                                 )
-        self.threshold = threshold
 
     def load_text(self, adress):
         if not re.match(r"""((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*""",
@@ -56,7 +58,6 @@ class paper_reader:
             data = response.read()  # a `bytes` object
             self.rawText = parser.from_buffer(data)
 
-
     def analyse(self):
         """ Extracts prose text from  the loaded texts, that may contain line numbers somewhere, adresses, journal links etc.
         :return str:  prose text
@@ -64,19 +65,26 @@ class paper_reader:
         text = self.rawText['content']
         paragraphs = text.split('\n\n')
         print ("mean length of splitted lines", (mean([len(p) for p in paragraphs])))
+
+        # If TIKA resolved '\n'
         if (mean([len(p) for p in paragraphs])) > 80:
             paragraphs = [re.sub(r"- *\n", '', p) for p in paragraphs]
             paragraphs = [p.replace('\n', " ") for p in paragraphs]
-            # paragraphs = [{'text': p, 'prop': ks_2samp( self.normal_data, list(p)).pvalue}
-            #                 for p in paragraphs if p and ks_2samp(self.normal_data, list(p) ).pvalue > self.threshold]
-            processed_text = "\n".join([p
-                                        for p in paragraphs if
-                                        p and ks_2samp(self.normal_data, list(p)).pvalue > self.threshold])
+            paragraphs = [p.replace(';', " ") for p in paragraphs]
+            joiner = " "
         else:
-            processed_text = " ".join([p
-                                        for p in paragraphs if
-                                        p and ks_2samp(self.normal_data, list(p)).pvalue > self.threshold])
-        return processed_text.strip() [:20000]
+            # If TIKA did not resolve '\n'
+            joiner = " "
+
+        processed_text = joiner.join([p
+              for p in paragraphs
+                   if
+                        p and
+                        ks_2samp(self.normal_data, list(p)).pvalue   >   self.threshold
+                                      ]
+                                     )
+
+        return processed_text.strip() [:self.length_limit]
 
 text_no = 0
 

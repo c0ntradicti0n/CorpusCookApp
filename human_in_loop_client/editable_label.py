@@ -8,9 +8,59 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.label import Label
 from kivy.base import runTouchApp
-from kivy.properties import BooleanProperty, ObjectProperty, Clock
+from kivy.properties import BooleanProperty, ObjectProperty
 
+class SelectableLabel(TextInput):
+    def _key_down(self, key, repeat=False):
+        displayed_str, internal_str, internal_action, scale = key
 
+        # handle deletion
+        if (self._selection and
+                internal_action in (None, 'del', 'backspace', 'enter')):
+            if internal_action != 'enter' or self.multiline:
+                self.delete_selection()
+        elif internal_action == 'del':
+            # Move cursor one char to the right. If that was successful,
+            # do a backspace (effectively deleting char right of cursor)
+            cursor = self.cursor
+            self.do_cursor_movement('cursor_right')
+            if cursor != self.cursor:
+                self.do_backspace(mode='del')
+        elif internal_action == 'backspace':
+            self.do_backspace()
+
+        # handle action keys and text insertion
+        if internal_action is None:
+            self.insert_text(displayed_str)
+        elif internal_action in ('shift', 'shift_L', 'shift_R'):
+            if not self._selection:
+                self._selection_from = self._selection_to = self.cursor_index()
+                self._selection = True
+            self._selection_finished = False
+        elif internal_action == 'ctrl_L':
+            self._ctrl_l = True
+        elif internal_action == 'ctrl_R':
+            self._ctrl_r = True
+        elif internal_action == 'alt_L':
+            self._alt_l = True
+        elif internal_action == 'alt_R':
+            self._alt_r = True
+        elif internal_action.startswith('cursor_'):
+            cc, cr = self.cursor
+            self.do_cursor_movement(internal_action,
+                                    self._ctrl_l or self._ctrl_r,
+                                    self._alt_l or self._alt_r)
+            if self._selection and not self._selection_finished:
+                self._selection_to = self.cursor_index()
+                self._update_selection()
+            else:
+                self.cancel_selection()
+        elif internal_action == 'enter':
+            self.dispatch('on_text_validate')
+            if self.text_validate_unfocus:
+                 self.focus = False
+        elif internal_action == 'escape':
+            self.focus = False
 #https://github.com/kivy/kivy/wiki/Editable-Label
 class EditableLabel(Label):
 
@@ -34,7 +84,7 @@ class EditableLabel(Label):
                 self.remove_widget(self.textinput)
             return
         unformatted_text = regex.sub(self.unformat_bbcode, "", self.text)
-        self.textinput = t = TextInput(
+        self.textinput = t = SelectableLabel(
                 text=unformatted_text, size_hint=(None, None),
                 font_size=self.font_size, font_name=self.font_name,
                 pos=self.pos, size=self.size, multiline=False)
@@ -56,7 +106,9 @@ class EditableLabel(Label):
 
     def on_text_focus(self, instance, focus):
         if focus is False:
-            self.text = instance.text
+            # TODO insert inputs, but beware format
+            #self.text = instance.text
+
             self.edit = False
 
 if __name__ == '__main__':

@@ -14,8 +14,8 @@ from human_in_loop_client.paper_reader import paper_reader
 
 kivy.require('1.9.0')
 from kivy.config import Config
-Config.set('graphics', 'width', '2000')
-Config.set('graphics', 'height', '1500')
+Config.set('graphics', 'width', '1000')
+Config.set('graphics', 'height', '1000')
 #Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 Config.write()
 from kivy.core.window import Window
@@ -25,7 +25,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.slider import Slider
-from human_in_loop_client.multislider import SliderX
+#from human_in_loop_client.multislider import SliderX
 
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ListProperty, ObservableList
 from kivy.uix.boxlayout import BoxLayout
@@ -36,7 +36,7 @@ from human_in_loop_client.client import AnnotationClient
 from human_in_loop_client.annotation_protocol import *
 from human_in_loop_client.screens_kivy import *
 from human_in_loop_client.manipulation_kivy import *
-from human_in_loop_client.proposal_kivy import *
+#from human_in_loop_client.proposal_kivy import *
 from human_in_loop_client.editable_label import  EditableLabel
 
 class RootWidget(ScreenManager):
@@ -123,11 +123,13 @@ class RootWidget(ScreenManager):
         whole_annotation = self.zero_before+self.final_version+self.zero_after
         for start in range(
                 max(0,len(self.zero_before)+len(self.final_version)-self.l),
-                len(self.zero_before)):
+                len(self.zero_before) + 1):
             new_annotation = whole_annotation[start:start + self.l]
             logging.info ("creating annotation window from %d to %d with text %s" % (start, start + self.l, new_annotation))
             self.me_as_client.commander(Command=SaveAnnotation, annotation=new_annotation)
             sleep(0.5)
+        self.landing()
+
 
     def zero_annotation_selection(self, proposal=None):
         if proposal:
@@ -240,6 +242,13 @@ class RootWidget(ScreenManager):
         if not proposal:
             self.take_next()
         self.landing()
+
+    def annotation_from_here(self):
+        if self.user_action == 'rolling':
+            self.zero_before = []
+            self.roll_windows()
+            return
+
 
     def complicated_sample(self, proposal=None):
         if proposal:
