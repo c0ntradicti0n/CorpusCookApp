@@ -103,6 +103,12 @@
                 height: self.parent.height
                 width: self.parent.height
             NavButton:
+                text: "in between"
+                on_press: root.manager.annotation_in_between()
+                background_normal: "./images/between.png"
+                height: self.parent.height
+                width: self.parent.height
+            NavButton:
                 text: "ok"
                 on_press: root.manager.ok()
                 background_normal: "./images/annotate_icon.png"

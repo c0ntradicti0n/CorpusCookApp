@@ -250,7 +250,7 @@ class UpMarker:
 
     def markup_proposal_list(self, proposals):
         proposals = sorted(proposals, key=lambda d: d['indices'][0])
-        indexed_words = {index:word
+        indexed_words = {index: word
                          for annotation in proposals
                          for (word, tag), index in
                              zip(annotation['annotation'], annotation['indices']) }

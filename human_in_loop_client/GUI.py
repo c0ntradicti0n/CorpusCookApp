@@ -131,6 +131,8 @@ class RootWidget(ScreenManager):
         self.landing()
 
 
+
+
     def zero_annotation_selection(self, proposal=None):
         if proposal:
             text=proposal.text
@@ -231,7 +233,7 @@ class RootWidget(ScreenManager):
         if not self.ids.proposals.ids.proposalview.data:
             self.sampler_proceed()
 
-    def ok(self, proposal=None):
+    def ok(self, proposal=None,):
         if self.user_action == 'rolling':
             self.roll_windows()
             return
@@ -249,6 +251,12 @@ class RootWidget(ScreenManager):
             self.roll_windows()
             return
 
+    def annotation_in_between(self):
+        if self.user_action == 'rolling':
+            self.zero_before = []
+            self.zero_after = []
+            self.roll_windows()
+            return
 
     def complicated_sample(self, proposal=None):
         if proposal:
@@ -373,7 +381,6 @@ class RootWidget(ScreenManager):
         self.sentence = text
         print(text)
         if self.sentence == None:
-            logging.info('Thank you for working!')
             App.get_running_app().stop()
             return None
 
