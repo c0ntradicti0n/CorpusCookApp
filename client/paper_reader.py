@@ -6,12 +6,12 @@ from time import sleep
 
 from scipy.stats import ks_2samp
 
-os.popen('java -jar human_in_loop_client/tika-server-1.22.jar')
+os.popen('java -jar client/tika-server-1.22.jar')
 sleep(1)
 from tika import parser
 import regex as re
 
-from human_in_loop_client.annotation_protocol import MakeProposals
+from client.annotation_protocol import MakeProposals
 
 
 class paper_reader:
@@ -105,8 +105,8 @@ def main():
 
 
     print ("tika runs or was already running (if you see \"address already in use\")")
-    from human_in_loop_client.client import AnnotationClient
-    from human_in_loop_client.upmarker import UpMarker
+    from client.annotation_client import AnnotationClient
+    from client.upmarker import UpMarker
 
     from twisted.internet import reactor
 

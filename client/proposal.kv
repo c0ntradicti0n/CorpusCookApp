@@ -71,7 +71,10 @@
                 on_press:     app.root.ok(proposal=root)
                 background_normal: "./images/annotate_icon.png"
             NavButton:
-                on_press: app.root.zero_annotation_selection(proposal=root)
+                on_press: app.root.zero_annotation_selection(proposal=root, which="first")
+                background_normal: "./images/zero_annotation.jpg"
+            NavButton:
+                on_press: app.root.zero_annotation_selection(proposal=root, which="over")
                 background_normal: "./images/zero_annotation.jpg"
             NavButton:
                 on_press: app.root.delete(proposal=root)

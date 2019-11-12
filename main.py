@@ -1,4 +1,4 @@
-from human_in_loop_client.GUI import MainApp
+from clinet.GUI import MainApp
 
 MainApp().run()
 

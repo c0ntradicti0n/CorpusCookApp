@@ -109,6 +109,18 @@
                 height: self.parent.height
                 width: self.parent.height
             NavButton:
+                text: "zero"
+                on_press: root.manager.zero_annotation_selection(proposal=root, which="first")
+                background_normal: "./images/zero_annotation.jpg"
+                height: self.parent.height
+                width: self.parent.height
+                        NavButton:
+                text: "zero"
+                on_press: root.manager.zero_annotation_selection(proposal=root, which="over")
+                background_normal: "./images/zero_annotation.jpg"
+                height: self.parent.height
+                width: self.parent.height
+            NavButton:
                 text: "ok"
                 on_press: root.manager.ok()
                 background_normal: "./images/annotate_icon.png"

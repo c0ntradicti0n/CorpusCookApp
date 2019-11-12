@@ -118,7 +118,7 @@ class RootWidget(ScreenManager):
         self.update_sliders_from_spans()
         self.display_sample()
 
-    def roll_windows(self):
+    def roll_windows(self, which):
         # roll in windows over annotation and save them all as samples
         whole_annotation = self.zero_before+self.final_version+self.zero_after
         for start in range(
@@ -126,14 +126,13 @@ class RootWidget(ScreenManager):
                 len(self.zero_before) + 1):
             new_annotation = whole_annotation[start:start + self.l]
             logging.info ("creating annotation window from %d to %d with text %s" % (start, start + self.l, new_annotation))
-            self.me_as_client.commander(Command=SaveAnnotation, annotation=new_annotation)
+            self.me_as_client.commander(Command=SaveAnnotation, annotation=new_annotation, which=which)
             sleep(0.5)
         self.landing()
 
-
-
-
-    def zero_annotation_selection(self, proposal=None):
+    def zero_annotation_selection(self, proposal=None, which=None):
+        if not which:
+            raise ValueError("Which corpus/model save to?")
         if proposal:
             text=proposal.text
             self.update_from_proposal(proposal)
@@ -145,7 +144,7 @@ class RootWidget(ScreenManager):
             return None
 
         logging.info("Adding zero sample to library")
-        self.me_as_client.commander(Command=ZeroAnnotation, text=text)
+        self.me_as_client.commander(Command=ZeroAnnotation, text=text, which=which)
 
     def sampler_proceed(self, text=''):
         self.ids.sample.ids.html_sample.text = text
@@ -233,13 +232,15 @@ class RootWidget(ScreenManager):
         if not self.ids.proposals.ids.proposalview.data:
             self.sampler_proceed()
 
-    def ok(self, proposal=None,):
+    def ok(self, proposal=None, which=None):
+        if not which:
+            ValueError("Which corpus save to?")
         if self.user_action == 'rolling':
-            self.roll_windows()
+            self.roll_windows(which="first")
             return
         if proposal:
             self.update_from_proposal(proposal)
-        self.me_as_client.commander(Command=SaveAnnotation, annotation=self.final_version)
+        self.me_as_client.commander(Command=SaveAnnotation, annotation=self.final_version, which=which)
         logging.info("Added to corpus")
         if not proposal:
             self.take_next()
@@ -248,14 +249,14 @@ class RootWidget(ScreenManager):
     def annotation_from_here(self):
         if self.user_action == 'rolling':
             self.zero_before = []
-            self.roll_windows()
+            self.roll_windows(which="over")
             return
 
     def annotation_in_between(self):
         if self.user_action == 'rolling':
             self.zero_before = []
             self.zero_after = []
-            self.roll_windows()
+            self.roll_windows(which="over")
             return
 
     def complicated_sample(self, proposal=None):

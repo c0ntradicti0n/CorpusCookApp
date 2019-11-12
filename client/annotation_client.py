@@ -13,7 +13,7 @@ if 'kivy' in sys.modules:
 
 from twisted.internet import reactor
 
-from human_in_loop_client.annotation_protocol import *
+import client
 
 
 
@@ -32,13 +32,13 @@ class AnnotationClient:
         >>> self.me_as_client.commander(fun ,MakePrediction, text="I love you. You love me.")
         """
         self.log_everything = log_everything
-        self.connection = ClientCreator(reactor, amp.AMP).connectTCP("localhost", 5180)
+        self.connection = ClientCreator(reactor, client.annotation_protocol.amp.AMP).connectTCP("localhost", 5180)
 
 
 
     def commander(self,
                   ProceedLocation: Optional[Callable] = dummy_response,
-                  Command: amp.Command = None,
+                  Command: client.annotation_protocol.amp.Command = None,
                   **kwargs):
         """ Its like a bind function between some Server Command and a action on client side.
         You call it like this:
@@ -64,21 +64,21 @@ class AnnotationClient:
             raise ValueError('`Command` must be given')
 
         def error(reason):
-            logging.error("Something went wrong")
-            logging.error(str(reason))
+            client.annotation_protocol.logging.error("Something went wrong")
+            client.annotation_protocol.logging.error(str(reason))
             reactor.stop()
 
         def seamless_apply(result):
             if self.log_everything:
-                logging.warning(pprint.pformat(result))
+                client.annotation_protocol.logging.warning(pprint.pformat(result))
             ProceedLocation(**result)
             return result
 
         def callback(result):
-            logging.warning(str(Command))
+            client.annotation_protocol.logging.warning(str(Command))
             for k, warg in kwargs.items():
-                logging.warning(k)
-                logging.warning(warg)
+                client.annotation_protocol.logging.warning(k)
+                client.annotation_protocol.logging.warning(warg)
 
             result.callRemote(Command, **kwargs).addCallback(seamless_apply).addErrback(error)
             return result
