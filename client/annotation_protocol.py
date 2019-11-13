@@ -80,78 +80,45 @@ class JSONB64COMPRESS(Argument):
         #l_before = len(inString)
         #l_after = len(str(decoded))
         #logging.info('compression: %dkB to %dkB, means to %2.1f%% of the original' % (l_before/1000, l_after/1000, 100/(l_before/l_after)))
-
         return decoded
 
-class DeliverPage(amp.Command):
-    arguments = []
-    response = [(b'text', amp.Unicode())]
+
+
 
 class ChangeProposals(amp.Command):
     arguments = [(b'cuts', JSONB64COMPRESS()), (b'indices', JSONB64COMPRESS()), (b'delete_add', JSONB64COMPRESS())]
     response = [(b'proposals', JSONB64COMPRESS()), (b'indices', JSONB64COMPRESS()),  (b'delete_add', JSONB64COMPRESS())]
 
+class DeliverPage(amp.Command):
+    arguments = []
+    response = [(b'text', amp.Unicode())]
+
+class DeliverSample(amp.Command):
+    arguments = []
+    response = [(b'text', amp.Unicode())]
+
 class MakePrediction(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response = [(b'annotation', JSON())]
 
-
-class DeliverSample(amp.Command):
-    arguments = []
-    response = [(b'text', amp.Unicode())]
-
 class MakeProposals(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response = [(b'proposals', JSONB64COMPRESS())]
-
-
-class SaveAnnotation(amp.Command):
-    arguments = [(b'annotation', JSON())]
-    response =  [(b'done', amp.Unicode())]
-
 
 class SaveComplicated(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response =  [(b'done', amp.Unicode())]
 
-
 class SaveSample(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response =  [(b'done', amp.Unicode())]
-
-
-
-class ZeroAnnotation(amp.Command):
-    arguments = [(b'text', amp.Unicode())]
-    response =  [(b'done', amp.Unicode())]
-
-
-class DeliverSample(amp.Command):
-    arguments = []
-    response = [(b'text', amp.Unicode())]
-
-class MakeProposals(amp.Command):
-    arguments = [(b'text', amp.Unicode())]
-    response = [(b'proposals', JSONB64COMPRESS())]
-
 
 class SaveAnnotation(amp.Command):
-    arguments = [(b'annotation', JSON()), (b'which', amp.String)]
+    arguments = [(b'annotation', JSON()), (b'which',  amp.Unicode())]
     response =  [(b'done', amp.Unicode())]
 
 class ZeroAnnotation(amp.Command):
-    arguments = [(b'annotation', JSON()), (b'which', amp.String)]
+    arguments = [(b'text',  amp.Unicode()), (b'which',  amp.Unicode())]
     response =  [(b'done', amp.Unicode())]
-
-
-class SaveComplicated(amp.Command):
-    arguments = [(b'text', amp.Unicode())]
-    response =  [(b'done', amp.Unicode())]
-
-
-class SaveSample(amp.Command):
-    arguments = [(b'text', amp.Unicode())]
-    response =  [(b'done', amp.Unicode())]
-
 
 

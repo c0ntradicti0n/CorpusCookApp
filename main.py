@@ -1,4 +1,4 @@
-from clinet.GUI import MainApp
+from client.GUI import MainApp
 
 MainApp().run()
 

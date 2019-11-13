@@ -33,9 +33,7 @@
     orientation: 'horizontal'
     InfoLabel:
         text: root.kind
-        font_size: 20
-        height: self.parent.height
-        width: self.parent.height
+        font_size: 15
     AnnotationManipulationButton:
         text: "+"
         font_size: 20
@@ -96,43 +94,39 @@
         BoxLayout:
             InfoLabel:
                 text: ""
-            NavButton:
+            InfoLabel:
+                text: "First-logic-annotation"
+            SquareButton:
                 text: "from here"
                 on_press: root.manager.annotation_from_here()
                 background_normal: "./images/from_here.png"
-                height: self.parent.height
-                width: self.parent.height
-            NavButton:
-                text: "in between"
-                on_press: root.manager.annotation_in_between()
-                background_normal: "./images/between.png"
-                height: self.parent.height
-                width: self.parent.height
-            NavButton:
-                text: "zero"
-                on_press: root.manager.zero_annotation_selection(proposal=root, which="first")
-                background_normal: "./images/zero_annotation.jpg"
-                height: self.parent.height
-                width: self.parent.height
-                        NavButton:
-                text: "zero"
-                on_press: root.manager.zero_annotation_selection(proposal=root, which="over")
-                background_normal: "./images/zero_annotation.jpg"
-                height: self.parent.height
-                width: self.parent.height
-            NavButton:
+            SquareButton:
                 text: "ok"
                 on_press: root.manager.ok()
                 background_normal: "./images/annotate_icon.png"
-                height: self.parent.height
-                width: self.parent.height
-            NavButton:
+            SquareButton:
+                text: "zero"
+                on_press: root.manager.zero_annotation_selection(text=root.manager.ids.manip.ids.sample.text, which="first")
+                background_normal: "./images/zero_annotation.png"
+            InfoLabel:
+                text: "Recursive-logic-annotation"
+            SquareButton:
+                text: "in between"
+                on_press: root.manager.annotation_in_between()
+                background_normal: "./images/between.png"
+            SquareButton:
+                text: "zero"
+                on_press: root.manager.zero_annotation_selection(text=root.manager.ids.manip.ids.sample.text, which="over")
+                background_normal: "./images/zero_annotation.png"
+            InfoLabel:
+                text: ""
+            SquareButton:
                 text: "trash"
                 background_normal: "./images/ignore.jpg"
                 on_press: root.manager.shit()
-                height: self.parent.height
-                width: self.parent.height
             InfoLabel:
                 text: ""
+
+
 
 
