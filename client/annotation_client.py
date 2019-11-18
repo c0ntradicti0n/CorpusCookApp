@@ -78,7 +78,6 @@ class AnnotationClient:
             client.annotation_protocol.logging.warning(str(Command))
             for k, warg in kwargs.items():
                 client.annotation_protocol.logging.warning(k)
-                client.annotation_protocol.logging.warning(warg)
 
             result.callRemote(Command, **kwargs).addCallback(seamless_apply).addErrback(error)
             return result

@@ -36,7 +36,7 @@ from client.annotation_client import AnnotationClient
 from client.annotation_protocol import *
 from client.screens_kivy import *
 from client.manipulation_kivy import *
-#from client.proposal_kivy import *
+#from human_in_loop_client.proposal_kivy import *
 from client.editable_label import  EditableLabel
 
 class RootWidget(ScreenManager):
@@ -53,8 +53,8 @@ class RootWidget(ScreenManager):
 
         self.load_something()
 
-        # extra-text window width of annotations to be made, if window rolls
-        self.l = 100
+        # extra-text window width of annotations to be made
+        self.l = 200
 
         self.landing_screen = "MultiMedia_Screen"
         #self.landing()
@@ -86,6 +86,7 @@ class RootWidget(ScreenManager):
     def analyse_paper(self):
         text = self.ids.multim.ids.editor.text
         self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.proposaler_proceed, text=text)
+
 
     def sampler_add_selection(self, input_field):
         # extract selected text and selection information
@@ -129,21 +130,21 @@ class RootWidget(ScreenManager):
             sleep(0.5)
         self.landing()
 
-    def zero_annotation_selection(self, text=None, proposal=None, selection=False, which=None):
+    def zero_annotation_selection(self, proposal=None, which=None):
         if not which:
             raise ValueError("Which corpus/model save to?")
         if proposal:
             text=proposal.text
             self.update_from_proposal(proposal)
-        elif selection:
+        else:
             text = self.ids.sampl.ids.html_sample.selection_text.replace('\n', ' ').replace('  ', ' ')
+
         if not text:
-            logging.error('text must be set')
+            logging.error('Text must be selected')
             return None
 
-        logging.info("adding zero sample to library")
+        logging.info("Adding zero sample to library")
         self.me_as_client.commander(Command=ZeroAnnotation, text=text, which=which)
-        self.landing()
 
     def sampler_proceed(self, text=''):
         self.ids.sample.ids.html_sample.text = text
@@ -248,7 +249,7 @@ class RootWidget(ScreenManager):
     def annotation_from_here(self):
         if self.user_action == 'rolling':
             self.zero_before = []
-            self.roll_windows(which="first")
+            self.roll_windows(which="over")
             return
 
     def annotation_in_between(self):
@@ -256,7 +257,7 @@ class RootWidget(ScreenManager):
             self.zero_before = []
             self.zero_after = []
             self.roll_windows(which="over")
-            self.landing()
+            return
 
     def complicated_sample(self, proposal=None):
         if proposal:
