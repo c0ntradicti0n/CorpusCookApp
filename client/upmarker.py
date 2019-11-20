@@ -13,7 +13,7 @@ simple_html = """
 
 <style>
 
-span.subject1     {color: red;}
+span.subject1      {color: red;}
 span.contrast1     {color: blue;}
 
 span.subject2      {
@@ -33,6 +33,8 @@ span.contrast2     {
     border:2px solid
 }
 
+span.subject3      { text-decoration: underline; }
+span.contrast3     { font-style: oblique; }
 
 .indentation     {display:inline-block; 
                   width: 50px;
@@ -265,13 +267,22 @@ class UpMarker:
             except KeyError:
                 raise
 
+        def subdate(highlighted, subs):
+            for sub_paragraph, sub_annotation in enumerate(subs):
+                highlighted.update(
+                    update_dict_from_annotation(sub_annotation['indices'], sub_annotation['annotation'], paragraph,
+                                                level=1))
+            for sub_paragraph, sub_annotation in enumerate(subs):
+                subdate(highlighted, sub_annotation['subs'])
+
+
 
         for paragraph, annotation in enumerate(proposals):
             highlighted.update(update_dict_from_annotation(annotation['indices'], annotation['annotation'], paragraph, 0))
 
+
             # Overwrite higher-level annotations with lower level for indenting them
-            for sub_paragraph, sub_annotation in  enumerate(annotation['subs']):
-                highlighted.update(update_dict_from_annotation(sub_annotation['indices'], sub_annotation['annotation'], paragraph, level=1))
+            subdate(highlighted=highlighted, subs=annotation["subs"])
 
 
         return self.body[self.generator] % "".join (self.wrap_indent_paragraph(

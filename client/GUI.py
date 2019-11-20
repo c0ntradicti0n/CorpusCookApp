@@ -102,9 +102,9 @@ class RootWidget(ScreenManager):
 
         # get some text to both sides and transform to zero annotations
         self.text_before = full_text[:sel_start].split()[-self.l:]
-        self.text_after = full_text[sel_to:].split()[:self.l]
+        self.text_after  = full_text[sel_to:   ].split()[       :self.l]
         self.zero_before = [(word, 'O') for word in self.text_before]
-        self.zero_after = [(word, 'O') for word in self.text_after]
+        self.zero_after  = [(word, 'O') for word in self.text_after]
 
         # get prediction and let the human annotate it
         self.me_as_client.commander(Command=MakePrediction, ProceedLocation=self.window_sample_proceed, text=selected_text)
