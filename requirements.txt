@@ -6,3 +6,4 @@ twisted
 scipy
 tika
 kivy-deps.sdl2
+py4j
