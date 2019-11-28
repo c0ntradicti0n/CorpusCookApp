@@ -105,8 +105,8 @@ def main():
 
 
     print ("tika runs or was already running (if you see \"address already in use\")")
-    from client.annotation_client import AnnotationClient
-    from client.upmarker import UpMarker
+    from annotation_client import AnnotationClient
+    from upmarker import UpMarker
 
     from twisted.internet import reactor
 
@@ -126,10 +126,8 @@ def main():
         def proceed(proposals=""):
             global text_no
             with open(paths[text_no] + '.html', "w", encoding="utf-8") as f:
-                try:
-                    f.write(upmarker.markup_proposal_list(proposals))
-                except ValueError:
-                    f.write (str(ValueError))
+                f.write(upmarker.markup_proposal_list(proposals))
+
             if text_no == len(paths)-1:
                 reactor.stop()
             else:

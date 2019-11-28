@@ -2,7 +2,7 @@ from typing import Callable, Optional
 
 from helpers.color_logger import *
 import pprint
-
+import logging
 
 from twisted.internet.protocol import ClientCreator
 
@@ -13,7 +13,7 @@ if 'kivy' in sys.modules:
 
 from twisted.internet import reactor
 
-import client
+from client import annotation_protocol
 
 
 
@@ -32,13 +32,13 @@ class AnnotationClient:
         >>> self.me_as_client.commander(fun ,MakePrediction, text="I love you. You love me.")
         """
         self.log_everything = log_everything
-        self.connection = ClientCreator(reactor, client.annotation_protocol.amp.AMP).connectTCP("localhost", 5180)
+        self.connection = ClientCreator(reactor, annotation_protocol.amp.AMP).connectTCP("localhost", 5180)
 
 
 
     def commander(self,
                   ProceedLocation: Optional[Callable] = dummy_response,
-                  Command: client.annotation_protocol.amp.Command = None,
+                  Command: annotation_protocol.amp.Command = None,
                   **kwargs):
         """ Its like a bind function between some Server Command and a action on client side.
         You call it like this:
@@ -64,20 +64,20 @@ class AnnotationClient:
             raise ValueError('`Command` must be given')
 
         def error(reason):
-            client.annotation_protocol.logging.error("Something went wrong")
-            client.annotation_protocol.logging.error(str(reason))
+            logging.error("Something went wrong")
+            logging.error(str(reason))
             reactor.stop()
 
         def seamless_apply(result):
             if self.log_everything:
-                client.annotation_protocol.logging.warning(pprint.pformat(result))
+                annotation_protocol.logging.warning(pprint.pformat(result))
             ProceedLocation(**result)
             return result
 
         def callback(result):
-            client.annotation_protocol.logging.warning(str(Command))
+            logging.warning(str(Command))
             for k, warg in kwargs.items():
-                client.annotation_protocol.logging.warning(k)
+                annotation_protocol.logging.warning(k)
 
             result.callRemote(Command, **kwargs).addCallback(seamless_apply).addErrback(error)
             return result
