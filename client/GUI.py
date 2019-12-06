@@ -61,6 +61,15 @@ class RootWidget(ScreenManager):
 
         #self.next_page()
 
+        def forward_proceed(annotation: List = []):
+            global back
+            print ("client callback approached")
+            print("waiting now")
+            _ = yield
+            print("going")
+            yield "yes"
+
+        self.me_as_client.commander(ProceedLocation=forward_proceed, Command=Ping)
 
     def landing(self):
         self.current = self.landing_screen
@@ -294,7 +303,6 @@ class RootWidget(ScreenManager):
     def display_sample(self):
         markedup_sentence = self.upmarker.markup_annotation(self.annotated_sample)
         self.ids.annot.ids.sample.text = markedup_sentence
-        self.ids.manip.ids.sample.text = markedup_sentence
         self.ids.manip.ids.annotationmanipulationview.refresh_from_data()
         logging.warning(self.ids.manip.ids.annotationmanipulationview.data)
 

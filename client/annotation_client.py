@@ -1,5 +1,8 @@
 from typing import Callable, Optional
 
+from twisted.protocols import amp
+from twisted.protocols.amp import AMP
+
 from helpers.color_logger import *
 import pprint
 
@@ -31,14 +34,14 @@ class AnnotationClient:
         like this:
         >>> self.me_as_client.commander(fun ,MakePrediction, text="I love you. You love me.")
         """
-        self.log_everything = log_everything
-        self.connection = ClientCreator(reactor, client.annotation_protocol.amp.AMP).connectTCP("localhost", 5180)
+        self.log_everything = False
+        self.connection = ClientCreator(reactor, AMP).connectTCP("localhost", 5180)
 
 
 
     def commander(self,
                   ProceedLocation: Optional[Callable] = dummy_response,
-                  Command: client.annotation_protocol.amp.Command = None,
+                  Command: amp.Command = None,
                   **kwargs):
         """ Its like a bind function between some Server Command and a action on client side.
         You call it like this:

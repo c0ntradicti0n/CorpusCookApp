@@ -82,43 +82,63 @@ class JSONB64COMPRESS(Argument):
         #logging.info('compression: %dkB to %dkB, means to %2.1f%% of the original' % (l_before/1000, l_after/1000, 100/(l_before/l_after)))
         return decoded
 
+__commands__ = {}
+def commando(cls):
+    global __commands__
+    __commands__[cls.__name__] = {'arguments' :
+                                      {name.decode('ascii') :type.__class__.__name__ for name, type in cls.arguments},
+                         'response' : {name.decode('ascii') :type.__class__.__name__ for name, type in cls.response}
+                                  }
+    return cls
 
-
-
+@commando
 class ChangeProposals(amp.Command):
     arguments = [(b'cuts', JSONB64COMPRESS()), (b'indices', JSONB64COMPRESS()), (b'delete_add', JSONB64COMPRESS())]
     response = [(b'proposals', JSONB64COMPRESS()), (b'indices', JSONB64COMPRESS()),  (b'delete_add', JSONB64COMPRESS())]
 
+@commando
 class DeliverPage(amp.Command):
     arguments = []
     response = [(b'text', amp.Unicode())]
 
+@commando
 class DeliverSample(amp.Command):
     arguments = []
     response = [(b'text', amp.Unicode())]
 
+@commando
 class MakePrediction(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response = [(b'annotation', JSON())]
 
+@commando
 class MakeProposals(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response = [(b'proposals', JSONB64COMPRESS())]
 
+@commando
 class SaveComplicated(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response =  [(b'done', amp.Unicode())]
 
+@commando
 class SaveSample(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response =  [(b'done', amp.Unicode())]
 
+@commando
 class SaveAnnotation(amp.Command):
     arguments = [(b'annotation', JSON()), (b'which',  amp.Unicode())]
     response =  [(b'done', amp.Unicode())]
 
+@commando
 class ZeroAnnotation(amp.Command):
     arguments = [(b'text',  amp.Unicode()), (b'which',  amp.Unicode())]
+    response =  [(b'done', amp.Unicode())]
+
+@commando
+class Ping(amp.Command):
+    arguments = [(b'text',  amp.Unicode())]
     response =  [(b'done', amp.Unicode())]
 
 

@@ -1,0 +1,25 @@
+
+span.subject1     {color: red;}
+span.contrast1     {color: blue;}
+
+span.subject2      {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.55em;
+    border:2px solid
+}
+span.contrast2     {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.025em;
+    border:2px solid
+}
+
+
+.indentation     {display:inline-block;
+                  width: 50px;
+}

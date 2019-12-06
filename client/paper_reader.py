@@ -1,3 +1,4 @@
+import logging
 import os
 import urllib
 from pprint import pprint
@@ -8,6 +9,7 @@ from scipy.stats import ks_2samp
 
 os.popen('java -jar client/tika-server-1.22.jar')
 sleep(1)
+from multiprocessing import Pool
 from tika import parser
 import regex as re
 
@@ -50,6 +52,7 @@ class paper_reader:
                                 )
 
     def load_text(self, adress):
+        logging.info("tika reading text...")
         if not re.match(r"""((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*""",
             adress        ):
             self.rawText = parser.from_file(adress)
@@ -62,6 +65,8 @@ class paper_reader:
         """ Extracts prose text from  the loaded texts, that may contain line numbers somewhere, adresses, journal links etc.
         :return str:  prose text
         """
+        logging.info("transferring text to nlp thing...")
+
         text = self.rawText['content']
         paragraphs = text.split('\n\n')
         print ("mean length of splitted lines", (mean([len(p) for p in paragraphs])))
@@ -146,9 +151,9 @@ def main():
 
     if os.path.isfile(args.file):
         process_single_file(paths=args.file)
+
     elif os.path.isdir(args.file):
         import glob
-
         for file_extension in args.extensions:
             relevant_files = list(glob.iglob(args.file + '/*.' +  file_extension, recursive=args.recursive))
 

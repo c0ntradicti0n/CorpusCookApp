@@ -1,10 +1,14 @@
 import glob
-import logging
+from time import time
+from typing import List
+
 from flask import request
-from flask import Flask, jsonify, make_response
-import requests
-import os
-import simplejson as json
+from flask import Flask
+
+from client import bio_annotation
+import shell_commander
+from client.annotation_client import AnnotationClient
+from client.annotation_protocol import *
 
 app = Flask(__name__)
 logging.getLogger().setLevel(logging.INFO)
@@ -13,6 +17,7 @@ logging.getLogger().setLevel(logging.INFO)
 import config
 from config import htmls
 
+I_as_client = AnnotationClient()
 
 @app.route("/paths",  methods=['GET', 'POST'])
 def html_paths():
@@ -47,7 +52,7 @@ def upload():
     try:
         path = htmls + filename
         import subprocess
-        cmd = "python ./client/paper_reader.py '{path}'".format(path=path)
+        cmd = """python ./client/paper_reader.py "{path}""""".format(path=path)
         logging.warning('calling command: ' + cmd)
         subprocess.Popen(cmd, shell=True)
     except Exception:
@@ -55,5 +60,64 @@ def upload():
 
     return ""
 
+from client.upmarker import UpMarker
+upmarker = UpMarker(_generator="tml")
+
+@app.route("/markup", methods=["POST"])
+def markup():
+    markedup = '???'
+    if request.method == 'POST':
+        spans = request.json['spans']
+        spans = [list(d.values()) for d in spans]
+        text =  request.json['text']
+        tokens = text.split()
+        annotated_sample = bio_annotation.BIO_Annotation.annotation_from_spans(tokens=tokens, paired_spans=spans)
+        markedup = upmarker.markup_annotation(annotated_sample)
+    else:
+        logging.error("not a post request")
+
+    return markedup
+
+from twisted.internet.defer import inlineCallbacks
+
+
+@inlineCallbacks
+@app.route("/predictmarkup", methods=["POST"])
+def predictmarkup():
+    spans = []
+    if request.method == 'POST':
+        text =  request.json['text']
+        print ('text', text)
+
+        shell_commander.call_os(MakePrediction, text=text)
+
+        tokens = text.split()
+        annotated_sample = bio_annotation.BIO_Annotation.annotation_from_spans(tokens=tokens, paired_spans=spans)
+        markedup = upmarker.markup_annotation(annotated_sample)
+    else:
+        logging.error("not a post request")
+
+    return markedup
+
+
+@app.route("/ping/")
+def ping():
+    class Timer(object):
+        def __init__(self, description):
+            self.description = description
+
+        def __enter__(self):
+            self.start =    time()
+
+        def __exit__(self, type, value, traceback):
+            self.end = time()
+            print(f"{self.description}: {self.end - self.start}")
+
+    with Timer("ping"):
+        ret = shell_commander.call_os(Ping, text='yes')
+    return ret
+
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
+

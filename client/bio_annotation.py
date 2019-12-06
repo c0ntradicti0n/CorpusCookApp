@@ -265,7 +265,7 @@ class BIO_Annotation:
                         logging.error('length %d' % length)
                         #logging.error(pprint.pformat(paired_spans))
                     for i in range(d['start'], d['end']):
-                        these_tags[i] = "-".join(['B' if i == beginning else 'I', d['kind']])
+                        these_tags[i] = "-".join(['B' if i == beginning else 'I', d['kind'].upper()])
                 all_tags = [x + [y] for x, y in zip(all_tags, these_tags)]
 
         print ('ALL TAGS', all_tags)

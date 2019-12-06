@@ -97,7 +97,19 @@ def threewise(iterable):
 
 class UpMarker:
     def __init__(self, _generator='bbcode'):
+        """
+
+        :param _generator:
+         - html
+         - tml body content of html
+         - bbcode (kivy formatting)
+        """
         self.generator = _generator
+
+        if _generator == 'tml':  # html torso
+            self.generator = 'html'
+            self.body['html'] = "%s"
+
 
     nl = {
         'bbcode': Bwalp("\n"),
@@ -243,10 +255,12 @@ class UpMarker:
         for index, (word, tag) in enumerate(annotation):
             highlighted[index].update(**self.markup_word(tag, paragraph=0, new_level=0))
 
-        return self.body[self.generator] % "".join(self.wrap_indent_paragraph(
-            highlighted,
-            fill=self.indent[self.generator],
-            wrap=130))
+        return self.body[self.generator] % "".join(  # insert at format mark in body
+            self.wrap_indent_paragraph(
+                highlighted,
+                fill=self.indent[self.generator],
+                wrap=130)
+        )
 
     def markup_proposal_list(self, proposals):
         proposals = sorted(proposals, key=lambda d: d['indices'][0])
