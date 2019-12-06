@@ -2,6 +2,7 @@ import itertools
 from collections import OrderedDict
 from typing import List, Tuple, Dict
 import codecs
+import logging
 
 from more_itertools import flatten, pairwise
 
@@ -13,7 +14,7 @@ simple_html = """
 
 <style>
 
-span.subject1     {color: red;}
+span.subject1      {color: red;}
 span.contrast1     {color: blue;}
 
 span.subject2      {
@@ -22,7 +23,8 @@ span.subject2      {
     line-height:1.2;
     display:inline-block;
     border-radius:.55em;
-    border:2px solid
+    border:2px solid;
+    border-color: black;
 }
 span.contrast2     {
     margin: 0.05em;
@@ -30,9 +32,22 @@ span.contrast2     {
     line-height:1.2;
     display:inline-block;
     border-radius:.025em;
-    border:2px solid
+    border:2px solid;
+    border-color: black;
 }
 
+span.subject3      { text-decoration: underline; 
+}
+span.contrast3     { font-style: oblique; 
+}
+
+
+span.privative     {   opacity: 0.5;
+		       mix-blend-mode: difference;
+                       	filter: invert(1); 
+                       	}
+                       	
+span.threshold     {}  
 
 .indentation     {display:inline-block; 
                   width: 50px;
@@ -61,12 +76,16 @@ class Bwalp:
         self.paragraph = _paragraph
 
     def update(self, _before=[], _after=[], _level=None, _paragraph=None):
-        self.before.extend(_before)
-        self.after.extend(_after)
-        if _level:
-            self.level = _level
-        if _paragraph:
-            self.paragraph = _paragraph
+        for b, a in zip(_before, _after):
+            if not b in self.before:
+                self.before.append(b)
+                self.after.append(a)
+                if _level:
+                    self.level = _level
+                if _paragraph:
+                    self.paragraph = _paragraph
+            else:
+                logging.info('annotating {self} multiple times'.format(self=self))
         return self
 
 
@@ -119,13 +138,21 @@ class UpMarker:
         'bbcode': Bwalp("~~~"),
         'html': Bwalp("<span class='indentation'>  </span>")
     }
+    sincere = {
+        'bbcode': [],
+        'html': [("",""),("<span class='privative'>","</span>")]
+    }
+    threshold = {
+        'bbcode':[],
+        'html': [("<hr class='threshold'>",''),("<hr class='threshold'>",''),("<hr class='threshold'>",''),("<hr class='threshold'>",'')]
+    }
     body = {
         'bbcode': "%s",
         'html': simple_html
     }
     _generator_tags = {
-        'bbcode': (('[', ']'), ('[/',']')),
-        'html': (('<', '>'), ('</','>'))
+        'bbcode': (('[', ']'), ('[/',']'), ('[/',']'),  ('[/',']')),
+        'html': (('<', '>'), ('</','>'),  ('</','>'),  ('</','>'))
     }
     annotation_dicts = {
         'bbcode' :
@@ -143,7 +170,25 @@ class UpMarker:
         'CONTRAST_MARKER': ('b', 'color=#F1FF1F'),
         'SUBJECT_EXCEPT': ('b', 'color=#F1FF1F'),
         'COMPARISON_MARKER': ('b', 'color=#F1FF1F')
-        }],
+        },
+        {
+        'SUBJECT': ('i'),
+        'CONTRAST': ('u'),
+        'ASPECT': ('b', 'color=#F1FF1F'),
+        'CONTRAST_MARKER': ('b', 'color=#F1FF1F'),
+        'SUBJECT_EXCEPT': ('b', 'color=#F1FF1F'),
+        'COMPARISON_MARKER': ('b', 'color=#F1FF1F')
+        },
+        {
+        'SUBJECT': ('i'),
+        'CONTRAST': ('u'),
+        'ASPECT': ('b', 'color=#F1FF1F'),
+        'CONTRAST_MARKER': ('b', 'color=#F1FF1F'),
+        'SUBJECT_EXCEPT': ('b', 'color=#F1FF1F'),
+        'COMPARISON_MARKER': ('b', 'color=#F1FF1F')
+        }
+    ]
+    ,
     'html':
     [{
             'SUBJECT':  ('span class="subject level1 subject1"',),
@@ -155,6 +200,20 @@ class UpMarker:
         }, {
             'SUBJECT':  ('span class="subject level2 subject2"',),
             'CONTRAST': ('span class="contrast level2 contrast2"',),
+            'ASPECT': ('b', 'color=#F1FF1F'),
+            'CONTRAST_MARKER': ('b', 'color=#F1FF1F'),
+            'SUBJECT_EXCEPT': ('b', 'color=#F1FF1F'),
+            'COMPARISON_MARKER': ('b', 'color=#F1FF1F'),
+        }, {
+            'SUBJECT':  ('span class="subject level3 subject3"',),
+            'CONTRAST': ('span class="contrast level3 contrast3"',),
+            'ASPECT': ('b', 'color=#F1FF1F'),
+            'CONTRAST_MARKER': ('b', 'color=#F1FF1F'),
+            'SUBJECT_EXCEPT': ('b', 'color=#F1FF1F'),
+            'COMPARISON_MARKER': ('b', 'color=#F1FF1F'),
+        }, {
+            'SUBJECT':  ('span class="subject level4 subject4"',),
+            'CONTRAST': ('span class="contrast level4 contrast4"',),
             'ASPECT': ('b', 'color=#F1FF1F'),
             'CONTRAST_MARKER': ('b', 'color=#F1FF1F'),
             'SUBJECT_EXCEPT': ('b', 'color=#F1FF1F'),
@@ -179,7 +238,7 @@ class UpMarker:
 
     before_to_after_map = {}
 
-    def markup_word(self, tag, paragraph, new_level):
+    def markup_word(self, tag, paragraph, new_level, sincerity):
         before = []
         after = []
         level = None
@@ -192,13 +251,23 @@ class UpMarker:
 
             before.extend(self.gen_before_tag(code_tag) for code_tag in gc_beg)
             after.extend (self.gen_after_tag(code_tag) for code_tag in gc_end)
-            self.before_to_after_map.update({self.gen_before_tag(start_tag):self.gen_after_tag(end_tag) for start_tag, end_tag in zip (gc_beg, gc_end)})
+            self.before_to_after_map.update(
+                   {
+                    self.gen_before_tag(start_tag):self.gen_after_tag(end_tag) 
+                    for start_tag, end_tag in zip (gc_beg, gc_end)
+                   })
             level = new_level
 
-        return {'_before': before,
-                '_after': after,
-                '_level': level,
-                '_paragraph': paragraph}
+            if sincerity:
+                 before.append(self.sincere[self.generator][sincerity])
+                 after.append( self.sincere[self.generator][sincerity])
+        
+        return {
+             '_before': before,
+             '_after': after,
+             '_level': level,
+             '_paragraph': paragraph
+        }
 
     def wrap_indent_paragraph(self, highlighted_dict: Dict[int, Bwalp],  wrap:int=80, fill:str= " ") -> str:
         width = 0
@@ -264,28 +333,65 @@ class UpMarker:
 
     def markup_proposal_list(self, proposals):
         proposals = sorted(proposals, key=lambda d: d['indices'][0])
-        indexed_words = {index: word
-                         for annotation in proposals
-                         for (word, tag), index in
-                             zip(annotation['annotation'], annotation['indices']) }
+        indexed_words = {
+            index: word
+            for annotation in proposals
+            for (word, tag), index in
+                 zip(annotation['annotation'], annotation['indices'])
+             }
         highlighted = self.new_start_dict(indexed_words)
 
-        def update_dict_from_annotation(indices, annotation, paragraph, level):
+        def update_dict_from_annotation(indices, annotation, paragraph, level, sincerity, mark_end, yes_no):
+            print (sincerity)
             try:
-                return {
-                    index: highlighted[index].update(**self.markup_word(tag, paragraph, level))
+                res = {
+                    index: highlighted[index].update(**self.markup_word(tag, paragraph, level, sincerity))
                     for index, (word, tag) in zip(indices, annotation)
                 }
-            except KeyError:
+                if yes_no:
+                    try:
+                        res[indices[0] + mark_end].update(_before=self.threshold[self.generator][level])
+                        logging.info('line inserted')
+                    except KeyError:
+                        logging.info("line not inserted")
+                return res
+            except TypeError:
+                print (sincerity)
                 raise
+
+        def subdate(highlighted, subs):
+            for sub_paragraph, sub_annotation in enumerate(subs):
+                highlighted.update(
+                    update_dict_from_annotation(
+                        sub_annotation['indices'], 
+                        sub_annotation['annotation'], 
+                        paragraph,
+                        level=sub_annotation['depth'],
+                        sincerity=annotation['privative'],
+                        mark_end=annotation['mark_end'],
+                        yes_no=annotation['difference']
+                        )                    
+                    )
+            for sub_paragraph, sub_annotation in enumerate(subs):
+                subdate(highlighted, sub_annotation['subs'])
+
+
 
 
         for paragraph, annotation in enumerate(proposals):
-            highlighted.update(update_dict_from_annotation(annotation['indices'], annotation['annotation'], paragraph, 0))
+            highlighted.update(
+                        update_dict_from_annotation(annotation['indices'], 
+                        annotation['annotation'], 
+                        paragraph, 
+                        level=0, 
+                        sincerity=annotation['privative'],
+                        mark_end=annotation['mark_end'],
+                        yes_no=annotation['difference']
+                        ))
+
 
             # Overwrite higher-level annotations with lower level for indenting them
-            for sub_paragraph, sub_annotation in  enumerate(annotation['subs']):
-                highlighted.update(update_dict_from_annotation(sub_annotation['indices'], sub_annotation['annotation'], paragraph, level=1))
+            subdate(highlighted=highlighted, subs=annotation["subs"])
 
 
         return self.body[self.generator] % "".join (self.wrap_indent_paragraph(
