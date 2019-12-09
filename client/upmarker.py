@@ -140,7 +140,7 @@ class UpMarker:
     }
     sincere = {
         'bbcode': [],
-        'html': [("",""),("<span class='privative'>","</span>")]
+        'html': [('',''),('<span class="privative">','</span>')]
     }
     threshold = {
         'bbcode':[],
@@ -259,8 +259,12 @@ class UpMarker:
             level = new_level
 
             if sincerity:
-                 before.append(self.sincere[self.generator][sincerity])
-                 after.append( self.sincere[self.generator][sincerity])
+                before.append(self.sincere[self.generator][sincerity][0])
+                after.append( self.sincere[self.generator][sincerity][1])
+                self.before_to_after_map.update(
+                    {
+                        self.sincere[self.generator][sincerity][0]: self.sincere[self.generator][sincerity][1]
+                    })
         
         return {
              '_before': before,
@@ -322,7 +326,7 @@ class UpMarker:
         highlighted = self.new_start_dict(dict(enumerate(word for word, tag in annotation)))
 
         for index, (word, tag) in enumerate(annotation):
-            highlighted[index].update(**self.markup_word(tag, paragraph=0, new_level=0))
+            highlighted[index].update(**self.markup_word(tag, paragraph=0, new_level=0, sincerity=True))
 
         return self.body[self.generator] % "".join(  # insert at format mark in body
             self.wrap_indent_paragraph(
@@ -408,8 +412,12 @@ class UpMarker:
         for u in unique:
             for bwalp1, bwalp2 in pairwise(yet_written):
                 if u in set(bwalp1.before) & set(bwalp2.before):
-                    to_call.append((bwalp1.delete_ending, self.before_to_after_map[u]))
-                    to_call.append((bwalp2.delete_beginning, u ))
+                    try:
+                        to_call.append((bwalp1.delete_ending, self.before_to_after_map[u]))
+                        to_call.append((bwalp2.delete_beginning, u ))
+                    except KeyError as ee:
+                        raise
+
 
         for procedure, arg in to_call:
             procedure(arg)

@@ -13,7 +13,7 @@ from client.annotation_protocol import *
 app = Flask(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
-
+import json
 import config
 from config import htmls
 
@@ -89,15 +89,14 @@ def predictmarkup():
         text =  request.json['text']
         print ('text', text)
 
-        shell_commander.call_os(MakePrediction, text=text)
-
-        tokens = text.split()
-        annotated_sample = bio_annotation.BIO_Annotation.annotation_from_spans(tokens=tokens, paired_spans=spans)
-        markedup = upmarker.markup_annotation(annotated_sample)
+        ret = shell_commander.call_os(MakePrediction, text=text)
+        marked_up = upmarker.markup_annotation(ret['annotation'])
+        spans = list(bio_annotation.BIO_Annotation.annotation_to_spans(ret['annotation']))
     else:
         logging.error("not a post request")
 
-    return markedup
+    return json.dumps({'marked_up': marked_up,
+                          'spans':  {'type': 'span', spans}})
 
 
 @app.route("/ping/")
