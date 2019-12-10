@@ -122,7 +122,7 @@ class BIO_Annotation:
 
             yield "".join([span_tag, _, annotag])
 
-    def annotation_to_spans(annotations):
+    def annotation2spans(annotations):
         ''' Get spans bases on spans annotated with the BIOL tagging scheme
 
         >>> annotation = [  # Some strange prediction from the model
@@ -140,7 +140,7 @@ class BIO_Annotation:
         ...    ]
         >>> annotation = [('The', 'B-CONTRAST'), ('queen', 'I-SUBJECT'), ('’s', 'I-SUBJECT'), ('crown', 'I-SUBJECT'), (',', 'I-CONTRAST'), ('also', 'I-CONTRAST'), ('referred', 'I-CONTRAST'), ('to', 'I-CONTRAST'), ('the', 'I-CONTRAST'), ('Royal', 'I-CONTRAST'), ('crown', 'I-CONTRAST'), ('is', 'I-CONTRAST'), ('made', 'I-CONTRAST'), ('with', 'I-CONTRAST'), ('depressed', 'I-CONTRAST'), ('arches', 'I-CONTRAST'), ('.', 'O'), ('The', 'B-CONTRAST'), ('king', 'I-SUBJECT'), ('’s', 'I-SUBJECT'), ('crown', 'I-SUBJECT'), ('also', 'I-CONTRAST'), ('called', 'I-CONTRAST'), ('the', 'I-CONTRAST'), ('Imperial', 'I-CONTRAST'), ('crown', 'I-CONTRAST'), (',', 'I-CONTRAST'), ('on', 'I-CONTRAST'), ('the', 'I-CONTRAST'), ('other', 'I-CONTRAST'), ('hand', 'I-CONTRAST'), (',', 'I-CONTRAST'), ('has', 'I-CONTRAST'), ('arches', 'I-CONTRAST'), ('that', 'I-CONTRAST'), ('rise', 'I-CONTRAST'), ('to', 'I-CONTRAST'), ('the', 'I-CONTRAST'), ('centre', 'I-CONTRAST'), ('.', 'O')]
         >>> import pprint
-        >>> pprint.pprint(list(BIO_Annotation.annotation_to_spans(annotation))) # doctest: +NORMALIZE_WHITESPACE
+        >>> pprint.pprint(list(BIO_Annotation.annotation2spans(annotation))) # doctest: +NORMALIZE_WHITESPACE
                 [('CONTRAST',
                   (27, 33),
                   [(27, ('facilitation', 'B-CONTRAST')),
@@ -169,7 +169,7 @@ class BIO_Annotation:
                    (48, ('neuropeptides', 'I-CONTRAST')),
                    (49, ('”', 'L-CONTRAST'))])]
         >>> annotation = [["The", "B-CONTRAST"], ["key", "I-CONTRAST"], ["difference", "I-CONTRAST"], ["between", "I-CONTRAST"], ["distillation", "I-CONTRAST"], ["and", "I-CONTRAST"], ["condensation", "I-CONTRAST"], ["is", "O"], ["that", "O"], ["the", "B-CONTRAST"], ["distillation", "I-SUBJECT"], ["is", "I-CONTRAST"], ["a", "I-CONTRAST"], ["separation", "I-CONTRAST"], ["technique", "I-CONTRAST"], ["whereas", "O"], ["the", "B-CONTRAST"], ["condensation", "I-SUBJECT"], ["is", "I-CONTRAST"], ["a", "I-CONTRAST"], ["process", "I-CONTRAST"], ["of", "I-CONTRAST"], ["changing", "I-CONTRAST"], ["the", "I-CONTRAST"], ["phase", "I-CONTRAST"], ["of", "I-CONTRAST"], ["matter", "I-CONTRAST"], [".", "O"]]
-        >>> pprint.pprint(list(BIO_Annotation.annotation_to_spans(annotation))) # doctest: +NORMALIZE_WHITESPACE
+        >>> pprint.pprint(list(BIO_Annotation.annotation2spans(annotation))) # doctest: +NORMALIZE_WHITESPACE
 
         :param annotations: list of words and tags
         :return:
@@ -183,7 +183,7 @@ class BIO_Annotation:
 
         yield from BIO_Annotation.spans_from_partitions_flat(parts)
 
-    def compute_structured_spans(annotations):
+    def annotation2nested_spans(annotations):
         # Divide by 'B'eginning tags
         parts = list(BIO_Annotation.compute_parts(annotations))
         # get single spans within these parts
@@ -241,7 +241,7 @@ class BIO_Annotation:
     importance_list = ['SUBJECT','ASPECT','CONTRAST',
                             'SUBJECT_EXCEPT', 'CONTRAST_MARKER','COMPARISON_MARKER', '']
 
-    def annotation_from_spans(tokens: List[str], paired_spans: List[List[Dict[str, Any]]]):
+    def spans2annotation(tokens: List[str], paired_spans: List[List[Dict[str, Any]]]):
         try:
             sorted_paired_spans = sorted(paired_spans,
                                          key=lambda l:
@@ -264,7 +264,7 @@ class BIO_Annotation:
                         length = len(tokens)
                         logging.error('length %d' % length)
                         #logging.error(pprint.pformat(paired_spans))
-                    for i in range(d['start'], d['end']):
+                    for i in range(int(d['start']), int(d['end'])):
                         these_tags[i] = "-".join(['B' if i == beginning else 'I', d['kind'].upper()])
                 all_tags = [x + [y] for x, y in zip(all_tags, these_tags)]
 

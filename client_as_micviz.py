@@ -71,7 +71,7 @@ def markup():
         spans = [list(d.values()) for d in spans]
         text =  request.json['text']
         tokens = text.split()
-        annotated_sample = bio_annotation.BIO_Annotation.annotation_from_spans(tokens=tokens, paired_spans=spans)
+        annotated_sample = bio_annotation.BIO_Annotation.spans2annotation(tokens=tokens, paired_spans=spans)
         markedup = upmarker.markup_annotation(annotated_sample)
     else:
         logging.error("not a post request")
@@ -82,7 +82,7 @@ from twisted.internet.defer import inlineCallbacks
 
 
 @inlineCallbacks
-@app.route("/predictmarkup", methods=["POST"])
+@app.route("/predict", methods=["POST"])
 def predictmarkup():
     spans = []
     if request.method == 'POST':
@@ -90,13 +90,19 @@ def predictmarkup():
         print ('text', text)
 
         ret = shell_commander.call_os(MakePrediction, text=text)
-        marked_up = upmarker.markup_annotation(ret['annotation'])
-        spans = list(bio_annotation.BIO_Annotation.annotation_to_spans(ret['annotation']))
+        spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(ret['annotation']))
+
+        spans = [{an[0]:  {
+             'kind': an[0],
+             'start': float(an[1][0]),
+             'end':   float(an[1][1]),
+             'able':  True,
+             'no': int(set_no)
+            } for an in an_set} for set_no, an_set in enumerate (spans)]
     else:
         logging.error("not a post request")
 
-    return json.dumps({'marked_up': marked_up,
-                          'spans':  {'type': 'span', spans}})
+    return json.dumps(spans)
 
 
 @app.route("/ping/")

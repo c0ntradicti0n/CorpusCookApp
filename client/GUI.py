@@ -309,7 +309,7 @@ class RootWidget(ScreenManager):
 
 
     def update_sliders_from_spans(self):
-        paired_spans = list(BIO_Annotation.compute_structured_spans(self.final_version))
+        paired_spans = list(BIO_Annotation.annotation2nested_spans(self.final_version))
         length =  len(self.final_version)
 
         self.sliders = {}
@@ -346,7 +346,7 @@ class RootWidget(ScreenManager):
         self.ids.manip.ids.spansliderview.refresh_from_data()
         tokens = [t[0] for t in self.final_version]
         paired_spans = BIO_Annotation.pair_spans(data)
-        new_annotation = BIO_Annotation.annotation_from_spans(tokens=tokens, paired_spans=paired_spans)
+        new_annotation = BIO_Annotation.spans2annotation(tokens=tokens, paired_spans=paired_spans)
         self.final_version = new_annotation
         self.annotated_sample = new_annotation
         self.check_annotation(new_annotation)
