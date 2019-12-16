@@ -1,0 +1,53 @@
+<MultiMedia_Screen>:
+    GridLayout:
+        rows: 1
+        cols: 2
+        GridLayout:
+            size_hint_x:0.96
+            rows: 3
+            cols: 1
+            BoxLayout:
+                size_hint_y: 0.06
+                orientation:'horizontal'
+                TextInput:
+                    id: address
+                    text: r"pdfs/Adolph Gruenbaum - Physics, Philosophy and Psychoanalysis.pdf" # r"/home/stefan/PycharmProjects/CorpusCookApp/pdfs/Adolph Gruenbaum - Physics, Philosophy and Psychoanalysis.pdf"
+                    multiline: False
+                    size_hint_x: 0.9
+                SquareNavButton:
+                    background_normal: "./images/read.png"
+                    on_press: root.manager.load_something()
+
+            ScrollView:
+                scroll_type: ['bars']
+                size_hint_y: 0.87
+                Textlooker:
+                    halign: "justify"
+                    valign: "middle"
+                    markup: True
+                    multiline: True
+                    id: editor
+                    text: "sample"
+                    font_size: 18
+                    text_size: self.width, None
+                    size_hint_y: None
+                    height: self.texture_size[1]
+                    selection_made:  root.manager.sampler_add_selection
+        BoxLayout:
+            size_hint_x:.04
+            orientation:'vertical'
+            NavButton:
+                background_normal: "./images/pdf.png"
+                on_press: app.root.load_mm()
+                text: "pdf etc."
+                size: (self.parent.width, self.parent.width)
+            NavButton:
+                background_normal: "./images/next.png"
+                on_press: app.root.next_page()
+                text: "next"
+                size: (self.parent.width, self.parent.width)
+
+
+
+
+

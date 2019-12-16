@@ -1,0 +1,35 @@
+
+
+<Sample_Screen>:
+    GridLayout:
+        rows: 2
+        cols: 1
+        TextInput:
+            multiline: True
+            id: html_sample
+            size_hint_y: 9.5
+            text: "sample"
+            font_size: 40
+        GridLayout:
+            rows: 3
+            cols: 2
+
+            NavButton:
+                text: "Next text"
+                font_size: 30
+                on_press: root.manager.next_page()
+
+            NavButton:
+                text: "Selection to sample library"
+                font_size: 30
+                on_press: root.manager.sampler_add_selection()
+            NavButton:
+                text: "Selection unfeasable to annotate, but difference utterance"
+                font_size: 30
+                on_press: root.manager.complicated_selection()
+            NavButton:
+                text: "Selection is non-difference utterance"
+                font_size: 30
+                on_press: root.manager.zero_annotation_selection()
+
+
