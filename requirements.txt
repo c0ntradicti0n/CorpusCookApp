@@ -1,9 +1,9 @@
-kivy
+
 numpy
 more_itertools
 regex
 twisted
 scipy
 tika
-kivy-deps.sdl2
+
 flask
