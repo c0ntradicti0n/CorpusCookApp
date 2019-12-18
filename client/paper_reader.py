@@ -100,6 +100,7 @@ def main():
     parser.add_argument('file', type=str, help='file or directory to process')
     parser.add_argument("-r", "--recursive", help="iterate recursively through directory",
                         action="store_true")
+
     parser.add_argument("-e", "--extensions", metavar='E', type=str, nargs='+',
                         help="file extensions, parses pdf, txt on default. What's possible depends on apache TIKA",
                         default=['pdf'])

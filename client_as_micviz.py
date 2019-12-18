@@ -1,6 +1,6 @@
 import glob
 from time import time, sleep
-from typing import List
+import os
 
 from flask import request
 from flask import Flask
@@ -18,6 +18,29 @@ import config
 from config import htmls
 
 I_as_client = AnnotationClient()
+
+import logging, sys
+
+class LogFile(object):
+    """File-like object to log text using the `logging` module."""
+
+    def __init__(self, name=None):
+        self.logger = logging.getLogger(name)
+
+    def write(self, msg, level=logging.INFO):
+        self.logger.log(level, msg)
+
+    def flush(self):
+        for handler in self.logger.handlers:
+            handler.flush()
+
+logging.basicConfig(level=logging.DEBUG, filename='mylog.log')
+
+# Redirect stdout and stderr
+sys.stdout = LogFile('stdout')
+sys.stderr = LogFile('stderr')
+print ('sdsdsdsdsdsds')
+
 
 def arg_parse(request):
     args = json.loads(request.data.decode('utf-8'))  # request.json['spot']
@@ -134,7 +157,6 @@ def predictmarkup():
     spans = []
     if request.method == 'POST':
         spot, spans = arg_parse(request)
-        #tokens = spot['text'].split()
         ret = shell_commander.call_os(MakePrediction, text=spot['text'])
         spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(ret['annotation']))
 
@@ -155,7 +177,6 @@ def predictmarkup():
 
 @app.route("/textlen", methods=["POST"])
 def textlen():
-    spans = []
     if request.method == 'POST':
         spot, spans = arg_parse(request)
         ret = len(spot['text'].split())
@@ -244,9 +265,117 @@ def zero_annotation_selection_second_corpus():
         logging.error("not a post request")
     return json.dumps(rets)
 
+#---------------------------------------
+
+@app.route("/migrate_corpus", methods=['GET'])
+def migrate_corpus():
+    ''' give file '''
+    if request.method == 'GET':
+        which = request.args['which']
+        logging.info("give log " + which)
+        rets = []
+        cmd = "cp {cc_corpus_path}/*.conll {dist_corpus_path}/ ".format(cc_corpus_path=config.cc_corpus_path, dist_corpus_path=config.dist_corpus_path )
+        logging.info("copying corpus from corpuscook to trainer by this command\n" + cmd)
+        os.system(cmd)
+    return json.dumps(rets)
+
+#---------------------------------------
+
+@app.route("/mix_corpus", methods=['GET'])
+def mix_corpus():
+    ''' give file '''
+    if request.method == 'GET':
+        which = request.args['which']
+        logging.info("give log " + which)
+        rets = []
+        cmd = "python {mixer} {cc_corpus_path}".format(mixer=config.mixer_path, cc_corpus_path=config.cc_corpus_path)
+        logging.info("mixing corpus commits to test/train/valid connl3s\n" + cmd)
+        logging.debug(str(os.system(cmd)))
+        return json.dumps(rets)
+    return []
+
+#---------------------------------------
+
+
+
+@app.route("/start_training", methods=['GET'])
+def start_training():
+    ''' give file '''
+    if request.method == 'GET':
+        which = request.args['which']
+        logging.info("give log " + which)
+        rets = []
+        cmd = "python {train_script} {config}".format(train_script=config.train_script, config=config.allennlp_config)
+        logging.info("start training process, lasts 1h to 3days \n" + cmd)
+        os.system(cmd)
+    return json.dumps(rets)
+
+
+#---------------------------------------
+
+@app.route("/migrate_model", methods=['GET'])
+def migrate_model():
+    ''' give file '''
+    if request.method == 'GET':
+        which = request.args['which']
+        logging.info("give log " + which)
+        rets = []
+
+        cmd = "cp {dist_model_path} {cc_model_path}/ ".format(dist_model_path=config.dist_model_path_first, cc_model_path=config.cc_model_path_first )
+        logging.info("copying FIRST corpus from corpuscook to trainer by this command\n" + cmd)
+        os.system(cmd)
+
+        cmd = "cp {dist_model_path} {cc_model_path}/ ".format(dist_model_path=config.dist_model_path_over, cc_model_path=config.cc_model_path_over )
+        logging.info("copying OVER corpus from corpuscook to trainer by this command\n" + cmd)
+        os.system(cmd)
+
+    return json.dumps(rets)
+#---------------------------------------
+
+def readlines_reverse(filename):
+    with open(filename) as qfile:
+        qfile.seek(0, os.SEEK_END)
+        position = qfile.tell()
+        line = ''
+        while position >= 0:
+            qfile.seek(position)
+            next_char = qfile.read(1)
+            if next_char == "\n":
+                yield line[::-1]
+                line = ''
+            else:
+                line += next_char
+            position -= 1
+        yield line[::-1]
+
+#---------------------------------------
+
+@app.route("/get_logs",  methods=['GET'])
+def get_log():
+    ''' give file '''
+    if request.method == 'GET':
+        which = request.args['which']
+        logging.info("give log " + which)
+        path = config.log_files[which]
+        try:
+            rev_lines = readlines_reverse(path)
+            return "\n".join(list(rev_lines)).encode()
+        except FileNotFoundError:
+            logging.info("error with giving log " + path)
+            return ""
+    logging.info("no file path given")
+    return ""
+
 ###########################################################################################
 
-
 if __name__ == '__main__':
+    import logging, logging.config, yaml
+
+    logging.config.dictConfig(yaml.load(open('logging.conf')))
+    logfile = logging.getLogger('file')
+    logconsole = logging.getLogger('console')
+    logfile.debug("Debug FILE")
+    logconsole.debug("Debug CONSOLE")
+
     app.run(port=5000, debug=True)
 
