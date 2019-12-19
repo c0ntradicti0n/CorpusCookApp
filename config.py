@@ -13,8 +13,9 @@ dist_corpus_path = "~/ai-difference/Distinctiopus4/manual_corpus"
 
 mixer_path = "~/CorpusCook/manually_annotated/mix_corpus_from_manual_files.py"
 
-train_venv = "~/ai-difference/Distinctiopus4/venv/bin/activate"
-train_script= "~/ai-difference/Distinctiopus4/do/train_difference.sh"
+train_venv = "~/ai-difference/venv/bin/activate"
+train_path= "~/ai-difference/Distinctiopus4"
+train_script= "~/ai-difference/Distinctiopus4/do/train_multi_corpus.py"
 allennlp_config = "~/ai-difference/Distinctiopus4/experiment_configs/elmo_lstm3_feedforward4_crf_straight_fitter.config"
 
 dist_model_path_first = "~/ai-difference/Distinctiopus4/output/first_./experiment_configs/{config}/model.tar.gz".format(config=allennlp_config)
