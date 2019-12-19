@@ -305,9 +305,14 @@ def start_training():
         which = request.args['which']
         logging.info("give log " + which)
         rets = []
-        cmd = "{train_script} {config}".format(train_script=config.train_script, config=config.allennlp_config)
+        cmd = "source {train_venv} ; {train_script} {allennlp_config}".format(
+            train_venv = config.train_venv,
+            train_script=config.train_script,
+            allennlp_config=config.allennlp_config)
         logging.info("start training process, lasts 1h to 3days \n" + cmd)
-        os.system(cmd)
+        import subprocess
+
+        subprocess.call(cmd, shell=True)
     return json.dumps(rets)
 
 
