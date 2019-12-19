@@ -33,13 +33,13 @@ class paper_reader:
         self.threshold = _threshold
 
         self.normal_data = list(
-                                    'used are variants of the predicate calculus. He  even says, “Lately '
-                                    'those who think  they ought to be so regarded seem to  be winning.” '
+                                    'used are variants of the predicate calculus. He  even says, Lately '
+                                    'those who think  they ought to be so regarded seem to  be winning. '
                                     'Under these circumstances, it does seem odd for McDermott to devote '
                                     'much space to  complaining about the logical basis  of a book whose '
                                     'very title proclaims  it is about logical foundations. In any  '
-                                    'case, given such a title, it wouldn’t  seem necessary that readers '
-                                    '“should  be warned that the foundations being  explored are not '
+                                    'case, given such a title, it wouldnt  seem necessary that readers '
+                                    'should  be warned that the foundations being  explored are not '
                                     'In competition with this diversity  is the idea of a unified model '
                                     'of inference. The desire for such a model is  strong among those '
                                     'who study  declarative representations, and  Genesereth and Nilsson '
@@ -143,8 +143,11 @@ def main():
                 print(text[:100])
                 text = text [:20000]
 
+                logging.info("command sent")
+
                 client.commander(Command=MakeProposals, ProceedLocation=proceed, text=text)
 
+        logging.info ("command sent")
         client.commander(Command=MakeProposals, ProceedLocation=proceed, text=text)
 
 

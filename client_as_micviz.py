@@ -124,7 +124,7 @@ def upload():
     try:
         path = htmls + filename
         import subprocess
-        cmd = """python ./client/paper_reader.py "{path}""""".format(path=path)
+        cmd = """python ./client/paper_reader.py "{path}" """.format(path=path)
         logging.warning('calling command: ' + cmd)
         subprocess.Popen(cmd, shell=True)
     except Exception:
