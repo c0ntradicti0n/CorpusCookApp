@@ -8,6 +8,9 @@ tests
 venv
 venv37
 log.log
+idea
+*.iml
+*.xml
 
 *.pyc
 *.pyx

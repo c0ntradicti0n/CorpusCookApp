@@ -13,7 +13,7 @@ dist_corpus_path = "~/ai-difference/Distinctiopus4/manual_corpus"
 
 mixer_path = "~/CorpusCook/manually_annotated/mix_corpus_from_manual_files.py"
 
-train_script= "~/ai-difference/Distinctiopus4/do/train_difference.py"
+train_script= "~/ai-difference/Distinctiopus4/do/train_difference.sh"
 allennlp_config = "~/ai-difference/Distinctiopus4/experiment_configs/elmo_lstm3_feedforward4_crf_straight_fitter.config"
 
 dist_model_path_first = "~/ai-difference/Distinctiopus4/output/first_./experiment_configs/{config}/model.tar.gz".format(config=allennlp_config)
