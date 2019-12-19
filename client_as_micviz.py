@@ -274,7 +274,7 @@ def migrate_corpus():
         which = request.args['which']
         logging.info("give log " + which)
         rets = []
-        cmd = "cp {cc_corpus_path}/*.conll {dist_corpus_path}/ ".format(cc_corpus_path=config.cc_corpus_path, dist_corpus_path=config.dist_corpus_path )
+        cmd = "cp {cc_corpus_path}/*.conll3 {dist_corpus_path}/ ".format(cc_corpus_path=config.cc_corpus_path, dist_corpus_path=config.dist_corpus_path )
         logging.info("copying corpus from corpuscook to trainer by this command\n" + cmd)
         os.system(cmd)
     return json.dumps(rets)
