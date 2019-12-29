@@ -39,7 +39,6 @@ logging.basicConfig(level=logging.DEBUG, filename='mylog.log')
 # Redirect stdout and stderr
 sys.stdout = LogFile('stdout')
 sys.stderr = LogFile('stderr')
-print ('sdsdsdsdsdsds')
 
 
 def arg_parse(request):
