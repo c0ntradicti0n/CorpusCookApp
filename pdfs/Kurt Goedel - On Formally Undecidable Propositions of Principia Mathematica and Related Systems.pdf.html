@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<style>
+
+span.subject1     {color: red;}
+span.contrast1     {color: blue;}
+
+span.subject2      {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.55em;
+    border:2px solid
+}
+span.contrast2     {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.025em;
+    border:2px solid
+}
+
+
+.indentation     {display:inline-block; 
+                  width: 50px;
+}
+</style>
+</head>
+<body>
+ 0   About   this   document   Godel   ’s   famous   proof   [   2   ,   1   ]   is   highly   interesting   ,   but   may   be   hard   to   understand   .   Some   of   this   difficulty   is   due   to   the   fact   that  <span class="contrast level1 contrast1"> the </span>  <br> </br>
+  <span class="contrast level1 contrast1"> notation   used   by </span> <span class="subject level1 subject1"> Godel </span> <span class="contrast level1 contrast1"> has   been   largely   replaced   by   other   notation </span>  .   <br> </br>
+   <br> </br>
+   Some   of   this   difficulty   is   due   to   the   fact   that   while  <span class="subject level1 subject1"> Godel   ’s </span> <span class="contrast level1 contrast1"> formulations   are   concise   ,   they   sometimes   require   the   readers   to   make   up   their   own </span>  <br> </br>
+  <span class="contrast level1 contrast1"> interpretations   for   formulae   ,   or   to   keep   definitions   in   mind   that   may   not   seem   mnemonic   to   them </span>  .   <br> </br>
+   <br> </br>
+   This   document   is   a   translation   of   a   large   part   of   Godel   ’s   proof   .  <span class="contrast level1 contrast1"> The </span> <span class="subject level1 subject1"> translation </span> <span class="contrast level1 contrast1"> happens   on   three   levels   :   from   German   to   English   from   Godel   ’s   notation   to </span>  <br> </br>
+  <span class="contrast level1 contrast1"> more   common   mathematical   symbols   from   paper   to   hyper-text   This   translation   omits   all   foot-notes   from   the   original   ,   and   only   contains   sections   1   and   2   ( </span>  <br> </br>
+  <span class="contrast level1 contrast1"> out   of   four   ) </span>  .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> The </span> <span class="subject level1 subject1"> translation </span> <span class="contrast level1 contrast1"> comes   as-is   ,   with   no   explicit   or   implied   warranty </span>  .  <span class="contrast level1 contrast1"> Use   at   your </span> <span class="subject level1 subject1"> own   risk </span> <span class="contrast level1 contrast1"> ,   the   translator   is   not   willing   to   take   any   responsibility   for </span>  <br> </br>
+  <span class="contrast level1 contrast1"> problems   you   might   have   because   of   errors   in   the   translation   ,   or   because   of   misunderstandings   .   You   are   permitted   to   reproduce   this   document   all   you   like   , </span>  <br> </br>
+  <span class="contrast level1 contrast1"> but   only   if   you   include   this   notice </span>  .   Boulder   ,   November   27   ,   2000   Martin   Hirzel   1   On   formally   undecidable   propositions   of   Principia   Mathematica   and   <br> </br>
+   related   systems   I   Kurt   Godel   1931   1   Introduction   The   development   of   mathematics   towards   greater   exactness   has   ,   as   is   well-known   ,   lead   to   formalization   <br> </br>
+   of   large   areas   of   it   such   that   you   can   carry   out   proofs   by   following   a   few   mechanical   rules   .   <br> </br>
+   <br> </br>
+   The   most   comprehensive   current   formal   systems   are   the   system   of   Principia   Mathematica   (   PM   )   on   the   one   hand   ,   the   Zermelo-Fraenkelian   axiom-system   of   set   <br> </br>
+   theory   on   the   other   hand   .   These   two   systems   are   so   far   developed   that   you   can   formalize   in   them   all   proof   methods   that   are   currently   in   use   in   mathematics   ,   <br> </br>
+   i.e.   you   can   reduce   these   proof   methods   to   a   few   axioms   and   deduction   rules   .   Therefore   ,   the   conclusion   seems   plausible   that   these   deduction   rules   are   <br> </br>
+   sufficient   to   decide   all   mathematical   questions   expressible   in   those   systems   .   We   will   show   that   this   is   not   true   ,   but   that   there   are   even   relatively   easy   <br> </br>
+   problem   in   the   theory   of   ordinary   whole   numbers   that   can   not   be   decided   from   the   axioms   .   <br> </br>
+   <br> </br>
+   This   is   not   due   to   the   nature   of   these   systems   ,   [   174   ]   but   it   is   true   for   a   very   wide   class   of   formal   systems   ,   which   in   particular   includes   all   those   that   you   get   <br> </br>
+   by   adding   a   finite   number   of   axioms   to   the   above   mentioned   systems   ,   provided   the   additional   axioms   do   n’t   make   false   theorems   provable   .   Let   us   first   sketch   <br> </br>
+   the   main   intuition   for   the   proof   ,   without   going   into   detail   and   of   course   without   claiming   to   be   exact   .   The   formulae   of   a   formal   system   (   we   will   restrict   <br> </br>
+   ourselves   to   the   PM   here   )   can   be   viewed   syntactically   as   finite   sequences   of   the   basic   symbols   (   variables   ,   logical   constants   ,   and   parentheses   or   <br> </br>
+   separators   )   ,   and   it   is   easy   to   define   precisely   which   sequences   of   the   basic   symbols   are   syntactically   correct   formulae   and   which   are   not   .   <br> </br>
+   <br> </br>
+   Similarly   ,   proofs   are   formally   nothing   else   than   finite   sequences   of   formulae   (   with   specific   definable   properties   )   .   Of   course   ,   it   is   irrelevant   for   <br> </br>
+   meta-mathematical   observations   what   signs   are   taken   for   basic   symbols   ,   and   so   we   will   chose   natural   numbers   for   them   .   Hence   ,   a   formula   is   a   finite   <br> </br>
+   sequence   of   natural   numbers   ,   and   a   proof   schema   is   a   finite   sequence   of   finite   sequences   of   natural   numbers   .   The   meta-mathematical   concepts   (   theorems   )   <br> </br>
+   hereby   become   concepts   (   theorems   )   about   natural   numbers   ,   which   makes   them   (   at   least   partially   )   expressible   in   the   symbols   of   the   system   PM   .   <br> </br>
+   <br> </br>
+   In   particular   ,   one   can   show   that   the   concepts   “   formula   ”   ,   “   proof   schema   ”   ,   “   provable   formula   ”   are   all   expressible   within   the   system   PM   ,   i.e.   one   can   ,   for   <br> </br>
+   example   ,   2   come   up   with   a   formula   F   (   v   )   of   PM   that   has   one   free   variable   v   (   whose   type   is   sequence   of   numbers   )   such   that   the   semantic   interpretation   of   F   (   v   )   is   :   <br> </br>
+   v   is   a   provable   formula   .   We   will   now   construct   an   undecidable   theorem   of   the   system   PM   ,   i.e.   a   theorem   A   for   which   neither   A   nor   A   is   provable   ,   as   follows   :   [   175   <br> </br>
+   ]   We   will   call   a   formula   of   PM   with   exactly   one   free   variable   of   type   natural   numbers   a   class-sign   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> We   will   assume   the   class-signs   are   somehow   numbered   ,   call   the   nth   one </span> <span class="subject level1 subject1"> Rn </span> <span class="contrast level1 contrast1"> ,   and   note   that   both   the   concept   “   class-sign   ” </span>  and   the   ordering   relation   R   are   <br> </br>
+   definable   within   the   system   PM   .   <br> </br>
+   <br> </br>
+   Let   be   an   arbitrary   class-sign   with   (   n   )   we   denote   the   formula   that   you   get   when   you   substitute   n   for   the   free   variable   of   .   Also   ,   the   ternary   relation   x   y(z   )   is   <br> </br>
+   definable   within   PM   .   Now   we   will   define   a   class   K   of   natural   numbers   as   follows   :   K   n   IN   provable(Rn(n   )   )   (   1   )   (   where   provable(x   )   means   x   is   a   provable   formula   )   <br> </br>
+   .   With   other   words   ,   K   is   the   set   of   numbers   n   where   the   formula   Rn(n   )   that   you   get   when   you   insert   n   into   its   own   formula   Rn   is   improvable   .   <br> </br>
+   <br> </br>
+   Since   all   the   concepts   used   for   this   definition   are   themselves   definable   in   PM   ,   so   is   the   compound   concept   K   ,   i.e.   there   is   a   class-sign   S   such   that   the   <br> </br>
+   formula   S(n   )   states   that   n   K.   As   a   class-sign   ,   S   is   identical   with   a   specific   Rq   ,   i.e.   we   have   S   Rq   for   a   specific   natural   number   q.   We   will   now   prove   that   the   <br> </br>
+   theorem   Rq(q   )   is   undecidable   within   PM   .   We   can   understand   this   by   simply   plugging   in   the   definitions   :   Rq(q   )   S(q   )   q   K   provable(Rq(q   )   )   ,   in   other   words   ,   Rq(q   <br> </br>
+   )   states   “   I   am   improvable   .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> ” </span> <span class="contrast level1 contrast1"> Assuming   the   theorem   Rq(q   )   were   provable   ,   then   it   would   also   be   true   ,   i.e.   because   of   (   1   )   provable(Rq(q   )   )   would   be   true   in   contradiction   to   the </span>  <br> </br>
+  <span class="contrast level1 contrast1"> assumption </span>  .   If   on   the   other   hand  <span class="subject level1 subject1"> Rq(q </span> <span class="contrast level1 contrast1"> )   were   provable   ,   then   we   would   have   q   6   K   ,   i.e.   provable(Rq(q   )   ) </span>  .   That   means   that   both   Rq(q   )   and   Rq(q   )   would   be   provable   ,   <br> </br>
+   which   again   is   impossible   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> The   analogy   of   this   conclusion   with   the </span> <span class="subject level1 subject1"> Richard-antinomy </span> <span class="contrast level1 contrast1"> leaps   to   the   eye   there   is   also   a   close   kinship   with   the   liar-antinomy   ,   because   our   undecidable </span>  <br> </br>
+  <span class="contrast level1 contrast1"> theorem   Rq(q   )   states   that   q   is   in   K   ,   i.e.   according   to   (   1   )   that   Rq(q   )   is   not   provable </span>  .   <br> </br>
+   <br> </br>
+   Hence   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> we   have   in   front   of   us   a   theorem   that   states   its   own </span> <span class="subject level2 subject2"> unprovability </span>  <br> </br>
+   .  <span class="contrast level1 contrast1"> The   proof   method   we   just   applied   is   obviously   applicable   to   any </span> <span class="subject level1 subject1"> formal   system </span> <span class="contrast level1 contrast1"> that   on   the   one   hand   is   expressive   [   176   ]   enough   to   allow   the   definition   of   the </span>  <br> </br>
+  <span class="contrast level1 contrast1"> concepts   used   above   (   in   particular   the   concept   “   provable   formula   ”   ) </span>  ,   and   in   which   on   the   other   hand  <span class="contrast level1 contrast1"> all </span> <span class="subject level1 subject1"> provable   formulae </span> <span class="contrast level1 contrast1"> are   also   true </span>  .   <br> </br>
+   <br> </br>
+   The   following   exact   implementation   of   the   proof   will   among   other   things   have   the   goal   to   replace   the   second   prerequisite   by   a   purely   formal   and   much   weaker   <br> </br>
+   one   .  <span class="contrast level1 contrast1"> From   the   remark   that   Rq(q   )   states   its   own   improvability   it   immediately   follows   that   Rq(q   )   is   correct </span>  ,   since  <span class="subject level1 subject1"> Rq(q   ) </span> <span class="contrast level1 contrast1"> is   in   fact   unprovable   (   because   it   is </span>  <br> </br>
+  <span class="contrast level1 contrast1"> undecidable   ) </span>  .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> The   theorem   which   is   undecidable   within   the   system </span> <span class="subject level1 subject1"> PM </span> <span class="contrast level1 contrast1"> has   hence   been   decided   by   metamathematical   considerations   .   The   exact   analysis   of </span> <span class="subject level1 subject1"> this   strange   fact </span>  <br> </br>
+  <span class="contrast level1 contrast1"> leads   to   surprising   results   about   consistency   proofs   for   formal   systems   ,   which   will   be   discussed   in   section   4   (   theorem   XI   ) </span>  .   <br> </br>
+   <br> </br>
+   3   2   Main   Result   We   will   now   exactly   implement   the   proof   sketched   above   ,   and   will   first   give   an   exact   description   of   the   formal   system   P   ,   for   which   we   want   to   <br> </br>
+   show   the   existence   of   undecidable   theorems   .   By   and   large   ,  <span class="subject level1 subject1"> P </span> <span class="contrast level1 contrast1"> is   the   system   that   you   get   by   building   the   logic   of   PM   on   top   the   Peano   axioms   (   numbers   as </span>  <br> </br>
+  <span class="contrast level1 contrast1"> individuals   ,   successor-relation   as   undefined   basic   concept   ) </span>  .   <br> </br>
+   <br> </br>
+   2.1   Definitions   The   basic   signs   of   system   P   are   the   following   :   I.   Constant   :   “   ”   (   not   )   ,   “   ”   (   or   )   ,   “   ”   (   for   all   )   ,   “   0   ”   (   zero   )   ,   “   succ   ”   (   the   successor   of   )   ,   “   (   ”   ,   “   )   ”   (   <br> </br>
+   parentheses   )   .  <span class="subject level1 subject1"> Godel </span> <span class="contrast level1 contrast1"> ’s   original   text   uses   a   different   notation </span>  ,   but  <span class="contrast level1 contrast1"> the </span> <span class="subject level1 subject1"> reader </span> <span class="contrast level1 contrast1"> may   be   more   familiar   with   the   notation   adapted   in   this   translation </span>  .   <br> </br>
+   <br> </br>
+   Remark   :   Variables   for   binary   or   n-ary   functions   (   relations   )   are   superfluous   as   basic   signs   ,   because   one   can   define   relations   as   classes   of   ordered   pairs   <br> </br>
+   and   ordered   pairs   as   classes   of   classes   ,   e.g.   the   ordered   pair   (   a   ,   b   )   by   a   ,   a   ,   b   ,   where   x   ,   y   and   x   stand   for   the   classes   whose   only   elements   are   x   ,   y   and   x   ,   <br> </br>
+   respectively   .   [   177   ]   By   a   sign   of   type   one   we   understand   a   combination   of   signs   of   the   form   By   substa   (   v   b   )   (   where   a   is   a   formula   ,   v   is   a   variable   ,   and   b   is   a   sign   of   <br> </br>
+   the   same   type   as   v   )   <br> </br>
+   <br> </br>
+   we   understand   the   formula   that   you   get   by   substituting   b   for   every   free   occurrence   4   of   v   in   a.   We   say   that   a   formula   a   is   a   type-lift   of   another   formula   b   if   you   <br> </br>
+   can   obtain   a   from   b   by   increasing   the   type   of   all   variables   occurring   in   a   by   the   same   number   .   The   following   formulae   (   I   through   V   )   are   called   axioms   (   they   are   <br> </br>
+   written   with   the   help   of   the   abbreviations   (   defined   in   the   usual   manner   )   ,   ,   ,   x   ,   ,   and   using   the   customary   conventions   for   leaving   out   parentheses   )   :   I.   The   <br> </br>
+   Peano   axioms   ,   which   give   fundamental   properties   for   natural   numbers   .   <br> </br>
+   <br> </br>
+   successor   ,   they   are   equal   .  <span class="contrast level1 contrast1"> ) </span> <span class="subject level1 subject1"> x1   .x2(x1 </span> <span class="contrast level1 contrast1"> )   We   can   prove   a   predicate   x2   on   natural   numbers   by   natural   induction </span>  .   <br> </br>
+   <br> </br>
+   [   178   ]   II   .   Every   formula   obtained   by   inserting   arbitrary   formulae   for   p   ,   q   ,   r   in   the   following   schemata   .   We   call   these   proposition   axioms   .   III   .   Every   <br> </br>
+   formula   obtained   from   the   two   schemata   1   .   (   v   .   a   )   substa   (   v   c   by   inserting   the   following   things   for   a   ,   v   ,   b   ,   c   (   and   executing   the   operation   denoted   by   subst   in   1   <br> </br>
+   .   )   :   Insert   an   arbitrary   formula   for   a   ,   an   arbitrary   variable   for   v   ,   any   formula   where   v   does   not   occur   free   for   b   ,   and   for   c   a   sign   of   the   same   type   as   v   with   the   <br> </br>
+   additional   requirement   that   c   does   not   contain   a   free   variable   that   would   be   bound   in   a   position   in   a   where   v   is   free   .   <br> </br>
+   <br> </br>
+   For   lack   of   a   better   name   ,   we   will   call   these   quantor   axioms   .   IV   .   Every   formula   obtained   from   the   schema   1   .   u   .v   .   (   u(v   )   a   )   by   inserting   for   v   and   u   any   variables   <br> </br>
+   of   type   n   and   n   +   1   respectively   and   for   a   a   formula   that   has   no   free   occurrence   of   u.   This   axiom   takes   the   place   of   the   reducibility   axiom   (   the   comprehension   <br> </br>
+   axiom   of   set   theory   )   .   5   V.   Any   formula   obtained   from   the   following   by   type-lift   (   and   the   formula   itself   )   :   )   x2   y2   This   axiom   states   that   a   class   is   completely   <br> </br>
+   determined   by   its   elements   .   <br> </br>
+   <br> </br>
+   Let   us   call   it   the   set   axiom   .  <span class="contrast level1 contrast1"> A </span> <span class="subject level1 subject1"> formula   c </span> <span class="contrast level1 contrast1"> is   called   the   immediate   consequence   of   a   and   b   (   of   a   )   if   a   is   the   formula   b   c   (   or   if </span> <span class="subject level1 subject1"> c </span> <span class="contrast level1 contrast1"> is   the   formula   v </span>  .   <br> </br>
+   <br> </br>
+   a   ,   where   v   is   any   variable   )   .   The   class   of   provable   formulae   is   defined   as   the   smallest   class   of   formulae   that   contains   the   axioms   and   is   closed   under   the   <br> </br>
+   relation   “   immediate   consequence   ”   .   2.2   Godel-numbers   We   will   now   uniquely   associate   the   primitive   signs   of   system   P   with   natural   numbers   as   follows   :   <br> </br>
+   Furthermore   we   will   uniquely   associate   each   variable   of   type   n   with   a   number   of   the   form   pn   (   where   p   is   a   prime   13   )   .   Thus   there   is   a   <br> </br>
+   one-to-one-correspondence   between   every   finite   string   of   basic   signs   and   a   sequence   of   natural   numbers   .   <br> </br>
+   <br> </br>
+   We   now   map   the   sequences   of   natural   numbers   (   again   in   one-to-one   correspondence   )   to   natural   numbers   by   having   the   sequence   n1   ,   n2   ,   .   .   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> , </span> <span class="subject level1 subject1"> nk </span> <span class="contrast level1 contrast1"> correspond   to   the   number   2   2.3   Primitive   recursion </span>  At   this   point   ,  <span class="contrast level1 contrast1"><span class="contrast level1 contrast1"> we </span> <span class="contrast level1 contrast1"> will </span> <span class="contrast level1 contrast1"> make </span> <span class="contrast level1 contrast1"> an </span> <span class="contrast level1 contrast1"> excursion </span> <span class="contrast level1 contrast1"> to </span> <span class="contrast level1 contrast1"> make </span> <span class="contrast level1 contrast1"> an </span> <span class="contrast level1 contrast1"> observation </span></span>  that   a   priori   does   not   have   anything   to   <br> </br>
+   do   with   the   system   P   ,   and   will   first   give   the   following   definition   :   we   6   (   2   )   We   call   a   number-theoretical   formula   primitive   recursive   if   there   is   a   finite   <br> </br>
+   sequence   of   number-theoretical   formulae   1   ,   2   ,   .   .   .   ,   n   ending   in   such   that   every   function   k   of   the   sequence   is   either   defined   from   two   of   the   preceding   <br> </br>
+   formulae   by   primitive   recursion   or   results   by   inserting   into   any   of   the   preceding   ones   or   ,   and   this   is   the   base   [   180   ]   case   ,   is   a   constant   or   the   successor   <br> </br>
+   function   succ(x   )   x+   1   .   <br> </br>
+   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]   <br> </br>
+   <br> </br>
+   We   call   a   relation   R(x1   ,   .   .   .   ,   xn   )   primitive   recursive   if   there   is   a   primitive   recursive   function   (   x1   ,   .   .   .   ,   xn   )   such   that   for   all   x1   ,   x2   ,   .   .   .   ,   xn   ,   The   <br> </br>
+   following   theorems   hold   :   I.   Every   function   (   relation   )   that   you   get   by   inserting   primitive   recursive   functions   in   the   places   of   variables   of   other   <br> </br>
+   primitive   recursive   functions   (   relations   )   is   itself   primitive   recursive   likewise   every   function   that   you   get   from   primitive   recursive   functions   by   <br> </br>
+   the   schema   (   2   )   .   II   .   If   R   and   S   are   primitive   recursive   relations   ,   then   so   are   R   ,   RS   (   and   therefore   also   R   S   )   .   <br> </br>
+   <br> </br>
+   III   .   If   the   functions   (   x   )   ,   (   y   )   are   primitive   recursive   ,   then   so   is   the   relation   (   x   )   (   y   )   .   We   have   resorted   to   a   vector   notation   x   to   denote   finite-length   <br> </br>
+   tuples   of   variables   .   IV   .   If   the   function   (   x   )   and   the   relation   R(y   ,   z   )   are   primitive   recursive   ,   then   so   are   the   relations   S   ,   T   )   )   as   well   as   the   function   )   where   <br> </br>
+   argminx   f(x   )   .F   (   x   )   stands   for   the   smallest   x   for   which   (   x   f(x   )   )   F   (   x   )   holds   ,   and   for   0   if   there   is   no   such   number   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> Readers   to   whom   an   operational   7   description   appeals   more   may   want   to   think   of   this   as   a   loop   that   tries   every   value   from   1   to   (   x   )   to   determine   the   result </span>  .   The   <br> </br>
+   crucial   point   here   is  <span class="subject level1 subject1"> this   theorem   does   not   state   that   an   unbounded   loop   (   or   recursion   )   is   primitive   recursive   those   are   in   fact   strictly   more   powerful   in </span>  <br> </br>
+  <span class="subject level1 subject1"> terms   of   computability </span>  .   Theorem   I   follows   immediately   from   the   definition   of   “   primitive   recursive   ”   .   <br> </br>
+   <br> </br>
+   Theorems   II   and   III   are   based   upon   the   fact   that   the   number-theoretical   functions   corresponding   to   the   logical   concepts   ,   ,   (   where   n   0   is   taken   for   true   and   n   <br> </br>
+   6   0   for   false   )   ,   namely   (   x   )   (   x   ,   y   )   (   x   ,   y   )   [   181   ]   are   primitive   recursive   ,   as   one   can   easily   convince   oneself   .   The   proof   for   theorem   IV   is   ,   in   short   ,   the   <br> </br>
+   following   :   by   assumption   there   is   a   primitive   recursive   (   y   ,   z   )   such   that   :   Using   the   recursion-schema   (   2   )   we   now   define   a   function   (   y   ,   z   )   as   follows   :   )   (   (   n   ,   z   <br> </br>
+   )   )   .   <br> </br>
+   <br> </br>
+   A   ,   which   makes   use   of   the   above   defined   and   of   the   fact   that  <span class="contrast level1 contrast1"><span class="contrast level1 contrast1"> a </span></span> <span class="subject level1 subject1"><span class="subject level1 subject1"> product </span></span> <span class="contrast level1 contrast1"><span class="contrast level1 contrast1"> is </span> <span class="contrast level1 contrast1"> 0 </span> <span class="contrast level1 contrast1"> if </span> <span class="contrast level1 contrast1"> one </span> <span class="contrast level1 contrast1"> of </span> <span class="contrast level1 contrast1"> its </span> <span class="contrast level1 contrast1"> factors </span> <span class="contrast level1 contrast1"> is </span> <span class="contrast level1 contrast1"> 0 </span> <span class="contrast level1 contrast1"> , </span> <span class="contrast level1 contrast1"> can </span> <span class="contrast level1 contrast1"> be </span> <span class="contrast level1 contrast1"> described </span> <span class="contrast level1 contrast1"> by </span> <span class="contrast level1 contrast1"> the </span> <span class="contrast level1 contrast1"> following </span> <span class="contrast level1 contrast1"> pseudo-code </span> <span class="contrast level1 contrast1"> : </span> <span class="contrast level1 contrast1"> A </span> <span class="contrast level1 contrast1"> if((0 </span> <span class="contrast level1 contrast1"> , </span> <span class="contrast level1 contrast1"> z </span> <span class="contrast level1 contrast1"> ) </span> <span class="contrast level1 contrast1"> 0 </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"><span class="contrast level1 contrast1"> ) </span> <span class="contrast level1 contrast1"> then </span> <span class="contrast level1 contrast1"> 0 </span> <span class="contrast level1 contrast1"> else </span> <span class="contrast level1 contrast1"> if((n </span> <span class="contrast level1 contrast1"> , </span> <span class="contrast level1 contrast1"> z </span> <span class="contrast level1 contrast1"> ) </span> <span class="contrast level1 contrast1"> 6 </span> <span class="contrast level1 contrast1"> 0 </span> <span class="contrast level1 contrast1"> ) </span> <span class="contrast level1 contrast1"> then </span> <span class="contrast level1 contrast1"> 0 </span> <span class="contrast level1 contrast1"> else </span></span>  1   the   first   case   will   occur   if   and   only   if   all   factors   of   A   are   1   ,   i.e.   if   we   have   8   This   implies   that   the   function   (   n   ,   z   )   (   <br> </br>
+   viewed   as   a   function   of   n   )   remains   0   up   to   the   smallest   value   of   n   for   which   R(n   ,   z   )   holds   ,   and   has   that   value   from   then   on   (   if   R(0   ,   z   )   already   holds   then   (   n   ,   z   )   is   <br> </br>
+   correspondingly   constant   and   0   )   .   <br> </br>
+   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]    [missing index]   <br> </br>
+    [missing index]   <br> </br>
+   <br> </br>
+   For   example   ,   the   function   x   +   y   can   be   constructed   as   0   +   y   y   and   (   k   +   1   )   +   y   succ(k   +   y   )   ,   i.e.   (   y   )   y   and   (   k   ,   l   ,   y   )   succ(l   )   in   schema   (   2   )   .   Using   these   concepts   ,   we   will   <br> </br>
+   now   define   a   sequence   of   functions   (   relations   )   1   -   45   ,   each   of   which   is   defined   from   the   preceding   ones   by   the   methods   given   by   theorems   I   through   IV   .   In   doing   <br> </br>
+   so   ,   usually   multiple   of   the   definition   steps   allowed   by   theorems   I   through   IV   are   combined   in   one   .   <br> </br>
+   <br> </br>
+   Each   of   the   functions   (   relations   )   1   -   45   ,   among   which   we   find   for   example   the   concepts   “   formula   ”   ,   “   axiom   ”   ,   and   “   immediate   consequence   ”   ,   is   therefore   <br> </br>
+   primitive   recursive   .   )   x   is   a   prime   number   .   3   .   prFactor(0   ,   x   )   0   )   prFactor(n   ,   x   )   is   the   nth   (   by   size   )   prime   number   contained   in   x.   5   .   nthPrime(0   )   0   )   <br> </br>
+   nthPrime(n   )   is   the   nth   (   by   size   )   prime   number   .   9   )   item(n   ,   x   )   is   the   nth   item   of   the   sequence   of   numbers   associated   with   x   (   for   n   0   and   n   not   larger   than   the   <br> </br>
+   length   of   this   sequence   )   .   )   length(x   )   is   the   length   of   the   sequence   of   numbers   associated   with   x.   xy   corresponds   to   the   operation   of   “   concatenating   ”   two   <br> </br>
+   finite   sequences   of   numbers   .   <br> </br>
+   <br> </br>
+   9   .   seq(x   )   2x   seq(x   )   corresponds   to   the   number   sequence   that   consists   only   of   the   number   x   (   for   x   0   )   .   10   .   paren(x   )   seq(11   )   x   seq(13   )   paren(x   )   corresponds   to   <br> </br>
+   the   operation   of   “   parenthesizing   ”   (   11   and   13   are   associated   with   the   primitive   signs   “   (   ”   and   “   )   ”   )   .   x   is   a   variable   of   type   n.   12   .   isVar(x   )   n   x   .   vtype(n   ,   x   )   x   is   <br> </br>
+   a   variable   .   13   .   not(x   )   seq(5   )   paren(x   )   not(x   )   is   the   negation   of   x.   15   .   <br> </br>
+   <br> </br>
+   forall(x   ,   y   )   seq(9   )   seq(x   )   paren(y   )   forall(x   ,   y   )   is   the   generalization   of   y   by   the   variable   x   (   provided   that   x   is   a   variable   )   .   succ   n(n   ,   x   )   corresponds   to   <br> </br>
+   the   operation   of   “   prepending   the   sign   ‘   succ   ’   in   front   of   x   for   n   times   ”   .   17   .   number(n   )   succ(n   ,   seq(1   )   )   number(n   )   is   the   number-sign   for   the   number   n.   x   is   a   <br> </br>
+   sign   of   type   one   .   10   )   (   x   is   a   sign   of   type   n.   x   is   an   elementary   formula   .   <br> </br>
+   <br> </br>
+   length(x   )   0   x   is   a   sequence   of   formulae   ,   each   of   which   is   either   an   elementary   formula   or   is   obtained   from   the   preceding   ones   by   the   operations   of   negation   ,   <br> </br>
+   disjunction   ,   or   generalization   .   23   .   isFm(x   )   n   (   nthPrime(length(x)2   )   )   x(length(x))2   .   fmSeq(n   )   x   item(length(n   )   ,   n   )   x   is   a   formula   (   i.e.   the   last   item   <br> </br>
+   of   a   sequence   n   of   formulae   )   .   length(a   )   +   1   n   length(a   )   +   length(forall(v   ,   b   )   )   The   variable   v   is   bound   in   x   at   position   n.   v   item(n   ,   x   )   n   length(x   )   bound(v   ,   n   ,   x   <br> </br>
+   )   The   variable   v   is   free   in   x   at   position   n.   26   .   <br> </br>
+   <br> </br>
+   free(v   ,   x   )   n   length(x   )   .   free(v   ,   n   ,   x   )   v   occurs   in   x   as   a   free   variable   .   You   obtain   insert(x   ,   n   ,   y   )   from   x   by   inserting   y   instead   of   the   nth   item   in   the   sequence   x   (   <br> </br>
+   provided   that   0   n   length(x   )   )   .   freePlace(k   ,   v   ,   x   )   is   the   k+1st   place   in   x   (   counted   from   the   end   of   formula   x   )   where   v   is   free   (   and   0   if   there   is   no   such   place   )   .   11   <br> </br>
+   29   .   nFreePlaces(v   ,   x   )   argminn   length(x   )   .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> freePlace(n </span> <span class="contrast level1 contrast1"> ,   v   ,   x   )   0   nFreePlaces(v   ,   x   )   is   the   number   of   places   where   v   is   free   in   x.   subst(x   ,   v </span>  ,  <span class="subject level1 subject1"> y   ) </span> <span class="contrast level1 contrast1"> is   the   above   defined   concept   substa   (   v   b   ) </span>  .   33   .   typeLift(n   ,   x   <br> </br>
+   )   argmin   y   xxn   .   k   length(x   )   .   typeLift(n   ,   x   )   is   the   nth   type-lift   of   x   (   if   x   and   typeLift(n   ,   x   )   are   formulae   )   .   <br> </br>
+   <br> </br>
+   There   are   three   specific   numbers   corresponding   to   the   axioms   I   ,   1   to   3   (   the   Peano   axioms   )   ,   which   we   will   denote   by   pa1   ,   pa2   ,   pa3   ,   and   we   define   :   define   <br> </br>
+   prop2Axiom(x   )   ,   prop3Axiom(x   )   ,   and   prop4Axiom(x   )   analogously   .   36   .   propAxiom(x   )   prop1Axiom(x)prop2Axiom(x)prop3Axiom(x)prop4Axiom(x   )   x   is   a   <br> </br>
+   formula   that   has   been   obtained   by   inserting   into   on   of   the   proposition   axioms   .   z   does   not   contain   a   variable   that   is   bound   anywhere   in   y   where   v   is   free   .   This   <br> </br>
+   condition   for   the   applicability   of   axiom   III   ,   1   ,   ensured   that   a   substitution   of   z   for   the   free   occurrences   of   v   in   y   does   not   accidentally   bind   some   of   z   ’s   <br> </br>
+   variables   .   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> x </span> <span class="contrast level1 contrast1"> is   a   formula   obtained   by   substitution   from   the   axiom   schema   III   ,   1   ,   i.e.   one   of   the   quantor   axioms </span>  .   <br> </br>
+   <br> </br>
+   12   x   imp(forall(v   ,   or(p   ,   q   )   )   ,   or(p   ,   forall(v   ,   q   )   )   )   x   is   a   formula   obtained   by   substitution   from   the   axiom   schema   III   ,   2   ,   i.e.   the   other   one   of   the   quantor   <br> </br>
+   axioms   .   x   is   a   formula   obtained   by   substitution   from   the   axiom   schema   IV   ,   1   ,   i.e.   from   the   reducibility   axiom   .   There   is   a   specific   number   corresponding   to   <br> </br>
+   axiom   V   ,   1   ,   (   the   set   axiom   )   ,   which   we   will   denote   by   sa   ,   and   we   define   :   41   .   setAxiom(x   )   n   x   .x   typeLift(n   ,   sa   )   42   .   <br> </br>
+   <br> </br>
+   isAxiom(x   )   peanoAxiom(x   )   propAxiom(x   )   quantor1Axiom(x   )   quantor2Axiom(x   )   reduAxiom(x   )   setAxiom(x   )   x   is   an   axiom   .   [   186   ]   44   .   isProofFigure(x   )   (   0   n   <br> </br>
+   length(x   )   .   )   length(x   )   0   x   is   a   proof   figure   (   a   finite   sequence   of   formulae   ,   each   of   which   is   either   an   axiom   or   the   immediate   consequence   of   two   of   the   <br> </br>
+   preceding   ones   )   .   45   .   proofFor(x   ,   y   )   isProofFigure(x   )   item(length(x   )   ,   x   )   y   x   is   a   proof   for   the   formula   y.   46   .   provable(x   )   y   .   proofFor(y   ,   x   )   x   is   a   provable   <br> </br>
+   formula   .   <br> </br>
+   <br> </br>
+   (   provable(x   )   is   the   only   one   among   the   concepts   1   -   46   for   which   we   can   not   assert   that   it   is   primitive   recursive   )   .   2.5   Denotability   and   provability   The   fact   <br> </br>
+   that   can   be   expressed   vaguely   by   :   Every   primitive   recursive   relation   is   definable   within   system   P   (   interpreting   that   system   as   to   content   )   ,   will   be   <br> </br>
+   expressed   in   the   following   theorem   without   referring   to   the   interpretation   of   formulae   of   P   :   13   We   contend   ourselves   with   giving   a   sketchy   outline   of   the   <br> </br>
+   proof   for   this   theorem   here   ,   since   it   does   not   offer   any   difficulties   in   principle   and   is   rather   cumbersome   .   <br> </br>
+   <br> </br>
+   We   prove   the   theorem   for   all   relations   R(x1   ,   .   .   .   ,   xn   )   of   the   form   x1   (   x2   ,   .   .   .   ,   xn  <span class="subject level1 subject1"> ) </span> <span class="contrast level1 contrast1"> (   where   is   a   primitive   recursive   function   )   and   apply   natural   induction   by   ’s </span>  <br> </br>
+  <span class="contrast level1 contrast1"> degree </span>  .   <br> </br>
+   <br> </br>
+   For   functions   of   degree   one   (   i.e.   constants   and   the   function   x+   1   )   the   theorem   is   trivial   .   Hence   ,   let   be   of   degree   m.   It   is   built   from   functions   of   lower   <br> </br>
+   degree   1   ,   .   .   .   ,   k   by   the   operations   of   insertion   and   primitive   recursive   definition   .   Since   everything   has   already   been   proven   for   1   ,   .   .   . 
+</body>
+</html>

@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<style>
+
+span.subject1     {color: red;}
+span.contrast1     {color: blue;}
+
+span.subject2      {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.55em;
+    border:2px solid
+}
+span.contrast2     {
+    margin: 0.05em;
+    padding:0.05em;
+    line-height:1.2;
+    display:inline-block;
+    border-radius:.025em;
+    border:2px solid
+}
+
+
+.indentation     {display:inline-block; 
+                  width: 50px;
+}
+</style>
+</head>
+<body>
+ Fullstack   Vue.js   Fullstack   Vue   The   Complete   Guide   to   Vue.js   and   Friends   Written   by   Hassan   Djirdeh   ,   Nate   Murray   ,   and   Ari   Lerner   2018   Fullstack.io   All   <br> </br>
+   rights   reserved   .  <span class="contrast level1 contrast1"> No   portion   of   the   book   manuscript   may   be   reproduced   ,   stored   in   a </span> <span class="subject level1 subject1"> retrieval   system </span> <span class="contrast level1 contrast1"> ,   or   transmitted   in   any   form   or   by   any   means   beyond   the </span>  <br> </br>
+  <span class="contrast level1 contrast1"> number   of   purchased   copies   ,   except   for   a   single   backup   or   archival   copy </span>  .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> The </span> <span class="subject level1 subject1"> code </span> <span class="contrast level1 contrast1"> may   be   used   freely   in   your   projects   ,   commercial   or   otherwise </span>  .   <br> </br>
+   <br> </br>
+   The   authors   and   publisher   have   taken   care   in   preparation   of   this   book   ,   but   make   no   expressed   or   implied   warranty   of   any   kind   and   assume   no   responsibility   <br> </br>
+   for   errors   or   omissions   .  <span class="contrast level1 contrast1"> No </span> <span class="subject level1 subject1"> liability </span> <span class="contrast level1 contrast1"> is   assumed   for   incidental   or   consequential   damagers   in   connection   with   or   arising   out   of   the   use   of   the   information </span>  <br> </br>
+  <span class="contrast level1 contrast1"> or   programs   container   herein </span>  .  <span class="contrast level1 contrast1"> Published   in   San   Francisco   ,   California   by   Fullstack.io </span>  .   <br> </br>
+   <br> </br>
+   Contents   Book   Revision   Bug   Reports   If   you   ’d   like   to   report   any   bugs   ,   typos   ,   or   suggestions   just   email   us   at   :   vuefullstack.io   .   For   further   help   dealing   <br> </br>
+   with   issues   ,   refer   to   “   How   to   Get   the   Most   Out   of   This   Book   ”   .   Be   notified   of   updates   via   Twitter   If   you   ’d   like   to   be   notified   of   updates   to   the   book   on   Twitter   ,   <br> </br>
+   follow   us   at   fullstackio1   .   We   ’d   love   to   hear   from   you   !   Did   you   like   the   book   ?   Did   you   find   it   helpful   ?   We   ’d   love   to   add   your   face   to   our   list   of   testimonials   on   <br> </br>
+   the   website   !   <br> </br>
+   <br> </br>
+  <span class="subject level1 subject1"> Email </span> <span class="contrast level1 contrast1"> us   at   :   vuefullstack.io   .   1https   :   twitter.comfullstackio   https   :   twitter.comfullstackio   https   :   twitter.comfullstackio   Foreword   Front-end </span>  <br> </br>
+  <span class="contrast level1 contrast1"> web   development   has   become   astoundingly   complex </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> If   you </span> <span class="subject level1 subject1"> ’ve   never   used   a   modern   JavaScript   framework   ,   building   your   first   app   that   just   displays </span> <span class="subject level2 subject2"> “   Hello   ” </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> can   take   a   whole   week   !   That   might   sound   ridiculous </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> ,   but   most   frameworks   assume   knowledge   of   the   terminal   ,   advanced   JavaScript   ,   and   tools   such   as   the   Node   Package   Manager   (   NPM   )   ,   Babel   ,   Webpack   ,   and </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> sometimes   more </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> Chris   Fritz   -   Vue   Core   Team   Vue </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> ,   refreshingly   ,   does   n’t   assume   .   We   call   it   the   “   pro-   gressive   ”   JavaScript   framework   because   it   scales   down   as   well   as   it   scales   up </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> If   your   app   is   simple   ,   you   can   use </span> <span class="subject level2 subject2"> Vue </span> <span class="contrast level2 contrast2"> just   like   jQuery   -   by   dropping   in   a   script   tag   .   But   as   your   skills   and   needs   grow   more   advanced </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> , </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="subject level2 subject2"> Vue </span> <span class="contrast level2 contrast2"> grows   with   you   to   make   you   more   powerful   and   productive </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> .   Hassan   provides   a   catalyst   for   that   growth   in   this   book   .   Through   project-driven   learning   ,   he   ’ll   guide   you   from   the   simplest   examples   through   the </span>  <br> </br>
+  <span class="contrast level1 contrast1"> necessary   skills   for   large-scale   ,   enterprise   applications </span>  .   <br> </br>
+   <br> </br>
+   Along   the   way   ,  <span class="contrast level1 contrast1"> you   ’ll   learn   not   only   how   to   solve   a   variety   of   problems   with </span> <span class="subject level1 subject1"> Vue </span> <span class="contrast level1 contrast1"> ,   but   also   the   concepts   and   tools   that   have   be-   come   industry   standards   no </span>  <br> </br>
+  <span class="contrast level1 contrast1"> matter   what   framework   you   use </span>  .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> Welcome   to   the   community   ,   have   fun   ,   and   enjoy   the </span> <span class="subject level1 subject1"> Vue </span> <span class="contrast level1 contrast1"> !   Chris   Fritz   ,   chrisvfritz2   ,   Vue   Core   Team   2https   :   twitter.comchrisvfritz   https   : </span>  <br> </br>
+  <span class="contrast level1 contrast1"> twitter.comchrisvfritz   https   :   twitter.comchrisvfritz   How   to   Get   the   Most   Out   of   This   Book   Overview   This   book   aims   to   be   the   single   most   useful   resource </span>  <br> </br>
+  <span class="contrast level1 contrast1"> on   learning   Vue.js   .   By   the   time   you   ’re   done   reading   this   book   ,   you   (   and   your   team   )   will   have   everything   you   need   to   build   reliable   ,   powerful   Vue </span>  <br> </br>
+  <span class="contrast level1 contrast1"> applications </span>  .  <span class="subject level1 subject1"> Vue </span> <span class="contrast level1 contrast1"> is   built   on   the   premise   of   simplicity   by   being   designed   from   the   ground   up   to   be   incrementally   adoptable </span>  .   <br> </br>
+   <br> </br>
+   After   the   first   few   chapters   ,   you   ’ll   have   a   solid   understanding   of   Vue   ’s   fundamentals   and   will   be   able   to   build   a   wide   array   of   rich   ,   interactive   web   apps   <br> </br>
+   with   the   framework   .  <span class="contrast level1 contrast1"> But   beyond   Vue   ’s   core   ,   there   are   tools   and   libraries   that   exist   in   the   Vue   ecosystem   that   ’s   often   needed   to   build   real-world </span>  <br> </br>
+  <span class="contrast level1 contrast1"> production   scale   applications </span>  .   <br> </br>
+   <br> </br>
+   Things   like   client-side   routing   between   pages   ,   managing   complex   state   ,   and   heavy   API   interaction   at   scale   .  <span class="subject level1 subject1"> This </span> <span class="contrast level1 contrast1"> book   can   be   broken   down   into   two   parts </span>  .  <span class="contrast level1 contrast1"> In </span>  <br> </br>
+  <span class="subject level1 subject1"> Part   I </span> <span class="contrast level1 contrast1"> ,   we   cover   all   the   fundamentals   with   a   progressive   ,   example-driven   approach   .   You   ’ll   first   introduce   Vue   through   a   Content   Delivery   Network   (   CDN   ) </span>  <br> </br>
+  <span class="contrast level1 contrast1"> before   moving   towards   building   within   Webpack   bundled   applications   .   You   ’ll   gain   a   grasp   of   handling   user   interaction   ,   working   with   single-file </span>  <br> </br>
+  <span class="contrast level1 contrast1"> components   ,   understanding   simple   state   management   ,   and   how   custom   events   work   .   We   bookend   the   first   part   by   introducing   Vuex   and   how   Vuex   is   integrated </span>  <br> </br>
+  <span class="contrast level1 contrast1"> to   manage   overall   application   data   architecture </span>  .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> Part   II   of </span> <span class="subject level1 subject1"> this </span> <span class="contrast level1 contrast1"> book   moves   into   more   advanced   concepts   that   you   ’ll   often   see   used   in   large   ,   production   applications   .   We   ’ll   integrate   Vuex   to   a </span>  <br> </br>
+  <span class="contrast level1 contrast1"> server-persisted   app   ,   manage   rich   forms   ,   build   a   multi-page   app   that   uses   client-side   routing   ,   and   finally   explore   how   unit   tests   can   be   written   with   Vue </span>  <br> </br>
+  <span class="contrast level1 contrast1"> ’s   official   unit   testing   library </span>  .   <br> </br>
+   <br> </br>
+   First   ,   know   that   you   do   not   need   to   read   this   book   linearly   from   cover-to-cover   .   However   ,   we   ’ve   ordered   the   contents   of   the   book   in   a   way   we   feel   fits   the   <br> </br>
+   order   you   should   learn   the   concepts   .   Some   sections   in   Part   II   assume   you   ’ve   acquired   certain   fundamental   concepts   from   Part   I.   As   a   result   ,   we   encourage   <br> </br>
+   you   to   learn   all   the   concepts   in   Part   I   of   the   book   first   before   diving   into   concepts   in   Part   II   .   Second   ,   keep   in   mind   this   package   is   more   than   just   a   book   -   it   ’s   <br> </br>
+   a   course   complete   with   example   code   for   every   chapter   .   <br> </br>
+   <br> </br>
+   Below   ,   we   ’ll   tell   you   :   how   to   approach   the   code   examples   and   how   to   get   help   if   something   goes   wrong   How   to   Get   the   Most   Out   of   This   Book   2   Vue   2.x   In   Sept.   20163   ,   <br> </br>
+   the   Vue   framework   was   rewritten   and   released   as   version   2.0   .   Vue   2.0   introduced   new   concepts   such   as   the   Virual   DOM   ,   render   functions   ,   and   server-side   <br> </br>
+   rendering   capabilities   .   In   addition   ,   version   2.0   was   rewritten   to   provide   significant   performance   improvements   over   v1   .   This   book   covers   ,   and   will   <br> </br>
+   always   cover   ,   the   latest   release   of   Vue   -   which   is   currently   labelled   as   version   2.x   .   <br> </br>
+   <br> </br>
+   Running   Code   Examples  <span class="subject level1 subject1"> This </span> <span class="contrast level1 contrast1"> book   comes   with   a   library   of   runnable   code   examples   .   The   code   is   available   to   download   from   the   same   place   where   you   purchased </span>  <br> </br>
+  <span class="contrast level1 contrast1"> this   book   .   If   you   have   any   trouble   finding   or   downloading   the   code   examples   ,   email   us   at   vuefullstack.io </span>  .  <span class="subject level1 subject1"> Webpack </span> <span class="contrast level1 contrast1"> projects   For   Webpack-bundled   projects </span>  <br> </br>
+  <span class="contrast level1 contrast1"> ,   we   use   the   program   npm4   to   run   examples   .   You   can   install   the   application   dependencies   with   :   npm   install   And   boot   apps   with   one   of   the   following   commands   : </span>  <br> </br>
+  <span class="contrast level1 contrast1"> npm   run   start   or   npm   run   serve   With   every   chapter   ,   we   ’ll   reiterate   the   commands   necessary   to   install   application   dependancies   and   boot   example   code </span>  .   <br> </br>
+   After   running   npm   run   start   or   npm   run   serve   ,   you   will   see   some   output   on   your   screen   that   will   tell   you   what   URL   to   open   to   view   your   app   .  <span class="contrast level1 contrast1"> If   you   ’re   unfamiliar </span>  <br> </br>
+  <span class="contrast level1 contrast1"> with </span> <span class="subject level1 subject1"> npm </span> <span class="contrast level1 contrast1"> ,   we   cover   how   to   get   it   installed   in   the   “   Setting   Up   ”   section   in   the   second   chapter </span>  .  <span class="contrast level1 contrast1"> If   you </span> <span class="subject level1 subject1"> ’re </span> <span class="contrast level1 contrast1"> ever   unclear   on   how   to   run   a   particular   sample   app   , </span>  <br> </br>
+  <span class="contrast level1 contrast1"> checkout   the </span> <span class="subject level1 subject1"> README.md </span> <span class="contrast level1 contrast1"> in   that   project   ’s   directory </span>  .   <br> </br>
+   <br> </br>
+   EveryWebpack   bundled   sample   project   contains   a   README.md   that   will   give   you   the   instructions   you   need   to   run   each   app   .   3https   :   <br> </br>
+   medium.comthe-vue-pointvue-2   -   0-is-here-ef1f26acf4b8   4https   :   www.npmjs.com   How   to   Get   the   Most   Out   of   This   Book   3   Direct   script   Include   For   simpler   <br> </br>
+   examples   ,   we   ’ve   resorted   to   directly   including   the   Vue   library   from   a   Content   Delivery   Network   (   CDN   )   to   get   the   app   up   and   running   as   fast   as   possible   .   In   <br> </br>
+   this   book   ,   applications   that   introduce   Vue   from   a   CDN   often   consist   of   a   single   HTML   file   (   index.html   )   for   markup   and   a   single   JS   file   (   main.js   )   for   all   Vue   <br> </br>
+   code   .   <br> </br>
+   <br> </br>
+   With   these   examples   ,   we   ’ll   be   able   to   run   the   app   by   opening   the   index.html   file   in   our   browser   (   e.g.   right   click   index.html   file   and   select   Open   With   Google   <br> </br>
+   Chrome   )   .  <span class="contrast level1 contrast1"> Since   the </span> <span class="subject level1 subject1"> Vue   library </span> <span class="contrast level1 contrast1"> is   hosted   externally   in   these   cases   ,   these   examples   will   require   your   machine   to   be   connected   to   the   internet </span>  .   <br> </br>
+   <br> </br>
+   Code   Blocks   and   Context   The   majority   of   code   blocks   in   this   book   is   pulled   from   a   runnable   code   example   which   you   can   find   in   the   sample   code   .   For   example   ,   <br> </br>
+   here   is   a   code   block   pulled   from   the   first   chapter   :   upvoteapp_5main.js   new   Vue   (   el   :   app   ,   data   :   submissions   :   Seed.submissions   ,   computed   :   <br> </br>
+   sortedSubmissions   (   )   return   this.submissions.sort((a   ,   b   )   return   b.votes   -   a.votes   )   ;   ,   components   :   submission-component   :   submissionComponent   )   ;   <br> </br>
+   Notice   that   the   header   of   this   code   block   states   the   path   to   the   file   which   contains   this   code   :   upvoteapp_5main.js   .   <br> </br>
+   <br> </br>
+   Certain   code   examples   will   resemble   building   blocks   to   get   to   a   certain   point   and   thus   may   not   reflect   a   code   block   directly   from   the   sample   code   .   If   you   ever   <br> </br>
+   feel   like   you   ’re   missing   the   context   for   a   code   example   ,   open   up   the   full   code   file   using   your   favorite   text   editor   .   This   book   is   written   with   the   <br> </br>
+   expectation   that   you   ’ll   also   be   looking   at   the   example   code   alongside   the   manuscript   .   For   example   ,   we   often   need   to   import   libraries   to   get   our   code   to   run   .   <br> </br>
+   In   the   early   chapters   of   the   book   we   show   these   import   statements   ,   because   it   ’s   not   clear   where   the   libraries   are   coming   from   How   to   Get   the   Most   Out   of   This   <br> </br>
+   Book   4   otherwise   .   <br> </br>
+   <br> </br>
+   However   ,   the   later   chapters   of   the   book   aremore   advanced   and   they   focus   on   key   concepts   instead   of   repeating   boilerplate   code   that   was   covered   earlier   in   <br> </br>
+   the   book   .   If   at   any   point   you   ’re   not   clear   on   the   context   ,   open   up   the   code   example   on   disk   .   Code   Block   Numbering   In   this   book   ,   we   mostly   build   larger   examples   <br> </br>
+   in   steps   .   If   you   see   a   file   being   loaded   that   has   a   numeric   suffix   ,   that   generally   means   we   ’re   building   up   to   something   bigger   .   For   instance   ,   the   code   block   <br> </br>
+   above   has   the   file   path   :   upvoteapp_5main.js   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> When   you   see   the   -N.js   syntax   ,   that   means   we   ’re   building   up   to   a   final   version   of   the   file   .   You   can   jump   into   that   file   and   see   the   state   of   all   the   code   at   that </span>  <br> </br>
+  <span class="contrast level1 contrast1"> particular   stage </span>  .  <span class="contrast level1 contrast1"> Instruction   for </span> <span class="subject level1 subject1"> Windows   users </span> <span class="contrast level1 contrast1"> All   the   code   in   this   book   has   been   tested   on   a </span> <span class="subject level1 subject1"> Windows   machine </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> If   you   have   any   issues   running   the   code   on </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> Windows </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> ,   send   us   an   email5   and   we   ’ll   try   to   help   you   get   it   resolved </span></span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+   Ensure   Node.js   and   npm   are   installed   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> If   you   ’re   on   a   Windows   machine   and   have   yet   to   do   any   web   development   on   it   ,   you   can   install   the   Node.js   Windows   Installer   from   the </span> <span class="subject level2 subject2"> Node.js6   website </span>  <br> </br>
+   .  <span class="contrast level1 contrast1"> With </span> <span class="subject level1 subject1"> Node.js </span> <span class="contrast level1 contrast1"> (   and   npm   )   appropriately   installed   ,   you   should   be   able   to   start   the   Webpack-bundled   Node.js   projects   in   the   book   as   expected </span>  .   <br> </br>
+   <br> </br>
+   See   this   tutorial7   for   installing   Node.js   and   npm   on   Windows   .   Getting   Help   While  <span class="contrast level1 contrast1"> we </span> <span class="subject level1 subject1"> ’ve </span> <span class="contrast level1 contrast1"> made   every   effort   to   be   clear   ,   precise   ,   and   accurate   you   may   find </span>  <br> </br>
+  <span class="contrast level1 contrast1"> that   when   you   ’re   writing   your   code   you   run   into   a   problem   .   Generally   ,   there   are   three   types   of   problems   :   A   “   bug   ”   in   the   book   (   e.g.   how   we   describe   something </span>  <br> </br>
+  <span class="contrast level1 contrast1"> is   wrong   ) </span>  <br> </br>
+   <br> </br>
+   A   “   bug   ”   in   our   code   A   “   bug   ”   in   your   code   5vuefullstack.io   6http   :   nodejs.org   7http   :   blog.teamtreehouse.cominstall-node-js-npm-windows   How   to   Get   the   <br> </br>
+   Most   Out   of   This   Book   5   If   you   find   an   inaccuracy   in   how   we   describe   something   ,   or   you   feel   a   concept   is   n’t   clear   ,   email   us   !   We   want   to   make   sure   that   the   book   is   <br> </br>
+   both   accurate   and   clear   .   Similarly   ,  <span class="contrast level1 contrast1"> if   you </span>  ’ve   found   a   bug   in   our   code   we   definitely   want   to   hear   about   it   .  <span class="contrast level1 contrast1"> If   you   ’re   having   trouble   getting   your   own   app </span>  <br> </br>
+  <span class="contrast level1 contrast1"> working   (   and   it   is   n’t   our   example   code   )   ,   this   case   is   a   bit   harder   for   us   to   handle </span>  .   <br> </br>
+   <br> </br>
+   If   you   ’re   still   stuck   ,   we   ’d   still   love   to   hear   from   you   .   Emailing   Us   If   you   ’re   emailing   us   asking   for   technical   help   ,   here   ’s   what   we   ’d   like   to   know   :   What   <br> </br>
+   revision   of   the   book   are   you   referring   to   ?   What   operating   system   are   you   on   ?   (   e.g.   Mac   OS   X   10.13.2   ,   Windows   95   )   Which   chapter   and   which   example   project   are   <br> </br>
+   you   on   ?   What   were   you   trying   to   accomplish   ?   What   have   you   tried   already   ?   What   output   did   you   expect   ?   What   actually   happened   ?   (   Including   relevant   log   <br> </br>
+   output   .   )   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> The   absolute   best   way   to   get </span> <span class="subject level1 subject1"> technical   support </span> <span class="contrast level1 contrast1"> is   to   send   us   a   short   ,   self-contained   example   of   the   problem </span>  .  <span class="contrast level1 contrast1"> Our   preferred   way   to   receive   this   would   be   for </span>  <br> </br>
+  <span class="contrast level1 contrast1"> you   to   send   us   a   Plunkr   link   by   using   this </span> <span class="subject level1 subject1"> URL8 </span> <span class="contrast level1 contrast1"> as   a   template </span>  .   That   URL   contains   a   runnable   ,   boilerplate   Vue   app   .  <span class="contrast level1 contrast1"> If   you   can   copy   and   paste   your   code   into   that </span>  <br> </br>
+  <span class="contrast level1 contrast1"> project   ,   reproduce   your   error   ,   and   send   it   to   us   you   ’ll   greatly   increase   the   likelihood   of   a   prompt   ,   helpful   response </span>  .   <br> </br>
+   <br> </br>
+   When   you   ’ve   written   down   these   things   ,   email   us   at   vuefullstack.io   .   We   look   forward   to   hearing   from   you   .   Get   excited   !   Writing   web   apps   with   Vue   is   fun   .   And   <br> </br>
+   by   using   this   book   ,   you   ’re   going   to   learn   how   to   build   real   Vue   apps   fast   .   (   Much   faster   than   spending   hours   parsing   out-dated   blog   posts   .   )   If   you   ’ve   written   <br> </br>
+   client-side   JavaScript   before   or   used   existing   JavaScript   frameworks   ,   you   ’ll   find   Vue   refreshingly   intuitive   .   If   this   is   your   first   serious   foray   into   <br> </br>
+   the   front-end   ,   you   ’ll   be   blown   away   at   how   quickly   you   can   create   something   worth   sharing   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> So   hold   on </span> <span class="subject level1 subject1"> tight </span> <span class="contrast level1 contrast1"> -   you   ’re   about   to   become   really   proficient   with   Vue   ,   and   have   a   lot   of   fun   along   the   way   .   Let   ’s   dig   in   !   Hassan   (   djirdehh9   )   ,   Nate   ,   and   Ari   8http </span>  <br> </br>
+  <span class="contrast level1 contrast1"> :   bit.ly2orvQcd   9https   :   twitter.comdjirdehh   http   :   bit.ly2orvQcd   https   :   twitter.comdjirdehh   http   :   bit.ly2orvQcd   https   :   twitter.comdjirdehh   I   - </span>  <br> </br>
+   Your   first   Vue.js   Web   Application   Building   UpVote   !   <br> </br>
+   <br> </br>
+   On   our   first   step   to   learning   Vue   ,   we   ’re   going   to   build   a   simple   voting   application   (   named  <span class="subject level1 subject1"> UpVote   !   ) </span> <span class="contrast level1 contrast1"> that   takes   inspiration   from   popular   social   feed </span>  <br> </br>
+  <span class="contrast level1 contrast1"> websites   like   Reddit10   and   Hacker   News11 </span>  .  <span class="contrast level1 contrast1"> Completed   version   of   the </span> <span class="subject level1 subject1"> app   UpVote   ! </span> <span class="contrast level1 contrast1"> focuses   on   displaying   a   list   of   submissions   that   users   can   vote   on   .   Each </span>  <br> </br>
+  <span class="contrast level1 contrast1"> submission   will   present   some   information   about   itself   like   an   image   ,   title   ,   and   description   .   All   submissions   are   sorted   instantaneously   by   number   of </span>  <br> </br>
+  <span class="contrast level1 contrast1"> votes   .   The   up-vote   icon   in   each   submissionwill   allow   users   to   increase   vote   numbers   and   subsequently   rearrange   submission   layout </span>  .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> With </span> <span class="subject level1 subject1"> UpVote </span> <span class="contrast level1 contrast1"> !   ,   we   ’ll   become   familiar   with   how   Vue   approaches   front-end   development   by   under-   standing   the   basic   fundamentals   associated   with   the </span>  <br> </br>
+  <span class="contrast level1 contrast1"> library </span>  .  <span class="contrast level1 contrast1"> By   the   end   of   the   chapter   we   ’ll   be   well   on   our   way   to   building   dynamic   front-end   interfaces   thanks   to   Vue   ’s   simplicity </span>  !   10https   :   reddit.com   <br> </br>
+   11https   :   hackernews.com   https   :   reddit.com   https   :   hackernews.com   https   :   reddit.com   https   :   hackernews.com   I   -   Your   first   Vue.js   Web   Application   7   <br> </br>
+   Development   environment   setup   Code   editor   Regardless   of   experience   ,   whenever   developing   for   the   web   ,   we   ’ll   need   a   code   editor   to   write   our   application   (   <br> </br>
+   this   is   true   for   all   code   in   this   book   )   .   <br> </br>
+   <br> </br>
+   It   ’s   most   important   to   be   comfortable   with   your   code   editor   ,   so   if   you   have   one   you   like   ,   stick   with   it   .  <span class="contrast level1 contrast1"> If   not   ,   we   recommend </span> <span class="subject level1 subject1"> Atom12 </span> <span class="contrast level1 contrast1"> ,   Sublime   Text   313   ,   or </span>  <br> </br>
+  <span class="contrast level1 contrast1"> Visual   Studio   Code14 </span>  .  <span class="subject level1 subject1"> Development   Environment </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> For   this   chapter   ,   we   ’ll   focus   on   getting   our </span> <span class="subject level2 subject2"> Vue </span> <span class="contrast level2 contrast2"> app   up   and   running   as   fast   as   possible   ,   so   we   ’ll   simply   introduce   Vue   through   a   Content   Delivery   Network   ( </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> CDN   )   .   We   ’ll   take   a   deeper   look   into   installing   all   the   necessary   libraries   for   our   development   environment   in   the   next   chapter </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"><span class="subject level2 subject2"> Browser </span></span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"><span class="contrast level2 contrast2"> We </span> <span class="contrast level2 contrast2"> highly </span> <span class="contrast level2 contrast2"> recommend </span> <span class="contrast level2 contrast2"> using </span> <span class="contrast level2 contrast2"> the </span> <span class="contrast level2 contrast2"> Google </span> <span class="contrast level2 contrast2"> Chrome </span> <span class="contrast level2 contrast2"> Web </span> <span class="contrast level2 contrast2"> Browser15 </span> <span class="contrast level2 contrast2"> to </span> <span class="contrast level2 contrast2"> develop </span> <span class="contrast level2 contrast2"> Vue </span> <span class="contrast level2 contrast2"> apps </span> <span class="contrast level2 contrast2"> since </span> <span class="contrast level2 contrast2"> we </span> <span class="contrast level2 contrast2"> ’ll </span> <span class="contrast level2 contrast2"> be </span> <span class="contrast level2 contrast2"> using </span> <span class="contrast level2 contrast2"> the </span> <span class="contrast level2 contrast2"> Chrome </span> <span class="contrast level2 contrast2"> developer </span> <span class="contrast level2 contrast2"> toolkit16 </span> <span class="contrast level2 contrast2"> throughout </span></span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"><span class="contrast level2 contrast2"> this </span> <span class="contrast level2 contrast2"> book </span></span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> .   To   follow   along   with   our   development   and   debugging   , </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> we   recommend   installing   Chrome   ,   if   not   installed   already </span></span>  <br> </br>
+   .  <span class="contrast level1 contrast1"> With </span> <span class="subject level1 subject1"> Chrome </span> <span class="contrast level1 contrast1"> , </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="subject level2 subject2"> Vue </span> <span class="contrast level2 contrast2"> provides   an   incredibly   useful   extension   ,   Vue.js   devtools17   that   simplifies   debugging   of   Vue   applications </span>  . </span>  <br> </br>
+   <span class='indentation'>  </span>   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> We   ’ll   be   using   the   devtools   at   separate   points   throughout   the   book   so   we   encourage   you   to   install   it   as   well </span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> Note </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> :   With   certain   chapters   in   this   book   (   like   this   chapter   for   example   )   ,   we   ’ll   be   working   with   applications   opened   via   file   :   protocol </span></span>  <br> </br>
+   .  <span class="contrast level1 contrast1"> To   make   the </span> <span class="subject level1 subject1"> Vue </span> <span class="contrast level1 contrast1"> devtools   work   for   these   pages   ,   you   ’ll   need   to   check   “   Allow   access   to   file   URLs   ”   for   the   extension   in   Chrome   ’s   extension   manager   :   Allow </span>  <br> </br>
+  <span class="contrast level1 contrast1"> access   to   file   URLs   I   -   Your   first   Vue.js   Web   Application   8   JavaScript   ES6ES7   JavaScript   is   the   language   of   the   web </span>  .   <br> </br>
+   <br> </br>
+   It   runs   on   many   different   browsers   ,   including   Google   Chrome   ,   Firefox   ,   Safari   ,   Microsoft   Edge   ,   and   Internet   Explorer   .   Different   browsers   have   <br> </br>
+   different   JavaScript   interpreters   which   execute   JavaScript   code   .   Its   widespread   adoption   as  <span class="contrast level1 contrast1"> the </span> <span class="subject level1 subject1"> Internet </span> <span class="contrast level1 contrast1"> ’s   client-side   scripting   language   led   to   the </span>  <br> </br>
+  <span class="contrast level1 contrast1"> formation   of   a   standards   body   which   manages   its   specification </span>  .   <br> </br>
+   <br> </br>
+   The   specification   is   called   ECMAScript   or   ES   .  <span class="contrast level1 contrast1"> The   5th   edition   of   the   specification   is   called </span> <span class="subject level1 subject1"> ES5 </span>  .  <span class="contrast level1 contrast1"> We   think   of </span> <span class="subject level1 subject1"> ES5 </span> <span class="contrast level1 contrast1"> as   a   “   version   ”   of   the   JavaScript </span>  <br> </br>
+  <span class="contrast level1 contrast1"> programming   language </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Finalized   in   2009   , </span> <span class="subject level2 subject2"> ES5 </span> <span class="contrast level2 contrast2"> was   adopted   by   all   major   browsers   within   a   few   years </span></span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> The   6th   edition   of </span> <span class="subject level2 subject2"> JavaScript </span> <span class="contrast level2 contrast2"> is   referred   to   as   ES6 </span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+  <span class="contrast level1 contrast1"> Finalized   in   2015   ,   the   latest   versions   of   major   browsers   are   still   finishing   adding   support   for </span> <span class="subject level1 subject1"> ES6 </span> <span class="contrast level1 contrast1"> as   of   2017 </span>  .  <span class="subject level1 subject1"> ES6 </span> <span class="contrast level1 contrast1"> provides   a   significant   update   .   It </span>  <br> </br>
+  <span class="contrast level1 contrast1"> contains   a   whole   host   of   new   features   for   JavaScript   ,   almost   two   dozen   in   total </span>  .   JavaScript   written   in   ES6   is   tangibly   different   than   JavaScript   written   <br> </br>
+   in   ES5   .   ES7   ,   a   much   smaller   update   that   builds   on   ES6   ,   was   ratified   in   June   2016   .   ES7   contains   only   two   new   features   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> To   take   advantage   of   the   future   versions   of </span></span>  <br> </br>
+   JavaScript   ,   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level2 contrast2"> we   want   to   write   our   code   in </span> <span class="subject level2 subject2"> ES6ES7   today </span>  <br> </br>
+   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> We   ’ll   also   want   our </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> JavaScript </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> to   run   on   older   browsers   until   they   fade   out   of   widespread   use </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> .   This   book   is   written   using   the   JavaScript </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="subject level2 subject2"> ES7   version </span></span>  <br> </br>
+   .   As   ES6   ratified   a   majority   of   these   new   features   ,   we   ’ll   commonly   refer   to   these   new   features   as   ES6   features   .   ES6   is   sometimes   referred   to   as   ES2015   ,   the   <br> </br>
+   year   of   its   finalization   .   ES7   ,   in   turn   ,   is   often   referred   to   as   ES2016   .   <br> </br>
+   <br> </br>
+   Getting   started   Sample   Code   All   the   code   examplessnippets   contained   in   this   chapter   (   and   all   the   other   chapters   )   are   available   in   the   code   package   that   <br> </br>
+   came   with   the   book   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> In   the </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> code   package </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> we   ’ll   see   completed   versions   of   the   apps   as   well   as   boilerplates   to   help   us   get   started </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> . </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Each </span> <span class="subject level2 subject2"> chapter </span> <span class="contrast level2 contrast2"> provides   detailed   instruction   on   how   to   follow   along   on   our   own </span></span>  <br> </br>
+   .   While  <span class="subject level1 subject1"> coding </span> <span class="contrast level1 contrast1"> along   with   the   book   is   not   necessary   ,   we   highly   recommend   doing   so </span>  .   <br> </br>
+   <br> </br>
+   Playing   around   with   examples   and   sample   code   will   help   solidify   and   strengthen   understanding   of   new   concepts   .   I   -   Your   first   Vue.js   Web   Application   9   <br> </br>
+   Previewing   the   application   We   ’ll   begin   this   chapter   by   taking   a   look   at   a   working   implementation   of   the   UpVote   !   app   .   Let   ’s   open   up   the   sample   code   that   came   <br> </br>
+   with   the   book   and   locate   the   upvote   folder   with   our   machines   file   navigator   (   Finder   for   OS   X   or   Windows   Explorer   on   Windows   )   or   through   our   code   editor   (   e.g.   <br> </br>
+   Sublime   )   .   By   opening   the   upvote   folder   ,   we   ’ll   see   all   the   sub-directories   containedwithin   the   sample   app   :   upvote   app   app_1   app_2   app_3   app_4   app_5   <br> </br>
+   app_complete   public   We   ’ve   included   each   version   of   the   app   as   we   build   it   up   throughout   this   chapter   (   app_1   ,   app_2   ,   etc   )   .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> Each   code   block   in </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> this </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> chapter   references   which   app   version   it   is   contained   within   .   We   can   copy   and   paste   longer   code   insertions   from   these   app   versions </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> into   our   local   app   folder   ,   the   starting   point   of   our   application   .   The   public   sub-folder   hosts   all   the   images   and   custom   styles   we   ’ll   use   within   our </span></span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> application </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> . </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="subject level2 subject2"> app_complete </span> <span class="contrast level2 contrast2"> represents   the   completed   state   of   our   application </span></span>  <br> </br>
+   .  <span class="contrast level1 contrast1"> Opening   the </span> <span class="subject level1 subject1"> app_complete   folder </span> <span class="contrast level1 contrast1"> ,   we   ’ll   see   there   are   just   three   files   located   inside   :   app_complete   index.html   main.js   seed.js   We   can   see   the   running </span>  <br> </br>
+  <span class="contrast level1 contrast1"> application   by   right   clicking   on   the   index.html   file   and   selecting   Open   With   Google   Chrome </span>  .   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> I   -   Your   first   Vue.js   Web   Application   10   Completed   version   of   the </span></span> <span class="subject level1 subject1"><span class="subject level2 subject2"> app </span> <span class="contrast level1 contrast1"> Notice </span> <span class="contrast level2 contrast2"> how   the   submissions   are   all   sorted   from   highest   to   lowest   number   of   votes </span></span>  <br> </br>
+  <span class="contrast level1 contrast1"> . </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> The </span> <span class="subject level2 subject2"> application </span> <span class="contrast level2 contrast2"> will   keep   the   posts   sorted   by   number   of   votes   ,   moving   them   around   as   the   votes   change   without   reloading   the   page </span></span>  <br> </br>
+   .  <span class="contrast level1 contrast1"> Prepare   the </span> <span class="subject level1 subject1"> app </span> <span class="contrast level1 contrast1"> Let   ’s   begin   building   the   application   . </span>  <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> We </span> <span class="subject level2 subject2"> ’re </span> <span class="contrast level2 contrast2"> going   to   be   working   entirely   from   the   app   directory </span>  . </span>  <br> </br>
+   <span class='indentation'>  </span>   <br> </br>
+   <span class='indentation'>  </span>  <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> By   opening   the   files   within   app   in   a   text   editor   ,   we   ’ll   see   some   boilerplate   code   contained   in   the   index.html   and   seed.js   files </span></span>  <br> </br>
+   ,   while   <br> </br>
+   <span class='indentation'>  </span>  <span class="subject level1 subject1"><span class="subject level2 subject2"> main.js </span></span> <span class="contrast level1 contrast1"><span class="contrast level2 contrast2"> is   left   blank </span></span>  <br> </br>
+   .   <br> </br>
+   <br> </br>
+   Let   ’s   begin   by   looking   inside   the   index.html   file   :   I   -   Your   first   Vue.js   Web   Application   11   upvoteappindex.html   html   head   link   relstylesheet   hrefhttps   :   <br> </br>
+   cdnjs.cloudflare.comajaxlibsbulma0.5.3cssbulma.css   link   relstylesheet   hrefhttps   :   use.fontawesome.comreleasesv5.0.6cssall.css   link   <br> </br>
+   relstylesheet   href   .. 
+</body>
+</html>
