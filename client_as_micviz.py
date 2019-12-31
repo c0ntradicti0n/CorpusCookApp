@@ -37,8 +37,8 @@ class LogFile(object):
 logging.basicConfig(level=logging.DEBUG, filename='mylog.log')
 
 # Redirect stdout and stderr
-sys.stdout = LogFile('stdout')
-sys.stderr = LogFile('stderr')
+#sys.stdout = LogFile('stdout')
+#sys.stderr = LogFile('stderr')
 
 
 def arg_parse(request):
@@ -143,9 +143,10 @@ def markup():
             tokens = spot['text'].split()
             spans = [ an_set for an_set in spans]
             annotated_sample = bio_annotation.BIO_Annotation.spans2annotation(tokens=tokens, paired_spans=spans)
-            markedup = upmarker.markup_annotation(annotated_sample).replace('"',"'")
+            markedup = upmarker.markup_annotation(annotated_sample, start_level=1).replace('"',"'")
+            logging.info (markedup)
         except Exception as e:
-            markedup = "Could not be annotated +" + str(e)
+            raise #markedup = "Could not be annotated +" + str(e)
     else:
         logging.error("not a post request")
 
@@ -205,7 +206,26 @@ def ping():
 ##--------------------------------- FIRST Annotation commands
 # Base model/corpus is named 'first' (primary, ground-one) from top/text-level.
 # Nested model/corpus is named 'over' (overall)
-# TODO: RENAME?
+
+
+Prepare training
+Execution of scripts,
+kill training script
+connect annotations
+throw annotations into HAL
+
+
+
+@app.route("/annotation_around", methods=["POST"])
+def annotation_around():
+    rets = []
+    if request.method == 'POST':
+        rets = save_sample (request, which='first', zero_before=[])
+    else:
+        logging.error("not a post request")
+    return json.dumps(rets)
+
+##---------------------------------
 
 
 @app.route("/annotation_from_here", methods=["POST"])
@@ -299,6 +319,25 @@ def mix_corpus():
 
 @app.route("/start_training", methods=['GET'])
 def start_training():
+    ''' give file '''
+    if request.method == 'GET':
+        which = request.args['which']
+        logging.info("give log " + which)
+        rets = []
+        cmd = "source {train_venv} ; export PYTHONPATH=.; python {train_script} {allennlp_config}".format(
+            train_venv = config.train_venv,
+            train_script=config.train_script,
+            allennlp_config=config.allennlp_config)
+
+
+        logging.info("start training process, lasts 1h to 3days \n" + cmd)
+        import subprocess
+
+        subprocess.call(cmd, cwd=config.train_path, shell=True)
+    return json.dumps(rets)
+
+@app.route("/stop_training", methods=['GET'])
+def stop_training():
     ''' give file '''
     if request.method == 'GET':
         which = request.args['which']

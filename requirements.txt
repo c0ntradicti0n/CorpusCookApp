@@ -7,4 +7,3 @@ scipy
 tika
 
 flask
-tendo
