@@ -43,9 +43,9 @@ span.contrast3     { font-style: oblique;
 }
 
 
-span.privative     {   opacity: 0.5;
-		       mix-blend-mode: difference;
-                       	filter: invert(1); 
+span.privative     {    opacity: 0.9;
+		                mix-blend-mode: difference;
+                       	filter: invert(0.7); 
                        	}
                        	
 span.threshold     {}  
@@ -232,9 +232,11 @@ class UpMarker:
     def new_start_dict(self, indexed_words):
         """ Creating a dict, that contains a bwalp for each possible index, filling up missing ones"""
         max_index = max(list(indexed_words.keys()))+1
+        min_index = min(list(indexed_words.keys()))
+
         return  OrderedDict(
             (i, Bwalp(indexed_words[i])) if i in indexed_words else (i, Bwalp(' [missing index]'))
-            for i in range(max_index))
+            for i in range(min_index, max_index))
 
     def gen_before_tag(self, tag):
         gcs = self._generator_tags[self.generator][0]
@@ -359,13 +361,14 @@ class UpMarker:
 
         def update_dict_from_annotation(indices, annotation, paragraph, start_level, sincerity, mark_end, yes_no):
             spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
-            highlighted = self.new_start_dict(dict(enumerate(word for word, tag in annotation)))
+            highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)))
             res = {}
+            start = min(indices)
             for an_set in spans:
                 for tag, span_range, span_annotation in an_set:
-                    for index in range(*span_range):
-                        res[index] = \
-                                highlighted[index].update(
+                    for local_index in range(*span_range):
+                        res[start + local_index] = \
+                                highlighted[start + local_index].update(
                                     **self.markup_word(
                                         tag,
                                         paragraph=0,
@@ -393,13 +396,14 @@ class UpMarker:
         for paragraph, annotation in enumerate(proposals):
             highlighted.update(
                         update_dict_from_annotation(annotation['indices'], 
-                        annotation['annotation'], 
-                        paragraph, 
-                        start_level=0,
-                        sincerity=annotation['privative'],
-                        mark_end=annotation['mark_end'],
-                        yes_no=annotation['difference']
-                        ))
+                            annotation['annotation'], 
+                            paragraph, 
+                            start_level=0,
+                            sincerity=annotation['privative'],
+                            mark_end=annotation['mark_end'],
+                            yes_no=annotation['difference']
+                            )
+            )
 
 
             # Overwrite higher-level annotations with lower level for indenting them
