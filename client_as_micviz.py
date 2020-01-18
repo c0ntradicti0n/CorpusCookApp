@@ -483,6 +483,12 @@ def science_video():
         logging.info("compressing video\n" + cmd)
         subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
 
+
+        cmd = f"cp {config.video_dir}/record_compressed.mp4 .{config.apache_dir}"
+        logging.info("compressing video\n" + cmd)
+        subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
+
+
         logging.info ("video finished")
 
 
