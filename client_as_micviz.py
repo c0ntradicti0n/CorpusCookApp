@@ -476,12 +476,14 @@ def science_video():
             hal=config.hal
         )
         logging.info("making video of journey \n" + cmd)
-        p = subprocess.Popen(cmd, cwd=config.video_dir, shell=True, preexec_fn=os.setsid)
+        p = subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
         (output, err) = p.communicate()
 
         cmd = "ffmpeg -y -i record.mp4 -vcodec libx265 -crf 27 -vf scale=1920:1080 record_compressed.mp4 "
         logging.info("compressing video\n" + cmd)
-        subprocess.Popen(cmd, cwd=config.video_dir, shell=True, preexec_fn=os.setsid)
+        subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
+
+        logging.info ("video finished")
 
 
         #cmd = "ffmpeg -y -i record.mp4 record_compressed.ogg "
