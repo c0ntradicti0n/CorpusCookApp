@@ -475,7 +475,7 @@ def science_video():
             path=config.ke_path,
             hal=config.hal
         )
-        logging.info(f"making video of journey {cmd} in dir {config.video_dir"})
+        logging.info(f"making video of journey {cmd} in dir {config.video_dir}")
         p = subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
         (output, err) = p.communicate()
 
