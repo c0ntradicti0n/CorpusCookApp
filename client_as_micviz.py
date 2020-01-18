@@ -412,6 +412,25 @@ def get_log():
 
 #---------------------------------------
 
+@app.route("/get_corpus_content",  methods=['GET'])
+def get_corpus_content():
+    ''' give file '''
+    if request.method == 'GET':
+        which = request.args['which']
+        logging.info("give log " + which)
+        path = config.log_files[which]
+        try:
+            rev_lines = readlines_reverse(path)
+            return "\n".join(list(rev_lines)).encode()
+        except FileNotFoundError:
+            logging.info("error with giving log " + path)
+            return ""
+    logging.info("no file path given")
+    return ""
+
+
+#---------------------------------------
+
 @app.route("/science_map", methods=['GET'])
 def science_map():
     ''' give file '''
@@ -479,15 +498,11 @@ def science_video():
         p = subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
         (output, err) = p.communicate()
 
-        cmd = "ffmpeg -y -i record.mp4 -vcodec libx265 -crf 27 -vf scale=1920:1080 record_compressed.mp4 "
+        cmd = "ffmpeg -y -i record.mp4 -vcodec libx265 -crf 27 -vf scale=1920:1080 record_compressed.mp4 " +
+              "cp ./record_compressed.mp4 .{config.apache_dir}"
+        
         logging.info("compressing video\n" + cmd)
         subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
-
-
-        cmd = f"cp {config.video_dir}/record_compressed.mp4 .{config.apache_dir}"
-        logging.info("compressing video\n" + cmd)
-        subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
-
 
         logging.info ("video finished")
 
