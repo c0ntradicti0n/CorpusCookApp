@@ -498,7 +498,7 @@ def science_video():
         p = subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
         (output, err) = p.communicate()
 
-        cmd = "ffmpeg -y -i record.mp4 -vcodec libx265 -crf 27 -vf scale=1920:1080 record_compressed.mp4 " + \
+        cmd = "ffmpeg -y -i record.mp4 -vcodec libx265 -crf 27 -vf scale=1920:1080 record_compressed.mp4  ;" + \
               f"cp ./record_compressed.mp4 .{config.apache_dir}"
         
         logging.info("compressing video\n" + cmd)
