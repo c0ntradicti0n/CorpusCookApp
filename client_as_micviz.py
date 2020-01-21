@@ -200,7 +200,7 @@ def ping():
 def annotation_around():
     rets = []
     if request.method == 'POST':
-        rets = save_sample (request, which='first', zero_before=[])
+        rets = save_sample (request, which='first')
     else:
         logging.error("not a post request")
     return json.dumps(rets)

@@ -42,12 +42,12 @@ span.subject3      { text-decoration: underline;
 span.contrast3     { font-style: oblique; 
 }
 
-
-span.privative     {    opacity: 0.9;
+/*
+span.privative     {    opacity: 0.99;
 		                mix-blend-mode: difference;
-                       	filter: invert(0.7); 
+                       	filter: invert(0.9); 
                        	}
-                       	
+  */                     	
 span.threshold     {}  
 
 .indentation     {display:inline-block; 
