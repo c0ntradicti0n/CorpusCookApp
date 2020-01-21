@@ -490,7 +490,7 @@ def science_video():
         logging.info("give log " + which)
         rets = []
 
-        cmd = "ls; xvfb-run  java -jar {hal} -all {all_coordinates} -c {colors} -p {path} -d 100 -m 100000 -v 1.7354  -h blub".format(
+        cmd = "ls; xvfb-run -a java -jar {hal} -all {all_coordinates} -c {colors} -p {path} -d 100 -m 100000 -v 1.7354  -h blub".format(
             all_coordinates=config.all_coordinates,
             colors=config.ke_colors,
             path=config.ke_path,
