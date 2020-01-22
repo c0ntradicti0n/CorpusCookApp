@@ -349,6 +349,9 @@ class UpMarker:
                 wrap=130)
         )
 
+    def reasonable(self, annotation):
+        return len(annotation) >= 2 and all (len(span)==2 for span in annotation)
+
     def markup_proposal_list(self, proposals):
         proposals = sorted(proposals, key=lambda d: d['indices'][0])
         indexed_words = {
@@ -360,20 +363,22 @@ class UpMarker:
         highlighted = self.new_start_dict(indexed_words)
 
         def update_dict_from_annotation(indices, annotation, paragraph, start_level, sincerity, mark_end, yes_no):
-            spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
-            highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)))
             res = {}
-            start = min(indices)
-            for an_set in spans:
-                for tag, span_range, span_annotation in an_set:
-                    for local_index in range(*span_range):
-                        res[start + local_index] = \
-                                highlighted[start + local_index].update(
-                                    **self.markup_word(
-                                        tag,
-                                        paragraph=0,
-                                        new_level=start_level,
-                                        sincerity=True))
+
+            if self.reasonable(annotation):
+                spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
+                highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)))
+                start = min(indices)
+                for an_set in spans:
+                    for tag, span_range, span_annotation in an_set:
+                        for local_index in range(*span_range):
+                            res[start + local_index] = \
+                                    highlighted[start + local_index].update(
+                                        **self.markup_word(
+                                            tag,
+                                            paragraph=0,
+                                            new_level=start_level,
+                                            sincerity=True))
 
             return res
 
@@ -390,8 +395,8 @@ class UpMarker:
                         yes_no=annotation['difference']
                         )                    
                     )
-            for sub_paragraph, sub_annotation in enumerate(subs):
-                subdate(highlighted, sub_annotation['subs'])
+            #for sub_paragraph, sub_annotation in enumerate(subs):
+            #    subdate(highlighted, sub_annotation['subs'])
 
         for paragraph, annotation in enumerate(proposals):
             highlighted.update(
@@ -407,7 +412,7 @@ class UpMarker:
 
 
             # Overwrite higher-level annotations with lower level for indenting them
-            subdate(highlighted=highlighted, subs=annotation["subs"])
+            #subdate(highlighted=highlighted, subs=annotation["subs"])
 
 
         return self.body[self.generator] % "".join (self.wrap_indent_paragraph(
