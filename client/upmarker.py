@@ -140,7 +140,7 @@ class UpMarker:
 
     nl = {
         'bbcode': Bwalp("\n"),
-        'html': Bwalp("<br> </br>\n")
+        'html': Bwalp("<br />\n")
     }
     indent = {
         'bbcode': Bwalp("~~~"),
