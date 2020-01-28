@@ -364,9 +364,10 @@ class UpMarker:
 
         def update_dict_from_annotation(indices, annotation, paragraph, start_level, sincerity, mark_end, yes_no):
             res = {}
+            spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
 
-            if self.reasonable(annotation):
-                spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
+            print (self.reasonable(spans ), spans )
+            if self.reasonable(spans ):
                 highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)))
                 start = min(indices)
                 for an_set in spans:
