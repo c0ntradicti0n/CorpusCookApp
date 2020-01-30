@@ -6,3 +6,4 @@ scipy
 tika
 pyaml
 flask
+bs4
