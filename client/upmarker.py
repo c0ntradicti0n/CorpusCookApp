@@ -283,7 +283,9 @@ class UpMarker:
              '_paragraph': paragraph
         }
 
-    def wrap_indent_paragraph(self, highlighted_dict: Dict[int, Bwalp],  wrap:int=80, fill:str= " ") -> str:
+    def wrap_indent_paragraph(self, highlighted_dict: Dict[int, Bwalp],  wrap:int=80, fill:str= " ", dont=False) -> str:
+        if dont:
+            return highlighted_dict
         width = 0
 
         def break_line(i):
@@ -323,11 +325,7 @@ class UpMarker:
             yet_paragraph = bwalp.paragraph
 
         self.conspan(yet_written, spans=list(itertools.groupby(yet_written, key=lambda x: x.before)))
-
-        try:
-            result = " ". join([str(xyz) for xyz in yet_written])
-        except:
-            raise
+        result = " ". join([str(xyz) for xyz in yet_written])
         return result
 
     def markup_annotation(self, annotation, start_level=0):
