@@ -352,19 +352,16 @@ class UpMarker:
 
     def markup_proposal_list(self, proposals):
         proposals = sorted(proposals, key=lambda d: d['indices'][0])
-        indexed_words = {
-            index: word
-            for annotation in proposals
-            for (word, tag), index in
-                 zip(annotation['annotation'], annotation['indices'])
-             }
+        self.indices_ = {index: word for annotation in proposals for (word, tag), index in
+                         zip(annotation['annotation'], annotation['indices'])}
+        indexed_words = self.indices_
         highlighted = self.new_start_dict(indexed_words)
 
         def update_dict_from_annotation(indices, annotation, paragraph, start_level, sincerity, mark_end, yes_no):
             res = {}
             spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
 
-            print (self.reasonable(spans ), spans )
+            indices.x = print(self.reasonable(spans), spans)
             if self.reasonable(spans ):
                 highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)))
                 start = min(indices)
