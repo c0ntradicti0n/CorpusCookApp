@@ -2,9 +2,9 @@ import itertools
 from collections import OrderedDict
 from typing import Dict
 import logging
+import pprint
 
 from more_itertools import flatten, pairwise
-
 from client import bio_annotation
 
 simple_html = """
@@ -229,11 +229,16 @@ class UpMarker:
         }]
     }
 
+
+
     def new_start_dict(self, indexed_words):
         """ Creating a dict, that contains a bwalp for each possible index, filling up missing ones"""
         max_index = max(list(indexed_words.keys()))+1
         min_index = min(list(indexed_words.keys()))
 
+        which_not_indexed = [i for i in range(min_index, max_index) if i not in indexed_words ]
+        if which_not_indexed:
+            logging.error(f"some words could not be indexed again. queer alignment. {which_not_indexed}")
         return  OrderedDict(
             (i, Bwalp(indexed_words[i])) if i in indexed_words else (i, Bwalp(' [missing index]'))
             for i in range(min_index, max_index))
@@ -330,7 +335,7 @@ class UpMarker:
 
     def markup_annotation(self, annotation, start_level=0):
         if not annotation:
-            raise ValueError("annotation must not be empty")
+            raise ValueError("annotathttps://www.google.com/maps/place/Neuk%C3%B6lln,+Berlin/@52https://www.google.com/maps/place/Neuk%C3%B6lln,+Berlin/@52.4773131,13.40726,13z/data=!3m1!4b1!4m5!3m4!1s0x47a84fa11a68b749:0x52120465b5fadb0!8m2!3d52.4743863!4d13.4470859.4773131,13.40726,13z/data=!3m1!4b1!4m5!3m4!1s0x47a84fa11a68b749:0x52120465b5fadb0!8m2!3d52.4743863!4d13.4470859ion must not be empty")
 
         spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
         highlighted = self.new_start_dict(dict(enumerate(word for word, tag in annotation)))
@@ -350,18 +355,23 @@ class UpMarker:
     def reasonable(self, annotation):
         return len(annotation) >= 2 and all (len(span)==2 for span in annotation)
 
-    def markup_proposal_list(self, proposals):
+    def markup_proposal_list(self, proposals, text=None):
         proposals = sorted(proposals, key=lambda d: d['indices'][0])
-        self.indices_ = {index: word for annotation in proposals for (word, tag), index in
-                         zip(annotation['annotation'], annotation['indices'])}
-        indexed_words = self.indices_
-        highlighted = self.new_start_dict(indexed_words)
+        if text:
+            self.indices = dict(enumerate(text.split()))
+        else:
+            self.indices = {index: word for annotation in proposals for (word, tag), index in
+                             zip(annotation['annotation'], annotation['indices'])}
+        highlighted = self.new_start_dict(self.indices)
 
         def update_dict_from_annotation(indices, annotation, paragraph, start_level, sincerity, mark_end, yes_no):
             res = {}
             spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
 
-            indices.x = print(self.reasonable(spans), spans)
+            try:
+                logging.info(f"using {pprint.pformat(list(zip(indices, annotation)))}")
+            except TypeError:
+                raise
             if self.reasonable(spans ):
                 highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)))
                 start = min(indices)

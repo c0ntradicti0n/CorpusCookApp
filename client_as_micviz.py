@@ -137,7 +137,12 @@ def predictmarkup():
     spans = []
     if request.method == 'POST':
         spot, spans = arg_parse(request)
-        ret = shell_commander.call_os(MakePrediction, text=spot['text'])
+        if not spot['text']:
+            logging.warning("empty call")
+            ret = []
+        else:
+            ret = shell_commander.call_os(MakePrediction, text=spot['text'])
+
         spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(ret['annotation']))
 
         spans = [[

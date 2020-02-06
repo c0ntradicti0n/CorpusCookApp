@@ -1,12 +1,12 @@
 _start = "!§$%&/()=?"
 _end = "?=(/&%$§"
-
 import subprocess
 
 def substring(whole, sub1, sub2):
-    print (whole)
-    print (whole.index(sub1))
-    return whole[whole.index(sub1) + len(sub1) : whole.index(sub2)]
+    try:
+        return whole[whole.index(sub1) + len(sub1): whole.index(sub2)]
+    except ValueError:
+        logging.error("problems annotating, CorpusCook did not sent dilimited result.")
 
 def call_os (command, **args) :
     cmd = """python shell_commander.py "{command}"  '{args}'  """.format(command=command.__name__, args=json.dumps(args))

@@ -113,7 +113,7 @@ def main():
         def proceed(proposals=""):
 
             global text_no
-            html = upmarker.markup_proposal_list(proposals)
+            html = upmarker.markup_proposal_list(proposals, text=text)
 
             reactor.stop()
             print_result (html)
@@ -124,6 +124,8 @@ def main():
 
     if os.path.isfile(args.file):
         process_single_file(path=args.file)
+    else:
+        raise NotImplementedError
 
     reactor.run()
 
