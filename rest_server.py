@@ -423,95 +423,9 @@ def get_log():
 def get_corpus_content():
     ''' give file '''
     if request.method == 'GET':
-
-    logging.info("no file path given")
+         content = autocorpus.contains()
+         return upmarker.upmark(content)
     return ""
-
-
-#---------------------------------------
-
-@app.route("/science_map", methods=['GET'])
-def science_map():
-    ''' give file '''
-    if request.method == 'GET':
-        which = request.args['which']
-        logging.info("give log " + which)
-        rets = []
-
-        cmd = "cp {cc_corpus_collection_path}/*.conll3 {science_map_corpus_path} ".format(
-            cc_corpus_collection_path=config.cc_corpus_collection_path,
-            science_map_corpus_path=config.science_map_corpus_path
-            )
-        logging.debug(str(os.system(cmd)))
-
-        cmd = "export PYTHONPATH=$PYTHONPATH:{science_map_working_dir}; bash {science_map_venv} && python {science_map} {science_map_corpus_path} ".format(
-            science_map_working_dir=config.science_map_working_dir,
-            science_map_venv=config.science_map_venv,
-            science_map=config.science_map,
-            science_map_corpus_path = config.science_map_corpus_path
-        )
-        logging.info("doing sciencemapping" + cmd)
-        subprocess.Popen(cmd, cwd=config.science_map_working_dir, shell=True, preexec_fn=os.setsid)
-
-        return json.dumps(rets)
-    return []
-
-@app.route("/science_coords", methods=['GET'])
-def science_coords():
-    ''' give file '''
-    if request.method == 'GET':
-        which = request.args['which']
-        logging.info("give log " + which)
-        rets = []
-
-
-        cmd = "export PYTHONPATH=$PYTHONPATH:{ampligraph_working_dir}; bash {ampligraph_venv} && python {ampligraph} {ampligraph_csv} ".format(
-            ampligraph_working_dir=config.ampligraph_working_dir,
-            ampligraph_venv=config.ampligraph_venv,
-            ampligraph=config.ampligraph,
-            ampligraph_csv = config.science_map_csv
-
-        )
-        logging.info("mapping graph to coordinates " + cmd)
-        subprocess.Popen(cmd, cwd=config.ampligraph_working_dir, shell=True, preexec_fn=os.setsid)
-
-        return json.dumps(rets)
-    return []
-
-
-@app.route("/science_video", methods=['GET'])
-def science_video():
-    ''' give file '''
-    if request.method == 'GET':
-        which = request.args['which']
-        logging.info("give log " + which)
-        rets = []
-
-        cmd = "ls; xvfb-run -a java -jar {hal} -all {all_coordinates} -c {colors} -p {path} -d 100 -m 100000 -v 1.7354  -h blub".format(
-            all_coordinates=config.all_coordinates,
-            colors=config.ke_colors,
-            path=config.ke_path,
-            hal=config.hal
-        )
-        logging.info(f"making video of journey {cmd} in dir {config.video_dir}")
-        p = subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
-        (output, err) = p.communicate()
-
-        cmd = "ffmpeg -y -i record.mp4 -acodec libfaac -ab 96k -vcodec libx264 -crf 28 -vf scale=700:700  record_compressed.mp4  ;" + \
-              f"cp ./record_compressed.mp4 {config.apache_dir}"
-        
-        logging.info("compressing video\n" + cmd)
-        subprocess.Popen(cmd, cwd=config.video_dir, shell=True)
-
-        logging.info ("video finished")
-
-
-        #cmd = "ffmpeg -y -i record.mp4 record_compressed.ogg "
-        #logging.info("compressing video\n" + cmd)
-        #subprocess.Popen(cmd, cwd=config.video_dir, shell=True, preexec_fn=os.setsid)
-
-        return json.dumps(rets)
-    return []
 
 
 if __name__ == '__main__':
