@@ -117,10 +117,10 @@ def main():
 
             reactor.stop()
             print_result (html)
-            logging.info("PaperReader finished!")
+            logging.info("PaperReader finished")
 
         logging.info ("Annotation command sent")
-        client.commander(Command=MakeProposals, ProceedLocation=proceed, text=text[:config.max_len_amp])
+        client.commander(Command=MakeProposals, ProceedLocation=proceed, text=text[:config.max_len_amp], text_name=path.replace("/", ""))
 
     if os.path.isfile(args.file):
         process_single_file(path=args.file)

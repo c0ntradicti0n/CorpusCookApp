@@ -7,3 +7,4 @@ tika
 pyaml
 flask
 bs4
+nltk

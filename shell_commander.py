@@ -19,7 +19,10 @@ def print_result(arg):
 def free_result(result):
     result = substring(result, _start, _end)
     logging.info(result)
-    return json.loads(result)
+    try:
+        return json.loads(result)
+    except TypeError:
+        return {}
 
 import argparse
 import pprint

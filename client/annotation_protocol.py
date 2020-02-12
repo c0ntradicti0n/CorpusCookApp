@@ -113,7 +113,7 @@ class MakePrediction(amp.Command):
 
 @commando
 class MakeProposals(amp.Command):
-    arguments = [(b'text', amp.Unicode())]
+    arguments = [(b'text', amp.Unicode()), (b'text_name', amp.Unicode())]
     response = [(b'proposals', JSONB64COMPRESS())]
 
 @commando

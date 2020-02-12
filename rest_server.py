@@ -423,15 +423,7 @@ def get_log():
 def get_corpus_content():
     ''' give file '''
     if request.method == 'GET':
-        which = request.args['which']
-        logging.info("give log " + which)
-        path = config.log_files[which]
-        try:
-            rev_lines = readlines_reverse(path)
-            return "\n".join(list(rev_lines)).encode()
-        except FileNotFoundError:
-            logging.info("error with giving log " + path)
-            return ""
+
     logging.info("no file path given")
     return ""
 
