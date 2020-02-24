@@ -14,7 +14,7 @@ def call_os (command, **args) :
     result = subprocess.check_output(cmd, shell=True).decode("utf-8")
     return free_result(result)
 
-def print_result(arg):
+def print_return_result(arg):
     print("RETURN" + _start + json.dumps(arg) + _end)
 def free_result(result):
     result = substring(result, _start, _end)

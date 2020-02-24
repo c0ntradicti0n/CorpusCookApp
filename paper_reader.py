@@ -7,10 +7,9 @@ import config
 from client.annotation_protocol import MakeProposals
 from client.annotation_client import AnnotationClient
 from client.upmarker import UpMarker
-from shell_commander import print_result
-
+from helpers.os_tools import get_filename_from_path
+from shell_commander import print_return_result
 client = AnnotationClient()
-upmarker = UpMarker(_generator='html')
 
 class paper_reader:
     """ multimedial extractor. it reads text from papers in pdfs, urls, html and other things.
@@ -47,15 +46,19 @@ class paper_reader:
                                     'interesting general theory. '.lower()
                                 )
 
-    def load_text(self, adress):
-        logging.info("tika reading text...")
-        if not re.match(r"""((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*""",
-            adress        ):
-            self.rawText = parser.from_file(adress)
-        else:
-            response = urllib.request.urlopen(adress)
-            data = response.read()  # a `bytes` object
-            self.rawText = parser.from_buffer(data)
+    def load_text(self, adress, preprocessor="tika"):
+        if preprocessor == "tika":
+            logging.info("tika reading text...")
+            if not re.match(r"""((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*""",
+                adress        ):
+                self.raw_text = parser.from_file(adress)
+            else:
+                response = urllib.request.urlopen(adress)
+                data = response.read()  # a `bytes` object
+                self.raw_text = parser.from_buffer(data)
+        if preprocessor == "pdf2htmlEX":
+            with open(adress, adress + ".txt", "r", encoding="utf8") as f:
+                self.raw_text = f.read()
 
     def analyse(self):
         """ Extracts prose text from  the loaded texts, that may contain line numbers somewhere, adresses, journal links etc.
@@ -63,7 +66,7 @@ class paper_reader:
         """
         logging.info("transferring text to nlp thing...")
 
-        text = self.rawText['content']
+        text = self.raw_text['content']
         paragraphs = text.split('\n\n')
         print ("mean length of splitted lines", (mean([len(p) for p in paragraphs])))
 
@@ -86,24 +89,18 @@ class paper_reader:
                                      )
 
         return processed_text.strip() [:self.length_limit]
-
 text_no = 0
 
 def main():
+    from twisted.internet import reactor
     from argparse import ArgumentParser
 
     parser = ArgumentParser(description='Analyse txt, pdf etc. text files for utterances of differences.')
     parser.add_argument('file', type=str, help='file or directory to process')
-    parser.add_argument("-r", "--recursive", help="iterate recursively through directory",
-                        action="store_true")
-
-    parser.add_argument("-e", "--extensions", metavar='E', type=str, nargs='+',
-                        help="file extensions, parses pdf, txt on default. What's possible depends on apache TIKA",
-                        default=['pdf'])
-
+    parser.add_argument("-p", "--preprocessor", help="if the file is preprocessed with pdf2htmlEX and indexed with true_format_html int hte html, it produces an {path}.html and a {path}.txt file; the processing here produces a css file {path}.css",
+                        default="tika")
     args = parser.parse_args()
 
-    from twisted.internet import reactor
 
     def process_single_file(path):
         with open (path, 'r+') as f:
@@ -111,22 +108,28 @@ def main():
         text = data['text']
 
         def proceed(proposals=""):
-
-            global text_no
-            html = upmarker.markup_proposal_list(proposals, text=text)
-
+            if args.preprocessor =="tika":
+                upmarker_html = UpMarker(_generator='html')
+                html = upmarker_html.markup_proposal_list(proposals, text=text)
+                result = html
+            elif args.preprocessor =="pdf2htmlEX":
+                upmarker_css = UpMarker(_generator="css")
+                css = upmarker_css.markup_proposal_list(proposals, text=text)
+                filename = get_filename_from_path(path)
+                css_path = config.css_dir+filename+".css"
+                with open(css_path, 'w', encoding="utf8") as f:
+                    f.write(css)
+                result = f"file {css_path}"
+            else:
+                logging.error("Preprocessor unknown!")
             reactor.stop()
-            print_result (html)
+            print_return_result (result)
             logging.info("PaperReader finished")
 
         logging.info ("Annotation command sent")
         client.commander(Command=MakeProposals, ProceedLocation=proceed, text=text[:config.max_len_amp], text_name=path.replace("/", ""))
 
-    if os.path.isfile(args.file):
-        process_single_file(path=args.file)
-    else:
-        raise NotImplementedError
-
+    process_single_file(path=args.file)
     reactor.run()
 
 

@@ -110,7 +110,7 @@ def save_text():
 
 
 from client.upmarker import UpMarker
-upmarker = UpMarker(_generator="tml")
+upmarker_html = UpMarker(_generator="tml")
 
 @app.route("/markup", methods=["POST"])
 def markup():
@@ -121,7 +121,7 @@ def markup():
             tokens = spot['text'].split()
             spans = [ an_set for an_set in spans]
             annotated_sample = bio_annotation.BIO_Annotation.spans2annotation(tokens=tokens, paired_spans=spans)
-            markedup = upmarker.markup_annotation(annotated_sample, start_level=1).replace('"',"'")
+            markedup = upmarker_html.markup_annotation(annotated_sample, start_level=1).replace('"',"'")
             logging.info (markedup)
         except Exception as e:
             raise #markedup = "Could not be annotated +" + str(e)

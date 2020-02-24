@@ -6,6 +6,7 @@ import pprint
 
 from more_itertools import flatten, pairwise
 from client import bio_annotation
+from client.true_format_html import INDEX_WRAP_TAG_NAME
 
 simple_html = """
 <!DOCTYPE html>
@@ -64,7 +65,7 @@ span.threshold     {}
 class Bwalp:
     level = 0
     paragraph = None
-    def __init__(self, _word:str, _level:int=0, _paragraph=None, _before = None, _after = None):
+    def __init__(self, _word:str, _id, _level:int=0, _paragraph=None, _before = None, _after = None):
         if not _before:
             self.before = []
             self.after = []
@@ -73,10 +74,11 @@ class Bwalp:
             self.after = _after
 
         self.word = _word
+        self.id = _id
         self.level = _level
         self.paragraph = _paragraph
 
-    def update(self, _before=[], _after=[], _level=None, _paragraph=None):
+    def update(self, _tag, _before=[], _after=[], _level=None, _paragraph=None):
         for b, a in zip(_before, _after):
             if not b in self.before:
                 self.before.append(b)
@@ -87,7 +89,7 @@ class Bwalp:
                     self.paragraph = _paragraph
             else:
                 _=0
-                #logging.info('annotating {self} multiple times'.format(self=self))
+                logging.info('annotating {self} multiple times'.format(self=self))
         return self
 
 
@@ -121,6 +123,67 @@ def threewise(iterable):
     for i in range(1,l-1):
         yield iterable[i-1], iterable[i], iterable[i+1]
 
+css_dict = {
+    0: {
+    "subject" : """{color: red!important; }""",
+    "contrast": """{color: blue!important;}"""},
+    1: {
+        "subject":"""{
+    margin: 0.05em!important;
+    padding:0.05em!important;
+    line-height:1.2!important;
+    display:inline-block!important;
+    border-radius:.55em!important;
+    border:2px solid!important;
+    border-color: black!important;}""",
+    "contrast": """{
+    margin: 0.05em !important;
+    padding:0.05em !important;
+    line-height:1.2 !important;
+    display:inline-block !important;
+    border-radius:.025em !important;
+    border:2px solid !important;
+    border-color: black; !important}"""},
+    2:{
+        "subject":"""{ text-decoration: underline !important;}""",
+        "contrast": """{ font-style: oblique !important;}"""
+    }
+}
+class CSS_word:
+    word = "not set"
+    id = 0
+
+    level = 0
+    def __init__(self, _word, _id):
+        self.annotation = []
+        self.word = _word
+        self.id = _id
+
+    def update(self, _tag, _before=[], _after=[], _level=None, _paragraph=None):
+        self.annotation.append(_tag)
+        return self
+
+    def collect_css (indexed_csswords):
+        css_collection = {level: {annotation_tag: [] for annotation_tag in annotation.keys()} for level, annotation in css_dict.items()}
+        for i, indexed_cssword in indexed_csswords.items():
+            if indexed_cssword.annotation:
+                for level, annotation in enumerate(indexed_cssword.annotation):
+                    css_collection[level][annotation.lower()].append(indexed_cssword.id)
+
+        css_markup_lists = []
+        for level, css_tags in css_dict.items():
+            for annotation, format in css_tags.items():
+                ids = css_collection[level][annotation.lower()]
+                if ids:
+                    ids_str = ", ".join(["#"+INDEX_WRAP_TAG_NAME+str(id) for id in ids])
+                    css_markup_lists.append(f"""{ids_str} {format}""")
+        css_markup_lists.append("z {background:rgba(1,1,1,0.03) !important;}")
+        css = "\n\n".join(css_markup_lists)
+        return css
+
+
+
+
 
 class UpMarker:
     def __init__(self, _generator='bbcode'):
@@ -139,12 +202,12 @@ class UpMarker:
 
 
     nl = {
-        'bbcode': Bwalp("\n"),
-        'html': Bwalp("<br />\n")
+        'bbcode': Bwalp(_word="\n", _id=0),
+        'html': Bwalp(_word="<br />\n", _id=0)
     }
     indent = {
-        'bbcode': Bwalp("~~~"),
-        'html': Bwalp("<span class='indentation'>  </span>")
+        'bbcode': Bwalp(_word="~~~", _id=0),
+        'html': Bwalp(_word="<span class='indentation'>  </span>", _id=0)
     }
     sincere = {
         'bbcode': [],
@@ -229,9 +292,7 @@ class UpMarker:
         }]
     }
 
-
-
-    def new_start_dict(self, indexed_words):
+    def new_start_dict(self, indexed_words, data_model):
         """ Creating a dict, that contains a bwalp for each possible index, filling up missing ones"""
         max_index = max(list(indexed_words.keys()))+1
         min_index = min(list(indexed_words.keys()))
@@ -240,7 +301,7 @@ class UpMarker:
         if which_not_indexed:
             logging.error(f"some words could not be indexed again. queer alignment. {which_not_indexed}")
         return  OrderedDict(
-            (i, Bwalp(indexed_words[i])) if i in indexed_words else (i, Bwalp(' [missing index]'))
+            (i, data_model(_word=indexed_words[i], _id=i)) if i in indexed_words else (i, data_model(' [missing index]'))
             for i in range(min_index, max_index))
 
     def gen_before_tag(self, tag):
@@ -257,36 +318,47 @@ class UpMarker:
         before = []
         after = []
         level = None
-        if len(tag)>2:
-            non_bio_tag = tag
+        if self.generator == "css":
+            return {
+                 '_tag': tag,
+                 '_before': [],
+                 '_after':  [],
+                 '_level':  new_level,
+                 '_paragraph': paragraph
+            }
 
-            # beginning and closing output tag
-            gc_beg = self.annotation_dicts[self.generator][new_level][non_bio_tag]
-            gc_end = self.annotation_dicts[self.generator][new_level][non_bio_tag]
+        else:
+            if len(tag)>2:
+                non_bio_tag = tag
 
-            before.extend(self.gen_before_tag(code_tag) for code_tag in gc_beg)
-            after.extend (self.gen_after_tag(code_tag) for code_tag in gc_end)
-            self.before_to_after_map.update(
-                   {
-                    self.gen_before_tag(start_tag):self.gen_after_tag(end_tag) 
-                    for start_tag, end_tag in zip (gc_beg, gc_end)
-                   })
-            level = new_level
+                # beginning and closing output tag
+                gc_beg = self.annotation_dicts[self.generator][new_level][non_bio_tag]
+                gc_end = self.annotation_dicts[self.generator][new_level][non_bio_tag]
 
-            if sincerity:
-                before.append(self.sincere[self.generator][sincerity][0])
-                after.append( self.sincere[self.generator][sincerity][1])
+                before.extend(self.gen_before_tag(code_tag) for code_tag in gc_beg)
+                after.extend (self.gen_after_tag(code_tag) for code_tag in gc_end)
                 self.before_to_after_map.update(
-                    {
-                        self.sincere[self.generator][sincerity][0]: self.sincere[self.generator][sincerity][1]
-                    })
-        
-        return {
-             '_before': before,
-             '_after': after,
-             '_level': level,
-             '_paragraph': paragraph
-        }
+                       {
+                        self.gen_before_tag(start_tag):self.gen_after_tag(end_tag)
+                        for start_tag, end_tag in zip (gc_beg, gc_end)
+                       })
+                level = new_level
+
+                if sincerity:
+                    before.append(self.sincere[self.generator][sincerity][0])
+                    after.append( self.sincere[self.generator][sincerity][1])
+                    self.before_to_after_map.update(
+                        {
+                            self.sincere[self.generator][sincerity][0]: self.sincere[self.generator][sincerity][1]
+                        })
+
+            return {
+                 '_tag': tag,
+                 '_before': before,
+                 '_after': after,
+                 '_level': level,
+                 '_paragraph': paragraph
+            }
 
     def wrap_indent_paragraph(self, highlighted_dict: Dict[int, Bwalp],  wrap:int=80, fill:str= " ", dont=False) -> str:
         if dont:
@@ -335,10 +407,10 @@ class UpMarker:
 
     def markup_annotation(self, annotation, start_level=0):
         if not annotation:
-            raise ValueError("annotathttps://www.google.com/maps/place/Neuk%C3%B6lln,+Berlin/@52https://www.google.com/maps/place/Neuk%C3%B6lln,+Berlin/@52.4773131,13.40726,13z/data=!3m1!4b1!4m5!3m4!1s0x47a84fa11a68b749:0x52120465b5fadb0!8m2!3d52.4743863!4d13.4470859.4773131,13.40726,13z/data=!3m1!4b1!4m5!3m4!1s0x47a84fa11a68b749:0x52120465b5fadb0!8m2!3d52.4743863!4d13.4470859ion must not be empty")
+            raise ValueError("annotation must not be empty")
 
         spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
-        highlighted = self.new_start_dict(dict(enumerate(word for word, tag in annotation)))
+        highlighted = self.new_start_dict(dict(enumerate(word for word, tag in annotation)), data_model=Bwalp)
 
         for an_set in spans:
             for tag, span_range, span_annotation in an_set:
@@ -362,7 +434,12 @@ class UpMarker:
         else:
             self.indices = {index: word for annotation in proposals for (word, tag), index in
                              zip(annotation['annotation'], annotation['indices'])}
-        highlighted = self.new_start_dict(self.indices)
+        if self.generator == "css":
+            data_model = CSS_word
+        else:
+            data_model = Bwalp
+
+        highlighted = self.new_start_dict(self.indices, data_model)
 
         def update_dict_from_annotation(indices, annotation, paragraph, start_level, sincerity, mark_end, yes_no):
             res = {}
@@ -373,7 +450,7 @@ class UpMarker:
             except TypeError:
                 raise
             if self.reasonable(spans ):
-                highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)))
+                highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)), data_model)
                 start = min(indices)
                 for an_set in spans:
                     for tag, span_range, span_annotation in an_set:
@@ -420,7 +497,8 @@ class UpMarker:
             # Overwrite higher-level annotations with lower level for indenting them
             #subdate(highlighted=highlighted, subs=annotation["subs"])
 
-
+        if self.generator=="css":
+            return CSS_word.collect_css(highlighted)
         return self.body[self.generator] % "".join (self.wrap_indent_paragraph(
                 highlighted,
                 fill=self.indent[self.generator],
