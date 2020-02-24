@@ -1,18 +1,14 @@
 import json
-import os
-from collections import Iterable, OrderedDict
+from collections import OrderedDict
 from pprint import pprint
 import itertools
 from statistics import stdev
-
 import regex
-from numpy import mean, std
-
+from numpy import mean
 from helpers.color_logger import *
-
 import bs4
 import tinycss
-from bs4 import NavigableString, Tag
+from bs4 import Tag
 from tinycss.css21 import RuleSet
 
 NORMAL_HEIGHT = 100
@@ -38,7 +34,6 @@ class TrueFormatUpmarker:
 
     def transform (self, pdf_path):
         if pdf_path.endswith(".pdf"):
-            #os.system(f"pdf2htmlEX {pdf_path}")
             html_path = pdf_path[:-4] + ".html"
             return html_path
         else:

@@ -46,10 +46,3 @@ all_coordinates="../../KnowledgeScience/knowledge_graph_coords/knowledge_graph_3
 ke_path=  "../../KnowledgeScience/knowledge_graph_coords/tsne_clusters_mean_points.csv"
 ke_colors="../../KnowledgeScience/knowledge_graph_coords/kn_clusters_mean_points.csv"
 hal = '"../../hal/target/hal-1-jar-with-dependencies.jar"'
-apache_dir = "../../apache-tomcat-9.0.30/webapps/corpuscow/"
-apache_dir = "../../apache-tomcat-9.0.30/webapps/corpuscow/"
-
-
-#css_dir = "../apache-tomcat-9.0.30/webapps/corpuscow/resources/css/document/"
-
-css_dir = "../view_control_web/WebContent/resources/document_css/"
