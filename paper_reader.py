@@ -11,6 +11,10 @@ from helpers.os_tools import get_filename_from_path
 from shell_commander import print_return_result
 client = AnnotationClient()
 
+def web_replace(path):
+    return path.replace('.', '_').replace(' ', '_').replace('-', '_')
+
+
 class paper_reader:
     """ multimedial extractor. it reads text from papers in pdfs, urls, html and other things.
 
@@ -91,6 +95,9 @@ class paper_reader:
         return processed_text.strip() [:self.length_limit]
 text_no = 0
 
+
+
+
 def main():
     from twisted.internet import reactor
     from argparse import ArgumentParser
@@ -115,7 +122,7 @@ def main():
             elif args.preprocessor =="pdf2htmlEX":
                 upmarker_css = UpMarker(_generator="css")
                 css = upmarker_css.markup_proposal_list(proposals, text=text)
-                filename = get_filename_from_path(path).replace('.', '_').replace(' ', '_').replace('-', '_')
+                filename = web_replace(get_filename_from_path(path))
 
                 css_path = config.apache_css_dir + filename + ".css"
                 with open(css_path, 'w', encoding="utf8") as f:
