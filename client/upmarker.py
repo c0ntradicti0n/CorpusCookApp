@@ -168,7 +168,8 @@ class CSS_word:
         for i, indexed_cssword in indexed_csswords.items():
             if indexed_cssword.annotation:
                 for level, annotation in enumerate(indexed_cssword.annotation):
-                    css_collection[level][annotation.lower()].append(indexed_cssword.id)
+                    css_collection[0][annotation.lower()].append(indexed_cssword.id)
+                    # TODO make level variant again
 
         css_markup_lists = []
         for level, css_tags in css_dict.items():
