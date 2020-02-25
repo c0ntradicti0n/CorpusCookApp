@@ -111,7 +111,7 @@ def save_text():
 def annotate_json_in_doc_folder():
     filename = request.json['filename']
     path = filename
-    cmd = f"""python {config.paper_reader} "{path}"  """
+    cmd = f"""python {config.paper_reader} --preprocessor pdf2htmlEX "{path}"  """
     logging.info('called paper reader: ' + cmd)
     result = subprocess.check_output(cmd, shell=True).decode("utf-8")
     answer = shell_commander.free_result(result)
