@@ -1,4 +1,3 @@
-htmls = "./pdfs/"
 recursive = True
 max_len = 200
 max_len_amp = 20000
@@ -19,6 +18,13 @@ mixer_path = "../CorpusCook/manually_annotated/mix_corpus_from_manual_files.py"
 mixer_working_dir =  "../CorpusCook/"
 corpuscook_venv = "../CorpusCook/venv/bin/activate"
 
+appcorpuscook_json_dir = "../CorpusCookApp/pdfs/"
+appcorpuscook_html_dir = "../pdfetc2txt/docs/"
+appcorpuscook_pdf_dir  = "../pdfetc2txt/docs/"
+mixer_path = "../CorpusCook/manually_annotated/mix_corpus_from_manual_files.py"
+mixer_working_dir =  "../CorpusCook/"
+corpuscook_venv = "../CorpusCook/venv/bin/activate"
+
 science_map_corpus_path="../ScienceMap/manual_corpus/"
 science_map_working_dir="../ScienceMap/"
 science_map="../ScienceMap/GUI.py"
@@ -33,7 +39,7 @@ ampligraph_coords="CONSTRASTSUBJECT"
 train_venv_python = "../Distinctiopus4/venv/bin/activate"
 train_path= "../Distinctiopus4"
 train_script= "../Distinctiopus4/do/train_multi_corpus.py"
-train_log = "../train.log"
+train_log = "train.log"
 allennlp_config = "../Distinctiopus4/experiment_configs/elmo_lstm3_feedforward4_crf_straight_fitter.config"
 
 dist_model_path_first = "../Distinctiopus4/output/first_./experiment_configs/{config}/model.tar.gz".format(config=allennlp_config)
@@ -41,8 +47,10 @@ cc_model_path_first   = "../CorpusCook/server/models/model_first.tar.gz"
 dist_model_path_over  = "../Distinctiopus4/output/over_./experiment_configs/{config}/model.tar.gz".format(config=allennlp_config)
 cc_model_path_over    = "../CorpusCook/server/models/model_over.tar.gz"
 
-video_dir = '../view_control_web/WebContent'
-all_coordinates="../../KnowledgeScience/knowledge_graph_coords/knowledge_graph_3d_choords.csv"
-ke_path=  "../../KnowledgeScience/knowledge_graph_coords/tsne_clusters_mean_points.csv"
-ke_colors="../../KnowledgeScience/knowledge_graph_coords/kn_clusters_mean_points.csv"
-hal = '"../../hal/target/hal-1-jar-with-dependencies.jar"'
+all_coordinates="../KnowledgeScience/knowledge_graph_coords/knowledge_graph_3d_choords.csv"
+ke_path=  "../KnowledgeScience/knowledge_graph_coords/tsne_clusters_mean_points.csv"
+ke_colors="../KnowledgeScience/knowledge_graph_coords/kn_clusters_mean_points.csv"
+hal = '"../hal/target/hal-1-jar-with-dependencies.jar"'
+video_dir = '../view_control_web/WebContent/resources/media/'
+apache_dir_document = "../../apache-tomcat-9.0.30/webapps/corpuscow/document"
+apache_css_dir = "../apache-tomcat-9.0.30/webapps/corpuscow/resources/css/document/"

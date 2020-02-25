@@ -20,7 +20,6 @@ logging.getLogger().setLevel(logging.INFO)
 
 import json
 import config
-from config import htmls
 
 I_as_client = AnnotationClient()
 
@@ -99,7 +98,7 @@ def save_sample (request, which=None, zero_before=None, zero_after=None, zero_te
 @app.route("/save_text", methods=["POST"])
 def save_text():
     filename = request.json['filename']
-    path = htmls + filename + '.json'
+    path = filename + '.json'
     with open(path, 'w') as f:
         json.dump(request.json, f)
     cmd = f"""python {config.paper_reader} "{path}"  """
@@ -111,15 +110,12 @@ def save_text():
 @app.route("/annotate_certain_json_in_doc_folder", methods=["POST"])
 def annotate_json_in_doc_folder():
     filename = request.json['filename']
-    path = htmls + filename
+    path = filename
     cmd = f"""python {config.paper_reader} "{path}"  """
     logging.info('called paper reader: ' + cmd)
     result = subprocess.check_output(cmd, shell=True).decode("utf-8")
     answer = shell_commander.free_result(result)
     return answer
-
-
-
 
 
 from client.upmarker import UpMarker
