@@ -103,10 +103,23 @@ def save_text():
     with open(path, 'w') as f:
         json.dump(request.json, f)
     cmd = f"""python {config.paper_reader} "{path}"  """
-    logging.info('calling paper reader: ' + cmd)
+    logging.info('called paper reader: ' + cmd)
     result = subprocess.check_output(cmd, shell=True).decode("utf-8")
     answer = shell_commander.free_result(result)
     return answer
+
+@app.route("/annotate_certain_json_in_doc_folder", methods=["POST"])
+def annotate_json_in_doc_folder():
+    filename = request.json['filename']
+    path = htmls + filename
+    cmd = f"""python {config.paper_reader} "{path}"  """
+    logging.info('called paper reader: ' + cmd)
+    result = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    answer = shell_commander.free_result(result)
+    return answer
+
+
+
 
 
 from client.upmarker import UpMarker
