@@ -115,7 +115,7 @@ def main():
             elif args.preprocessor =="pdf2htmlEX":
                 upmarker_css = UpMarker(_generator="css")
                 css = upmarker_css.markup_proposal_list(proposals, text=text)
-                filename = get_filename_from_path(path).replace(".","")
+                filename = get_filename_from_path(path).replace('.', '_').replace(' ', '_').replace('-', '_')
 
                 css_path = config.apache_css_dir + filename + ".css"
                 with open(css_path, 'w', encoding="utf8") as f:
