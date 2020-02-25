@@ -115,27 +115,33 @@ def main():
         text = data['text']
 
         def proceed(proposals=""):
-            if args.preprocessor =="tika":
-                upmarker_html = UpMarker(_generator='html')
-                html = upmarker_html.markup_proposal_list(proposals, text=text)
-                result = html
-            elif args.preprocessor =="pdf2htmlEX":
-                upmarker_css = UpMarker(_generator="css")
-                css = upmarker_css.markup_proposal_list(proposals, text=text)
-                filename = web_replace(get_filename_from_path(path))
+            proceed.proposals.extend(proposals)
+            if (proceed.islast):
+                if args.preprocessor =="tika":
+                    upmarker_html = UpMarker(_generator='html')
+                    html = upmarker_html.markup_proposal_list(proceed.proposals, text=text)
+                    result = html
+                elif args.preprocessor =="pdf2htmlEX":
+                    upmarker_css = UpMarker(_generator="css")
+                    css = upmarker_css.markup_proposal_list(proceed.proposals, text=text)
+                    filename = web_replace(get_filename_from_path(path))
 
-                css_path = config.apache_css_dir + filename + ".css"
-                with open(css_path, 'w', encoding="utf8") as f:
-                    f.write(css)
-                result = f"file {css_path}"
-            else:
-                logging.error("Preprocessor unknown!")
-            reactor.stop()
-            print_return_result (result)
-            logging.info("PaperReader finished")
+                    css_path = config.apache_css_dir + filename + ".css"
+                    with open(css_path, 'w', encoding="utf8") as f:
+                        f.write(css)
+                    result = f"file {css_path}"
+                else:
+                    logging.error("Preprocessor unknown!")
+                reactor.stop()
+                print_return_result (result)
+                logging.info("PaperReader finished")
 
         logging.info ("Annotation command sent")
-        client.commander(Command=MakeProposals, ProceedLocation=proceed, text=text[:config.max_len_amp], text_name=path.replace("/", ""))
+        splits = [text[i:i+config.max_len_amp] for i in range(0, len(text), config.max_len_amp)]
+        proceed.proposals = []
+        for n, snipped in enumerate(splits):
+                proceed.islast = True if (n == len(splits) - 1) else False
+            client.commander(Command=MakeProposals, ProceedLocation=proceed, text=snipped, text_name=path.replace("/", ""))
 
     process_single_file(path=args.file)
     reactor.run()
