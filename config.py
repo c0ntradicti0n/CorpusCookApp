@@ -1,6 +1,6 @@
 recursive = True
 max_len = 200
-max_len_amp = 10000
+max_len_amp = 20000
 
 log_files = {
     "ccapp": "./log.log",
