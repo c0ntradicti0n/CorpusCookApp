@@ -178,7 +178,7 @@ class CSS_word:
                 if ids:
                     ids_str = ", ".join(["#"+INDEX_WRAP_TAG_NAME+str(id) for id in ids])
                     css_markup_lists.append(f"""{ids_str} {format}""")
-        css_markup_lists.append("z {background:rgba(1,1,1,0.03) !important;}")
+        css_markup_lists.append("z {background:rgba(1,1,1,0.09) !important;}")
         css = "\n\n".join(css_markup_lists)
         return css
 
