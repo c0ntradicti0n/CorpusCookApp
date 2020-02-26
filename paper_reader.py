@@ -139,13 +139,15 @@ def main():
         logging.info ("Annotation command sent")
         splits = [text[i:i+config.max_len_amp] for i in range(0, len(text), config.max_len_amp)]
         proceed.proposals = []
-        for n, snipped in enumerate(splits):
-                proceed.islast = True if (n == len(splits) - 1) else False
-            client.commander(Command=MakeProposals, ProceedLocation=proceed, text=snipped, text_name=path.replace("/", ""))
+        for n, snippet in enumerate(splits):
+            proceed.islast = True if (n == len(splits) - 1) else False
+            logging.info (f"processing text snippet {n+1}/{len(splits)} with {len(snippet)} chars")
+            client.commander(Command=MakeProposals, ProceedLocation=proceed, text=snippet, text_name=path.replace("/", ""))
 
     process_single_file(path=args.file)
     reactor.run()
 
 
 if __name__== "__main__":
+
     main()
