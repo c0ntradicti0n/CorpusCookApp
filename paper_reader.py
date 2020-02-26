@@ -114,10 +114,10 @@ def main():
         with open (path, 'r+') as f:
             data = json.load(f)
         text = data['text']
-        def collect_wrapper (islast, no):
+        def collect_wrapper (islast, no, lend):
             collect_wrapper.last_index = 0
             def proceed(proposals=""):
-                logging.info(f"appending result batch {no} ")
+                logging.info(f"appending result batch {no+1}/{lend} ")
                 proposals, collect_wrapper.last_index = BIO_Annotation.push_indices(proposals, collect_wrapper.last_index)
                 collect_wrapper.proposals.extend(proposals)
                 if (islast):
@@ -151,7 +151,10 @@ def main():
         for n, snippet in enumerate(splits):
             islast = True if (n == len(splits) - 1) else False
             logging.info (f"processing text snippet {n+1}/{len(splits)} with {len(snippet)} chars")
-            client.commander(Command=MakeProposals, ProceedLocation=collect_wrapper(islast, n), text=snippet, text_name=path.replace("/", ""))
+            client.commander(Command=MakeProposals,
+                             ProceedLocation=collect_wrapper(islast= islast, no= n, s= len(splits)),
+                             text=snippet,
+                             text_name=path.replace("/", ""))
 
     process_single_file(path=args.file)
     reactor.run()
