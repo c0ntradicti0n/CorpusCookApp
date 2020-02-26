@@ -6,6 +6,7 @@ import regex as re
 import config
 from client.annotation_protocol import MakeProposals
 from client.annotation_client import AnnotationClient
+from client.bio_annotation import BIO_Annotation
 from client.upmarker import UpMarker
 from helpers.os_tools import get_filename_from_path
 from shell_commander import print_return_result
@@ -113,36 +114,44 @@ def main():
         with open (path, 'r+') as f:
             data = json.load(f)
         text = data['text']
+        def collect_wrapper (islast, no):
+            collect_wrapper.last_index = 0
+            def proceed(proposals=""):
+                logging.info(f"appending result batch {no} ")
+                proposals, collect_wrapper.last_index = BIO_Annotation.push_indices(proposals, collect_wrapper.last_index)
+                collect_wrapper.proposals.extend(proposals)
+                if (islast):
+                    logging.info(f"last one, tranforming to css")
 
-        def proceed(proposals=""):
-            proceed.proposals.extend(proposals)
-            if (proceed.islast):
-                if args.preprocessor =="tika":
-                    upmarker_html = UpMarker(_generator='html')
-                    html = upmarker_html.markup_proposal_list(proceed.proposals, text=text)
-                    result = html
-                elif args.preprocessor =="pdf2htmlEX":
-                    upmarker_css = UpMarker(_generator="css")
-                    css = upmarker_css.markup_proposal_list(proceed.proposals, text=text)
-                    filename = web_replace(get_filename_from_path(path))
+                    if args.preprocessor =="tika":
+                        upmarker_html = UpMarker(_generator='html')
+                        html = upmarker_html.markup_proposal_list(proceed.proposals, text=text)
+                        result = html
+                    elif args.preprocessor =="pdf2htmlEX":
+                        upmarker_css = UpMarker(_generator="css")
+                        css = upmarker_css.markup_proposal_list(collect_wrapper.proposals, text=text)
+                        filename = web_replace(get_filename_from_path(path))
 
-                    css_path = config.apache_css_dir + filename + ".css"
-                    with open(css_path, 'w', encoding="utf8") as f:
-                        f.write(css)
-                    result = f"file {css_path}"
-                else:
-                    logging.error("Preprocessor unknown!")
-                reactor.stop()
-                print_return_result (result)
-                logging.info("PaperReader finished")
+                        css_path = config.apache_css_dir + filename + ".css"
+                        with open(css_path, 'w', encoding="utf8") as f:
+                            f.write(css)
+                        result = f"file {css_path}"
+
+                        reactor.stop()
+                        print_return_result(result)
+                        logging.info("PaperReader finished")
+                    else:
+                        logging.error("Preprocessor unknown!")
+            return proceed
+
 
         logging.info ("Annotation command sent")
         splits = [text[i:i+config.max_len_amp] for i in range(0, len(text), config.max_len_amp)]
-        proceed.proposals = []
+        collect_wrapper.proposals = []
         for n, snippet in enumerate(splits):
-            proceed.islast = True if (n == len(splits) - 1) else False
+            islast = True if (n == len(splits) - 1) else False
             logging.info (f"processing text snippet {n+1}/{len(splits)} with {len(snippet)} chars")
-            client.commander(Command=MakeProposals, ProceedLocation=proceed, text=snippet, text_name=path.replace("/", ""))
+            client.commander(Command=MakeProposals, ProceedLocation=collect_wrapper(islast, n), text=snippet, text_name=path.replace("/", ""))
 
     process_single_file(path=args.file)
     reactor.run()
