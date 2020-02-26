@@ -152,7 +152,7 @@ def main():
             islast = True if (n == len(splits) - 1) else False
             logging.info (f"processing text snippet {n+1}/{len(splits)} with {len(snippet)} chars")
             client.commander(Command=MakeProposals,
-                             ProceedLocation=collect_wrapper(islast= islast, no= n, s= len(splits)),
+                             ProceedLocation=collect_wrapper(islast= islast, no= n, lend= len(splits)),
                              text=snippet,
                              text_name=path.replace("/", ""))
 
