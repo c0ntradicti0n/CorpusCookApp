@@ -109,11 +109,12 @@ def main():
                         default="tika")
     args = parser.parse_args()
 
-
     def process_single_file(path):
         with open (path, 'r+') as f:
             data = json.load(f)
         text = data['text']
+        indexed_words = data['indexed_words']
+
         def collect_wrapper (islast, no, lend):
             collect_wrapper.last_index = 0
             def proceed(proposals=""):
@@ -124,11 +125,11 @@ def main():
                     logging.info(f"last one, tranforming to css")
 
                     if args.preprocessor =="tika":
-                        upmarker_html = UpMarker(_generator='html')
+                        upmarker_html = UpMarker(indexed_words, _generator='html')
                         html = upmarker_html.markup_proposal_list(proceed.proposals, text=text)
                         result = html
                     elif args.preprocessor =="pdf2htmlEX":
-                        upmarker_css = UpMarker(_generator="css")
+                        upmarker_css = UpMarker(indexed_words, _generator="css")
                         css = upmarker_css.markup_proposal_list(collect_wrapper.proposals, text=text)
                         filename = web_replace(get_filename_from_path(path))
 

@@ -97,15 +97,18 @@ def save_sample (request, which=None, zero_before=None, zero_after=None, zero_te
 
 @app.route("/save_text", methods=["POST"])
 def save_text():
+    NotImplementedError
+    """
     filename = request.json['filename']
     path = filename + '.json'
     with open(path, 'w') as f:
         json.dump(request.json, f)
-    cmd = f"""python {config.paper_reader} "{path}"  """
+    cmd = fssspython {config.paper_reader} "{path}"  sss
     logging.info('called paper reader: ' + cmd)
     result = subprocess.check_output(cmd, shell=True).decode("utf-8")
     answer = shell_commander.free_result(result)
     return answer
+    """
 
 @app.route("/annotate_certain_json_in_doc_folder", methods=["POST"])
 def annotate_json_in_doc_folder():
@@ -119,7 +122,7 @@ def annotate_json_in_doc_folder():
 
 
 from client.upmarker import UpMarker
-upmarker_html = UpMarker(_generator="tml")
+upmarker_html = UpMarker(_indexed_words={}, _generator="tml")
 
 @app.route("/markup", methods=["POST"])
 def markup():

@@ -163,7 +163,8 @@ class CSS_word:
         self.annotation.append(_tag)
         return self
 
-    def collect_css (indexed_csswords):
+    def collect_css (indexed_csswords, _indexed_words):
+        indexed_csswords = CSS_word.align_with_real (indexed_csswords, _indexed_words)
         css_collection = {level: {annotation_tag: [] for annotation_tag in annotation.keys()} for level, annotation in css_dict.items()}
         for i, indexed_cssword in indexed_csswords.items():
             if indexed_cssword.annotation:
@@ -182,12 +183,27 @@ class CSS_word:
         css = "\n\n".join(css_markup_lists)
         return css
 
+    def align_with_real(indexed_csswords, _indexed_words):
+        import difflib
+        s = difflib.SequenceMatcher(None,
+                                    [icw.word for icw in indexed_csswords.values()],
+                                    list(_indexed_words.values()))
+
+        result = {}
+        for block in s.get_matching_blocks():
+            print (
+            "exact match of length", block.size, "starting at indices", block.a, "and", block.b)
+            for i in range(0,block.size):
+                result[block.b + i] = indexed_csswords[block.a + i]
+        return result
+
+
 
 
 
 
 class UpMarker:
-    def __init__(self, _generator='bbcode'):
+    def __init__(self, _indexed_words, _generator='bbcode'):
         """
 
         :param _generator:
@@ -195,6 +211,7 @@ class UpMarker:
          - tml body content of html
          - bbcode (kivy formatting)
         """
+        self._indexed_words = _indexed_words
         self.generator = _generator
 
         if _generator == 'tml':  # html torso
@@ -499,7 +516,7 @@ class UpMarker:
             #subdate(highlighted=highlighted, subs=annotation["subs"])
 
         if self.generator=="css":
-            return CSS_word.collect_css(highlighted)
+            return CSS_word.collect_css(highlighted, _indexed_words=self._indexed_words)
         return self.body[self.generator] % "".join (self.wrap_indent_paragraph(
                 highlighted,
                 fill=self.indent[self.generator],
