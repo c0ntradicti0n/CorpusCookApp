@@ -45,7 +45,7 @@ class AnnotationClient:
                   **kwargs):
         """ Its like a bind function between some Server Command and a action on client side.
         You call it like this:
-        >>> self.me_as_client.commander(fun ,MakePrediction, text="I love you. You love me.")
+        >>> self.me_as_client.commander(fun, MakePrediction, text="Lorem ipsum.")
         The Command is an amp.Command, defined somewhere as:
         ```
         class MakePrediction(amp.Command):

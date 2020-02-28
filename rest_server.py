@@ -122,7 +122,7 @@ def annotate_json_in_doc_folder():
 
 
 from client.upmarker import UpMarker
-upmarker_html = UpMarker(_indexed_words={}, _generator="tml")
+upmarker_html = UpMarker(_generator="tml")
 
 @app.route("/markup", methods=["POST"])
 def markup():

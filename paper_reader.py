@@ -4,7 +4,7 @@ import os
 import regex as re
 
 import config
-from client.annotation_protocol import MakeProposals
+from client.annotation_protocol import MakeProposals, MakeProposalsIndexed
 from client.annotation_client import AnnotationClient
 from client.bio_annotation import BIO_Annotation
 from client.upmarker import UpMarker
@@ -112,8 +112,7 @@ def main():
     def process_single_file(path):
         with open (path, 'r+') as f:
             data = json.load(f)
-        text = data['text']
-        indexed_words = data['indexed_words']
+        indexed_words = {int(index): word for index, word in data['indexed_words'].items() }
 
         def collect_wrapper (islast, no, lend):
             collect_wrapper.last_index = 0
@@ -125,12 +124,12 @@ def main():
                     logging.info(f"last one, tranforming to css")
 
                     if args.preprocessor =="tika":
-                        upmarker_html = UpMarker(indexed_words, _generator='html')
-                        html = upmarker_html.markup_proposal_list(proceed.proposals, text=text)
+                        upmarker_html = UpMarker(_generator='html')
+                        html = upmarker_html.markup_proposal_list(proceed.proposals, _indexed_words=indexed_words)
                         result = html
                     elif args.preprocessor =="pdf2htmlEX":
-                        upmarker_css = UpMarker(indexed_words, _generator="css")
-                        css = upmarker_css.markup_proposal_list(collect_wrapper.proposals, text=text)
+                        upmarker_css = UpMarker(_generator="css")
+                        css = upmarker_css.markup_proposal_list(collect_wrapper.proposals, _indexed_words=indexed_words)
                         filename = web_replace(get_filename_from_path(path))
 
                         css_path = config.apache_css_dir + filename + ".css"
@@ -147,14 +146,14 @@ def main():
 
 
         logging.info ("Annotation command sent")
-        splits = [text[i:i+config.max_len_amp] for i in range(0, len(text), config.max_len_amp)]
+        splits = [list(indexed_words.values())[i:i+config.max_len_amp] for i in range(0, len(indexed_words), config.max_len_amp)]
         collect_wrapper.proposals = []
         for n, snippet in enumerate(splits):
             islast = True if (n == len(splits) - 1) else False
             logging.info (f"processing text snippet {n+1}/{len(splits)} with {len(snippet)} chars")
-            client.commander(Command=MakeProposals,
+            client.commander(Command=MakeProposalsIndexed,
                              ProceedLocation=collect_wrapper(islast= islast, no= n, lend= len(splits)),
-                             text=snippet,
+                             indexed=snippet,
                              text_name=path.replace("/", ""))
 
     process_single_file(path=args.file)

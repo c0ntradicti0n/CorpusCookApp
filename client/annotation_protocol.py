@@ -117,6 +117,12 @@ class MakeProposals(amp.Command):
     response = [(b'proposals', JSONB64COMPRESS())]
 
 @commando
+class MakeProposalsIndexed(amp.Command):
+    arguments = [(b'indexed',  JSONB64COMPRESS()), (b'text_name', amp.Unicode())]
+    response = [(b'proposals', JSONB64COMPRESS())]
+
+
+@commando
 class SaveComplicated(amp.Command):
     arguments = [(b'text', amp.Unicode())]
     response =  [(b'done', amp.Unicode())]

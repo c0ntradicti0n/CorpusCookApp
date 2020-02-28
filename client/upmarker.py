@@ -3,6 +3,7 @@ from collections import OrderedDict
 from typing import Dict
 import logging
 import pprint
+import difflib
 
 from more_itertools import flatten, pairwise
 from client import bio_annotation
@@ -164,7 +165,7 @@ class CSS_word:
         return self
 
     def collect_css (indexed_csswords, _indexed_words):
-        indexed_csswords = CSS_word.align_with_real (indexed_csswords, _indexed_words)
+        #indexed_csswords = CSS_word.align_with_real (indexed_csswords, _indexed_words)
         css_collection = {level: {annotation_tag: [] for annotation_tag in annotation.keys()} for level, annotation in css_dict.items()}
         for i, indexed_cssword in indexed_csswords.items():
             if indexed_cssword.annotation:
@@ -184,7 +185,6 @@ class CSS_word:
         return css
 
     def align_with_real(indexed_csswords, _indexed_words):
-        import difflib
         s = difflib.SequenceMatcher(None,
                                     [icw.word for icw in indexed_csswords.values()],
                                     list(_indexed_words.values()))
@@ -197,13 +197,12 @@ class CSS_word:
                 result[block.b + i] = indexed_csswords[block.a + i]
         return result
 
-
-
-
+    def __repr__(self):
+        return f"css {self.word}"
 
 
 class UpMarker:
-    def __init__(self, _indexed_words, _generator='bbcode'):
+    def __init__(self, _generator='bbcode'):
         """
 
         :param _generator:
@@ -211,7 +210,6 @@ class UpMarker:
          - tml body content of html
          - bbcode (kivy formatting)
         """
-        self._indexed_words = _indexed_words
         self.generator = _generator
 
         if _generator == 'tml':  # html torso
@@ -445,13 +443,16 @@ class UpMarker:
     def reasonable(self, annotation):
         return len(annotation) >= 2 and all (len(span)==2 for span in annotation)
 
-    def markup_proposal_list(self, proposals, text=None):
+    def markup_proposal_list(self, proposals, _indexed_words=None):
+        self._indexed_words = _indexed_words
+        self.indices = _indexed_words
+
         proposals = sorted(proposals, key=lambda d: d['indices'][0])
-        if text:
-            self.indices = dict(enumerate(text.split()))
-        else:
-            self.indices = {index: word for annotation in proposals for (word, tag), index in
-                             zip(annotation['annotation'], annotation['indices'])}
+        #if text:
+        #    self.indices = dict(enumerate(text.split()))
+        #else:
+        #    self.indices = {index: word for annotation in proposals for (word, tag), index in
+        #                     zip(annotation['annotation'], annotation['indices'])}
         if self.generator == "css":
             data_model = CSS_word
         else:
