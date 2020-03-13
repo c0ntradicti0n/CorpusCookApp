@@ -6,8 +6,9 @@ import pprint
 import difflib
 
 from more_itertools import flatten, pairwise
+
+import config
 from client import bio_annotation
-from client.true_format_html import INDEX_WRAP_TAG_NAME
 
 simple_html = """
 <!DOCTYPE html>
@@ -178,7 +179,7 @@ class CSS_word:
             for annotation, format in css_tags.items():
                 ids = css_collection[level][annotation.lower()]
                 if ids:
-                    ids_str = ", ".join(["#"+INDEX_WRAP_TAG_NAME+str(id) for id in ids])
+                    ids_str = ", ".join(["#"+config.INDEX_WRAP_TAG_NAME+str(id) for id in ids])
                     css_markup_lists.append(f"""{ids_str} {format}""")
         css_markup_lists.append("z {background:rgba(1,1,1,0.09) !important;}")
         css = "\n\n".join(css_markup_lists)

@@ -64,7 +64,7 @@ class AnnotationClient:
         :param kwargs: arguments for the Command, mapping to the arguments of the commands
         """
         if not Command:
-            raise ValueError('`Command` must be given')
+            raise ValueError("`Command` must be given")
 
         def error(reason):
             client.annotation_protocol.logging.error("Something with twisted.amp went wrong, look at the server")
@@ -72,8 +72,6 @@ class AnnotationClient:
             reactor.stop()
 
         def seamless_apply(result):
-            if self.log_everything:
-                client.annotation_protocol.logging.warning(pprint.pformat(result))
             ProceedLocation(**result)
             return result
 

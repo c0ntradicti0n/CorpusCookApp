@@ -48,7 +48,8 @@ def main():
 
     parser = ArgumentParser(description='Call corpuscook commands inside flask. Twisted and flask can deadlock each other. ', formatter_class=SmartFormatter)
     parser.add_argument('command', type=str, help='R|command from the protocol: \n'
-                                                  + pprint.pformat(client.annotation_protocol.__commands__,  width=20, indent=1))
+                                                 + pprint.pformat(client.annotation_protocol.__commands__,  width=20, indent=1)
+                        )
     parser.add_argument('arguments', type=str, help='arguments for the command as json (see commandd description)')
     args = parser.parse_args()
 

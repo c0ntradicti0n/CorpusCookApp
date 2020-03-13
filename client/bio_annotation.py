@@ -260,10 +260,9 @@ class BIO_Annotation:
                 if d['able']:
                     if not (d['end'] < len(tokens)):
                         import pprint
-                        logging.error('Exceeding annotation length')
+                        logging.error("Exceeding annotation length")
                         length = len(tokens)
-                        logging.error('length %d' % length)
-                        #logging.error(pprint.pformat(paired_spans))
+                        logging.error("length %d" % length)
                     for i in range(int(d['start']), int(d['end'])):
                         these_tags[i] = "-".join(['B' if i == beginning else 'I', d['kind'].upper()])
                 all_tags = [x + [y] for x, y in zip(all_tags, these_tags)]

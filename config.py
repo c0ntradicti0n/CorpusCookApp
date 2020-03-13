@@ -1,6 +1,9 @@
 recursive = True
 max_len = 200
 max_len_amp = 3000 # words
+NORMAL_HEIGHT = 100
+INDEX_WRAP_TAG_NAME = 'z'
+
 
 log_files = {
     "ccapp": "./log.log",
