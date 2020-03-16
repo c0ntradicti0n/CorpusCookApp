@@ -274,12 +274,10 @@ class BIO_Annotation:
         annotation = list(zip(tokens, tags))
         return annotation
 
-    def push_indices(proposals, push):
-        last_index=0;
+    def push_indices(proposals: List[Dict], push: int):
         for proposal in proposals:
-            proposal['indices'] = [index+push for index in proposal['indices']]
-            last_index =  max(proposal['indices'][-1], last_index)
-        return proposals, last_index
+            proposal['indices'] = [index + push for index in proposal['indices']]
+        return proposals
 
 
 

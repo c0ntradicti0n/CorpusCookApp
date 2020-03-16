@@ -51,53 +51,12 @@ class paper_reader:
                                     'interesting general theory. '.lower()
                                 )
 
-    def load_text(self, adress, preprocessor="tika"):
-        if preprocessor == "tika":
-            logging.info("tika reading text...")
-            if not re.match(r"""((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*""",
-                adress        ):
-                self.raw_text = parser.from_file(adress)
-            else:
-                response = urllib.request.urlopen(adress)
-                data = response.read()  # a `bytes` object
-                self.raw_text = parser.from_buffer(data)
+    def load_text(self, adress, preprocessor="pdf2htmlEX"):
         if preprocessor == "pdf2htmlEX":
             with open(adress, adress + ".txt", "r", encoding="utf8") as f:
                 self.raw_text = f.read()
 
-    def analyse(self):
-        """ Extracts prose text from  the loaded texts, that may contain line numbers somewhere, adresses, journal links etc.
-        :return str:  prose text
-        """
-        logging.info("transferring text to nlp thing...")
-
-        text = self.raw_text['content']
-        paragraphs = text.split('\n\n')
-        print ("mean length of splitted lines", (mean([len(p) for p in paragraphs])))
-
-        # If TIKA resolved '\n'
-        if (mean([len(p) for p in paragraphs])) > 80:
-            paragraphs = [re.sub(r"- *\n", '', p) for p in paragraphs]
-            paragraphs = [p.replace('\n', " ") for p in paragraphs]
-            paragraphs = [p.replace(';', " ") for p in paragraphs]
-            joiner = " "
-        else:
-            # If TIKA did not resolve '\n'
-            joiner = " "
-
-        processed_text = joiner.join([p
-              for p in paragraphs
-                   if
-                        p and
-                        ks_2samp(self.normal_data, list(p)).pvalue   >   self.threshold
-                                      ]
-                                     )
-
-        return processed_text.strip() [:self.length_limit]
 text_no = 0
-
-
-
 
 def main():
     from twisted.internet import reactor
@@ -114,25 +73,23 @@ def main():
             data = json.load(f)
         indexed_words = {int(index): word for index, word in data['indexed_words'].items() }
 
-        def collect_wrapper (islast, no, lend):
-            collect_wrapper.last_index = 0
+        splits = [list(indexed_words.values())[i:i + config.max_len_amp]
+                  for i in range(0, len(indexed_words), config.max_len_amp)]
+
+        def collect_wrapper (islast, no, old_last_offset):
             def proceed(proposals=""):
-                logging.info(f"appending result batch {no+1}/{lend} ")
-                proposals, collect_wrapper.last_index = BIO_Annotation.push_indices(proposals, collect_wrapper.last_index)
+                logging.info(f"appending result batch {no+1}/{len(splits)} with last offset = {old_last_offset} ")
+                proposals = BIO_Annotation.push_indices(proposals,  old_last_offset)
                 collect_wrapper.proposals.extend(proposals)
                 if (islast):
                     logging.info(f"last one, tranforming to css")
 
-                    if args.preprocessor =="tika":
-                        upmarker_html = UpMarker(_generator='html')
-                        html = upmarker_html.markup_proposal_list(proceed.proposals, _indexed_words=indexed_words)
-                        result = html
-                    elif args.preprocessor =="pdf2htmlEX":
+                    if args.preprocessor=="pdf2htmlEX":
                         upmarker_css = UpMarker(_generator="css")
                         css = upmarker_css.markup_proposal_list(collect_wrapper.proposals, _indexed_words=indexed_words)
                         filename = web_replace(get_filename_from_path(path))
-
                         css_path = config.apache_css_dir + filename + ".css"
+
                         with open(css_path, 'w', encoding="utf8") as f:
                             f.write(css)
                         result = f"file {css_path}"
@@ -146,15 +103,20 @@ def main():
 
 
         logging.info ("Annotation command sent")
-        splits = [list(indexed_words.values())[i:i+config.max_len_amp] for i in range(0, len(indexed_words), config.max_len_amp)]
+
         collect_wrapper.proposals = []
+        current_offset = 0
         for n, snippet in enumerate(splits):
             islast = True if (n == len(splits) - 1) else False
             logging.info (f"processing text snippet {n+1}/{len(splits)} with {len(snippet)} chars")
             client.commander(Command=MakeProposalsIndexed,
-                             ProceedLocation=collect_wrapper(islast= islast, no= n, lend= len(splits)),
+                             ProceedLocation=collect_wrapper(
+                                 islast= islast,
+                                 no= n,
+                                 old_last_offset=current_offset),
                              indexed=snippet,
                              text_name=path.replace("/", ""))
+            current_offset += len(snippet)
 
     process_single_file(path=args.file)
     reactor.run()

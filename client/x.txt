@@ -1,7 +1,0 @@
-    def mirror(self):
-        return [self.max-v for v in self.values]
-    def remirror(self, mirror_values):
-        self.values = [self.max-v for v in mirror_values]
-    mirror_values = AliasProperty(mirror, remirror,
-                                     bind=('values'),
-                                     cache=True)

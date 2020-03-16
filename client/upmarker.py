@@ -91,7 +91,7 @@ class Bwalp:
                     self.paragraph = _paragraph
             else:
                 _=0
-                logging.info('annotating {self} multiple times'.format(self=self))
+                logging.info(f"annotating {self} multiple times")
         return self
 
 
@@ -161,29 +161,41 @@ class CSS_word:
         self.word = _word
         self.id = _id
 
-    def update(self, _tag, _before=[], _after=[], _level=None, _paragraph=None):
+    def update(self, _tag, _before=[], _after=[], _level=None, _paragraph=None, check_word=None, debug=True):
         self.annotation.append(_tag)
+        if check_word!=self.word:
+            if debug:
+                logging.error(f"Annotated word '{self.word}' is not the same with the indexed word before, '{check_word}'")
+            else:
+                assert (check_word==self.word)
+
         return self
 
     def collect_css (indexed_csswords, _indexed_words):
-        #indexed_csswords = CSS_word.align_with_real (indexed_csswords, _indexed_words)
-        css_collection = {level: {annotation_tag: [] for annotation_tag in annotation.keys()} for level, annotation in css_dict.items()}
+        css_collection = {level:
+                              {annotation_tag: []
+                               for annotation_tag in annotation.keys()}
+                          for level, annotation in css_dict.items()}
         for i, indexed_cssword in indexed_csswords.items():
             if indexed_cssword.annotation:
-                for level, annotation in enumerate(indexed_cssword.annotation):
-                    css_collection[0][annotation.lower()].append(indexed_cssword.id)
+                for level, tag in enumerate(indexed_cssword.annotation):
+                    annotation_key = CSS_word.keyize(tag)
+                    css_collection[0][annotation_key].append(str(indexed_cssword.id) )
                     # TODO make level variant again
 
         css_markup_lists = []
         for level, css_tags in css_dict.items():
-            for annotation, format in css_tags.items():
-                ids = css_collection[level][annotation.lower()]
+            for annotation_key, format in css_tags.items():
+                ids = css_collection[level][annotation_key]
                 if ids:
                     ids_str = ", ".join(["#"+config.INDEX_WRAP_TAG_NAME+str(id) for id in ids])
                     css_markup_lists.append(f"""{ids_str} {format}""")
         css_markup_lists.append("z {background:rgba(1,1,1,0.09) !important;}")
         css = "\n\n".join(css_markup_lists)
         return css
+
+    def keyize(annotation):
+        return annotation.lower()[2:]
 
     def align_with_real(indexed_csswords, _indexed_words):
         s = difflib.SequenceMatcher(None,
@@ -199,7 +211,7 @@ class CSS_word:
         return result
 
     def __repr__(self):
-        return f"css {self.word}"
+        return f"css-word: {self.word} {self.annotation}"
 
 
 class UpMarker:
@@ -220,11 +232,11 @@ class UpMarker:
 
     nl = {
         'bbcode': Bwalp(_word="\n", _id=0),
-        'html': Bwalp(_word="<br />\n", _id=0)
+        'html': Bwalp(_word="", _id=0)
     }
     indent = {
         'bbcode': Bwalp(_word="~~~", _id=0),
-        'html': Bwalp(_word="<span class='indentation'>  </span>", _id=0)
+        'html': Bwalp(_word="", _id=0)
     }
     sincere = {
         'bbcode': [],
@@ -445,79 +457,61 @@ class UpMarker:
         return len(annotation) >= 2 and all (len(span)==2 for span in annotation)
 
     def markup_proposal_list(self, proposals, _indexed_words=None):
-        self._indexed_words = _indexed_words
-        self.indices = _indexed_words
-
-        proposals = sorted(proposals, key=lambda d: d['indices'][0])
-        #if text:
-        #    self.indices = dict(enumerate(text.split()))
-        #else:
-        #    self.indices = {index: word for annotation in proposals for (word, tag), index in
-        #                     zip(annotation['annotation'], annotation['indices'])}
         if self.generator == "css":
             data_model = CSS_word
         else:
             data_model = Bwalp
 
+        self._indexed_words = _indexed_words
+        self.indices = _indexed_words
+        proposals = sorted(proposals, key=lambda d: d['indices'][0])
+
         highlighted = self.new_start_dict(self.indices, data_model)
 
         def update_dict_from_annotation(indices, annotation, paragraph, start_level, sincerity, mark_end, yes_no):
-            res = {}
+            highlighted = {}
             spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(annotation))
 
-            try:
-                logging.info(f"using {pprint.pformat(list(zip(indices, annotation)))}")
-            except TypeError:
-                raise
             if self.reasonable(spans ):
                 highlighted = self.new_start_dict(dict((index, word) for index, (word, tag) in zip(indices, annotation)), data_model)
                 start = min(indices)
                 for an_set in spans:
-                    for tag, span_range, span_annotation in an_set:
-                        for local_index in range(*span_range):
-                            res[start + local_index] = \
-                                    highlighted[start + local_index].update(
-                                        **self.markup_word(
-                                            tag,
-                                            paragraph=0,
-                                            new_level=start_level,
-                                            sincerity=True))
+                    for tag, span_range, spannotation in an_set:
+                        for local_index, (word, tag) in spannotation:
+                            try:
+                                highlighted[start + local_index].update(
+                                                **self.markup_word(
+                                                    tag,
+                                                    paragraph=0,
+                                                    new_level=start_level,
+                                                    sincerity=True),
+                                                check_word=word)
+                            except IndexError:
+                                logging.error("range for given annotation is too long")
+                                continue
+            return highlighted
 
-            return res
-
-        def subdate(highlighted, subs):
-            for sub_paragraph, sub_annotation in enumerate(subs):
-                highlighted.update(
-                    update_dict_from_annotation(
-                        sub_annotation['indices'], 
-                        sub_annotation['annotation'], 
-                        paragraph,
-                        start_level=sub_annotation['depth'],
-                        sincerity=annotation['privative'],
-                        mark_end=annotation['mark_end'],
-                        yes_no=annotation['difference']
-                        )                    
-                    )
-            #for sub_paragraph, sub_annotation in enumerate(subs):
-            #    subdate(highlighted, sub_annotation['subs'])
-
-        for paragraph, annotation in enumerate(proposals):
-            highlighted.update(
-                        update_dict_from_annotation(annotation['indices'], 
-                            annotation['annotation'], 
-                            paragraph, 
-                            start_level=0,
-                            sincerity=annotation['privative'],
-                            mark_end=annotation['mark_end'],
-                            yes_no=annotation['difference']
-                            )
-            )
-
-
-            # Overwrite higher-level annotations with lower level for indenting them
-            #subdate(highlighted=highlighted, subs=annotation["subs"])
+        for annotation_number, proposal in enumerate(proposals):
+            update_dict = update_dict_from_annotation(proposal['indices'],
+                                        proposal['annotation'],
+                                        annotation_number,
+                                        start_level=0,
+                                        sincerity=proposal['privative'],
+                                        mark_end=proposal['mark_end'],
+                                        yes_no=proposal['difference'],
+                                        )
+            update_dict = update_dict_from_annotation(proposal['indices'],
+                                        proposal['annotation'],
+                                        annotation_number,
+                                        start_level=0,
+                                        sincerity=proposal['privative'],
+                                        mark_end=proposal['mark_end'],
+                                        yes_no=proposal['difference'],
+                                        )
+            highlighted.update(update_dict)
 
         if self.generator=="css":
+            assert len(self._indexed_words)==len(highlighted)
             return CSS_word.collect_css(highlighted, _indexed_words=self._indexed_words)
         return self.body[self.generator] % "".join (self.wrap_indent_paragraph(
                 highlighted,
