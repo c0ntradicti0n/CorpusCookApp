@@ -21,9 +21,17 @@ mixer_path = "../CorpusCook/manually_annotated/mix_corpus_from_manual_files.py"
 mixer_working_dir =  "../CorpusCook/"
 corpuscook_venv = "../CorpusCook/venv/bin/activate"
 
-appcorpuscook_json_dir = "../CorpusCookApp/pdfs/"
-appcorpuscook_html_dir = "../pdfetc2txt/docs/"
-appcorpuscook_pdf_dir  = "../pdfetc2txt/docs/"
+appcorpuscook_docs_json_dir = "../CorpusCookApp/pdfs/"
+appcorpuscook_docs_html_dir = "../pdfetc2txt/docs/htmls/"
+appcorpuscook_docs_pdf_dir  = "../pdfetc2txt/docs/pdfs/"
+appcorpuscook_docs_txt_dir  = "../pdfetc2txt/docs/txts/"
+
+appcorpuscook_diff_json_dir = "../CorpusCookApp/htmls/"
+appcorpuscook_diff_html_dir = "../pdfetc2txt/scraped_difference_between/htmls/"
+appcorpuscook_diff_pdf_dir  = "../pdfetc2txt/scraped_difference_between/pdfs"
+appcorpuscook_diff_txt_dir  = "../pdfetc2txt/scraped_difference_between/txts"
+
+
 mixer_path = "../CorpusCook/manually_annotated/mix_corpus_from_manual_files.py"
 mixer_working_dir =  "../CorpusCook/"
 corpuscook_venv = "../CorpusCook/venv/bin/activate"

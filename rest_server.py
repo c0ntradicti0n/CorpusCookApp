@@ -441,13 +441,5 @@ def get_corpus_content():
 
 
 if __name__ == '__main__':
-    import logging, logging.config, yaml
-
-    logging.config.dictConfig(yaml.load(open('logging.conf')))
-    logfile = logging.getLogger('file')
-    logconsole = logging.getLogger('console')
-    logfile.debug("Debug FILE")
-    logconsole.debug("Debug CONSOLE")
-
     app.run(port=5000, debug=True)
 
