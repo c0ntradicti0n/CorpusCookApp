@@ -5,12 +5,12 @@ import regex as re
 
 import config
 from client.annotation_protocol import MakeProposals, MakeProposalsIndexed
-from client.annotation_client import AnnotationClient
+from client.annotation_client import RequestAnnotation
 from client.bio_annotation import BIO_Annotation
 from client.upmarker import UpMarker
 from helpers.os_tools import get_filename_from_path
 from shell_commander import print_return_result
-client = AnnotationClient()
+client = RequestAnnotation()
 
 def web_replace(path):
     return path.replace('.', '_').replace(' ', '_').replace('-', '_')
@@ -109,13 +109,13 @@ def main():
         for n, snippet in enumerate(splits):
             islast = True if (n == len(splits) - 1) else False
             logging.info (f"processing text snippet {n+1}/{len(splits)} with {len(snippet)} chars")
-            client.commander(Command=MakeProposalsIndexed,
-                             ProceedLocation=collect_wrapper(
+            client.schedule(command=MakeProposalsIndexed,
+                            ProceedLocation=collect_wrapper(
                                  islast= islast,
                                  no= n,
                                  old_last_offset=current_offset),
-                             indexed=snippet,
-                             text_name=path.replace("/", ""))
+                            indexed=snippet,
+                            text_name=path.replace("/", ""))
             current_offset += len(snippet)
 
     process_single_file(path=args.file)

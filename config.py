@@ -1,36 +1,38 @@
+parse_pdf2htmlEX = True
 recursive = True
 max_len = 200
-max_len_amp = 3000 # words
 NORMAL_HEIGHT = 100
+
+doc_port        = 5180
+app_port        = 5181
+annotation_port = 5182
+science_port    = 5183
+
 INDEX_WRAP_TAG_NAME = 'z'
 
-
 log_files = {
-    "ccapp": "./log.log",
+    "ccapp": "./CorpusCookApp/log.log",
     "cc": "../CorpusCook/log.log",
-    "dist": "../Distinctiopus/log.log"
+    "dist": "../Distinctiopus4/log.log"
 }
 
-paper_reader = "paper_reader.py"
-
+new_corpus_increment = "../CorpusCook/server/corpus/"
 cc_corpus_collection_path = "../CorpusCook/manually_annotated/"
 cc_corpus_working_path = "../CorpusCook/server/corpus/"
 dist_corpus_path = "../Distinctiopus4/manual_corpus/"
 
-mixer_path = "../CorpusCook/manually_annotated/mix_corpus_from_manual_files.py"
-mixer_working_dir =  "../CorpusCook/"
-corpuscook_venv = "../CorpusCook/venv/bin/activate"
-
 appcorpuscook_docs_json_dir = "../CorpusCookApp/pdfs/"
 appcorpuscook_docs_html_dir = "../pdfetc2txt/docs/htmls/"
-appcorpuscook_docs_pdf_dir  = "../pdfetc2txt/docs/pdfs/"
+appcorpuscook_docs_document_dir  = "../pdfetc2txt/docs/pdfs/"
 appcorpuscook_docs_txt_dir  = "../pdfetc2txt/docs/txts/"
 
 appcorpuscook_diff_json_dir = "../CorpusCookApp/htmls/"
 appcorpuscook_diff_html_dir = "../pdfetc2txt/scraped_difference_between/htmls/"
-appcorpuscook_diff_pdf_dir  = "../pdfetc2txt/scraped_difference_between/pdfs"
-appcorpuscook_diff_txt_dir  = "../pdfetc2txt/scraped_difference_between/txts"
+appcorpuscook_diff_document_dir  = "../pdfetc2txt/scraped_difference_between/download/"
+appcorpuscook_diff_txt_dir  = "../pdfetc2txt/scraped_difference_between/txts/"
 
+apache_dir_document = "../apache-tomcat-9.0.30/webapps/corpuscow/document/"
+apache_css_dir = "../apache-tomcat-9.0.30/webapps/corpuscow/resources/css/document/"
 
 mixer_path = "../CorpusCook/manually_annotated/mix_corpus_from_manual_files.py"
 mixer_working_dir =  "../CorpusCook/"
@@ -63,5 +65,12 @@ ke_path=  "../KnowledgeScience/knowledge_graph_coords/tsne_clusters_mean_points.
 ke_colors="../KnowledgeScience/knowledge_graph_coords/kn_clusters_mean_points.csv"
 hal = '"../hal/target/hal-1-jar-with-dependencies.jar"'
 video_dir = '../view_control_web/WebContent/resources/media/'
-apache_dir_document = "../../apache-tomcat-9.0.30/webapps/corpuscow/document"
-apache_css_dir = "../apache-tomcat-9.0.30/webapps/corpuscow/resources/document_css/"
+
+wordlist = '../pdfetc2txt/wordlist.txt'
+
+reader_width = 700
+import numpy
+reader_height = numpy.sqrt(2) * reader_width
+
+page_margin_bottom = 0.06
+page_margin_top = 0.15

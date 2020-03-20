@@ -33,7 +33,7 @@ from argparse import ArgumentParser
 from typing import List
 
 from twisted.internet import reactor
-from client.annotation_client import AnnotationClient
+from client.annotation_client import RequestAnnotation
 from client.annotation_protocol import *
 
 
@@ -55,14 +55,14 @@ def main():
 
     logging.getLogger().setLevel(logging.INFO)
 
-    I_as_client = AnnotationClient()
+    I_as_client = RequestAnnotation()
 
     def forward_proceed(**kwargs):
         print ("RETURN" + _start+json.dumps(kwargs)+_end)
         reactor.stop()
 
     logging.warning(f"CALLING {str(eval(args.command))}")
-    I_as_client.commander(ProceedLocation=forward_proceed, Command=eval(args.command), **json.loads(args.arguments))
+    I_as_client.schedule(ProceedLocation=forward_proceed, command=eval(args.command), **json.loads(args.arguments))
     reactor.run()
 
 if __name__ == "__main__":

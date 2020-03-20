@@ -1,56 +1,36 @@
-import glob
-import urllib
 from datetime import datetime
-from time import time, sleep
+from time import time
 import os
 import signal
 import subprocess
 
-from bs4 import BeautifulSoup
-from flask import request
-from flask import Flask
+from scispacy.abbreviation import AbbreviationDetector
 
 from client import bio_annotation
 import shell_commander
-from client.annotation_client import AnnotationClient
+from client.annotation_client import RequestAnnotation
 from client.annotation_protocol import *
 
+from flask import request
+from flask import Flask
 app = Flask(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
 import json
 import config
 
-I_as_client = AnnotationClient()
+request_annotation = RequestAnnotation()
 
-import logging, sys
-
-class LogFile(object):
-    """File-like object to log text using the `logging` module."""
-
-    def __init__(self, name=None):
-        self.logger = logging.getLogger(name)
-
-    def write(self, msg, level=logging.INFO):
-        self.logger.log(level, msg)
-
-    def flush(self):
-        for handler in self.logger.handlers:
-            handler.flush()
-
-logging.basicConfig(level=logging.DEBUG, filename='mylog.log')
-
-# Redirect stdout and stderr
-#sys.stdout = LogFile('stdout')
-#sys.stderr = LogFile('stderr')
+import spacy
+nlp = spacy.load("en_core_sci_sm")
+abbreviation_pipe = AbbreviationDetector(nlp)
+nlp.add_pipe(abbreviation_pipe)
 
 
-def arg_parse(request):
-    args = json.loads(request.data.decode('utf-8'))  # request.json['spot']
-    data = args['data']
-    spot = args['spot']
-    logging.info("\ndata = {data}\n spot= {spot}".format(data=str(data), spot=spot))
-    return spot, data
+def arg_parse():
+    args = json.loads(request.data.decode('utf-8'))
+    return args
+
 
 def before_after_prepare (spot):
     # get some text to both sides and transform to zero annotations
@@ -59,6 +39,7 @@ def before_after_prepare (spot):
     zero_before = [(word, 'O') for word in text_before]
     zero_after = [(word, 'O') for word in text_after]
     return zero_after, zero_before
+
 
 def roll_windows(which, zero_before= [], final_version=[], zero_after = [], max_len=200 ):
     # roll in windows over annotation and save them all as samples
@@ -70,15 +51,17 @@ def roll_windows(which, zero_before= [], final_version=[], zero_after = [], max_
         logging.info ("creating annotation window from %d to %d with text %s" % (start, start + max_len, new_annotation))
         yield shell_commander.call_os(SaveAnnotation, annotation=new_annotation, which=which)
 
+
 def save_zero_sample(request=None, which=None):
-    spot, spans = arg_parse(request)
+    spot, spans = arg_parse()
     shell_commander.call_os(ZeroAnnotation, text=spot['text'], which=which)
 
+
 def save_sample (request, which=None, zero_before=None, zero_after=None, zero_text=False):
-    spot, spans = arg_parse(request)
-    tokens = spot['text'].split()
-    annotated_sample = bio_annotation.BIO_Annotation.spans2annotation(tokens=tokens, paired_spans=spans)
-    _zero_before, _zero_after = before_after_prepare(spot)
+    args = arg_parse()
+    tokens = args['spot']['text'].split()
+    annotated_sample = bio_annotation.BIO_Annotation.spans2annotation(tokens=tokens, paired_spans=args['spans'])
+    _zero_before, _zero_after = before_after_prepare(args['spot'])
     if zero_before != None:
         _zero_before = zero_before
     if zero_after != None:
@@ -94,22 +77,6 @@ def save_sample (request, which=None, zero_before=None, zero_after=None, zero_te
     return rets
 
 
-
-@app.route("/save_text", methods=["POST"])
-def save_text():
-    NotImplementedError
-    """
-    filename = request.json['filename']
-    path = filename + '.json'
-    with open(path, 'w') as f:
-        json.dump(request.json, f)
-    cmd = fssspython {config.paper_reader} "{path}"  sss
-    logging.info('called paper reader: ' + cmd)
-    result = subprocess.check_output(cmd, shell=True).decode("utf-8")
-    answer = shell_commander.free_result(result)
-    return answer
-    """
-
 @app.route("/annotate_certain_json_in_doc_folder", methods=["POST"])
 def annotate_json_in_doc_folder():
     filename = request.json['filename']
@@ -124,63 +91,46 @@ def annotate_json_in_doc_folder():
 from client.upmarker import UpMarker
 upmarker_html = UpMarker(_generator="tml")
 
+
 @app.route("/markup", methods=["POST"])
 def markup():
-    markedup = '???'
-    if request.method == 'POST':
-        try:
-            spot, spans = arg_parse(request)
-            tokens = spot['text'].split()
-            spans = [ an_set for an_set in spans]
-            annotated_sample = bio_annotation.BIO_Annotation.spans2annotation(tokens=tokens, paired_spans=spans)
-            markedup = upmarker_html.markup_annotation(annotated_sample, start_level=1).replace('"',"'")
-            logging.info (markedup)
-        except Exception as e:
-            raise #markedup = "Could not be annotated +" + str(e)
-    else:
-        logging.error("not a post request")
-
+    args = arg_parse()
+    tokens, spans = args['data']
+    spans = [annotation_span for annotation_span in spans]
+    annotated_sample = bio_annotation.BIO_Annotation.spans2annotation(tokens=tokens, paired_spans=spans)
+    markedup = upmarker_html.markup_annotation(annotated_sample, start_level=1).replace('"',"'")
     return markedup
 
 
-
 @app.route("/predict", methods=["POST"])
-def predictmarkup():
-    spans = []
-    if request.method == 'POST':
-        spot, spans = arg_parse(request)
-        if not spot['text']:
-            logging.warning("empty call")
-            ret = []
-        else:
-            ret = shell_commander.call_os(MakePrediction, text=spot['text'])
-
-        spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(ret['annotation']))
-
-        spans = [[
-            {
-             'kind': an[0],
-             'start': float(an[1][0]),
-             'end':   float(an[1][1]),
-             'able':  True,
-             'no': int(set_no),
-             '_i': int(_i)
-
-            } for _i, an in enumerate (an_set)] for set_no, an_set in enumerate (spans)]
+def predict():
+    args = arg_parse()
+    if not args['spot']['text']:
+        logging.warning("empty call")
+        ret = []
     else:
-        logging.error("not a post request")
+        request = request_annotation.schedule(command="MakePrediction", text=args['spot']['text'])
+
+    spans = list(bio_annotation.BIO_Annotation.annotation2nested_spans(request['annotation']))
+
+    spans = [[
+        {
+         'kind': an[0],
+         'start': float(an[1][0]),
+         'end':   float(an[1][1]),
+         'able':  True,
+         'no': int(set_no),
+         '_i': int(_i)
+        } for _i, an in enumerate (an_set)] for set_no, an_set in enumerate (spans)]
 
     return json.dumps(spans)
 
-@app.route("/textlen", methods=["POST"])
-def textlen():
-    if request.method == 'POST':
-        spot, spans = arg_parse(request)
-        ret = len(spot['text'].split())
-    else:
-        logging.error("not a post request")
-
-    return json.dumps(ret)
+@app.route("/tokenize", methods=["POST"])
+def tokenize():
+    args = arg_parse()
+    doc = nlp(args['spot']['text'])
+    tokens = [token.text for token in doc]
+    return json.dumps(tokens)
 
 @app.route("/ping/", methods=["POST", "GET"])
 def ping():
@@ -198,19 +148,6 @@ def ping():
     with Timer("ping"):
         ret = shell_commander.call_os(Ping, text='yes')
     return ret
-
-############################################################################################
-##--------------------------------- FIRST Annotation commands
-# Base model/corpus is named 'first' (primary, ground-one) from top/text-level.
-# Nested model/corpus is named 'over' (overall)
-
-
-#Prepare training
-#Execution of scripts,
-#kill training script
-#connect annotations
-#throw annotations into HAL
-
 
 
 @app.route("/annotation_around", methods=["POST"])
@@ -441,5 +378,6 @@ def get_corpus_content():
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.debug = True
+    app.run(port=config.app_port, debug=True, use_reloader=False)
 

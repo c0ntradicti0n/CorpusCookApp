@@ -30,7 +30,7 @@ class AllResource(object):
 
         if text_param is not None:
 
-            self.me_as_client.commander(Command=MakeProposals, ProceedLocation=self.on_get_proceed, text=text_param)
+            self.me_as_client.schedule(command=MakeProposals, ProceedLocation=self.on_get_proceed, text=text_param)
 
     def on_get_proceed(self, proposals):
         self.upmarker.to_html(proposals)
