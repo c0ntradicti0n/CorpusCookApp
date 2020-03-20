@@ -13,6 +13,10 @@ from client.annotation_protocol import *
 
 from flask import request
 from flask import Flask
+
+from helpers.os_tools import get_filename_from_path
+from helpers.str_tools import remove_ugly_chars
+
 app = Flask(__name__)
 logging.getLogger().setLevel(logging.INFO)
 
@@ -81,11 +85,28 @@ def save_sample (request, which=None, zero_before=None, zero_after=None, zero_te
 def annotate_json_in_doc_folder():
     filename = request.json['filename']
     path = filename
-    cmd = f"""python {config.paper_reader} --preprocessor pdf2htmlEX "{path}"  """
-    logging.info('called paper reader: ' + cmd)
-    result = subprocess.check_output(cmd, shell=True).decode("utf-8")
-    answer = shell_commander.free_result(result)
-    return answer
+
+    with open(path, 'r+') as f:
+        data = json.load(f)
+    indexed_words = {
+        index: word
+        for index, word in data['indexed_words'].items()}
+
+    proposals = request_annotation.schedule(command="MakeProposalsIndexed",
+                    indexed=indexed_words,
+                    text_name=path.replace("/", ""))
+
+    upmarker_css = UpMarker(_generator="css")
+    css = upmarker_css.markup_proposal_list(proposals, _indexed_words=indexed_words)
+    filename = remove_ugly_chars(get_filename_from_path(path))
+
+    css_path = config.apache_css_dir + filename + ".css"
+
+    with open(css_path, 'w', encoding="utf8") as f:
+        f.write(css)
+
+    logging.info(f"css written to {css_path}")
+    return None
 
 
 from client.upmarker import UpMarker

@@ -8,6 +8,7 @@ import difflib
 from more_itertools import flatten, pairwise
 
 import config
+from Exceptions.ProposalException import EmptyProposalError
 from client import bio_annotation
 
 simple_html = """
@@ -457,6 +458,8 @@ class UpMarker:
         return len(annotation) >= 2 and all (len(span)==2 for span in annotation)
 
     def markup_proposal_list(self, proposals, _indexed_words=None):
+        if not proposals:
+            raise EmptyProposalError("No proposals in the list")
         if self.generator == "css":
             data_model = CSS_word
         else:
@@ -464,6 +467,7 @@ class UpMarker:
 
         self._indexed_words = _indexed_words
         self.indices = _indexed_words
+
         proposals = sorted(proposals, key=lambda d: d['indices'][0])
 
         highlighted = self.new_start_dict(self.indices, data_model)
