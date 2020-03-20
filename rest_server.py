@@ -89,12 +89,12 @@ def annotate_json_in_doc_folder():
     with open(path, 'r+') as f:
         data = json.load(f)
     indexed_words = {
-        index: word
+        int(index): word
         for index, word in data['indexed_words'].items()}
 
     proposals = request_annotation.schedule(command="MakeProposalsIndexed",
                     indexed=indexed_words,
-                    text_name=path.replace("/", ""))
+                    text_name=path.replace("/", ""))['proposals']
 
     upmarker_css = UpMarker(_generator="css")
     css = upmarker_css.markup_proposal_list(proposals, _indexed_words=indexed_words)
@@ -106,7 +106,7 @@ def annotate_json_in_doc_folder():
         f.write(css)
 
     logging.info(f"css written to {css_path}")
-    return None
+    return "css"[:20]
 
 
 from client.upmarker import UpMarker

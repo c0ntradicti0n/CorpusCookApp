@@ -504,14 +504,6 @@ class UpMarker:
                                         mark_end=proposal['mark_end'],
                                         yes_no=proposal['difference'],
                                         )
-            update_dict = update_dict_from_annotation(proposal['indices'],
-                                        proposal['annotation'],
-                                        annotation_number,
-                                        start_level=0,
-                                        sincerity=proposal['privative'],
-                                        mark_end=proposal['mark_end'],
-                                        yes_no=proposal['difference'],
-                                        )
             highlighted.update(update_dict)
 
         if self.generator=="css":
